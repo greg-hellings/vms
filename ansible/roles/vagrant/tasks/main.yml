@@ -1,0 +1,69 @@
+- name: load vars, if needed
+  include_vars: "{{ item }}"
+  loop:
+    - "{{ role_path }}/vars/default.yml"
+    - "{{ role_path }}/vars/{{ ansible_facts.distribution }}.yml"
+    - "{{ role_path }}/vars/{{ ansible_facts.distribution }}_{{ ansible_facts.distribution_major_version }}.yml"
+  when: item is file
+
+- name: remove cloud-init
+  become: true
+  package:
+    name: cloud-init
+    state: absent
+  when: ansible_facts.pkg_mgr not in ['atomic_container']
+
+- name: get build time
+  become: true
+  copy:
+    content: "{{ ansible_facts.date_time.date }}"
+    dest: /etc/vagrant_box_build_time
+    owner: root
+    group: root
+    mode: 0644
+
+- name: create .ssh directory
+  file:
+    path: "{{ ansible_user_dir }}/.ssh"
+    state: directory
+    mode: "0700"
+
+- name: fetch authorized_keys
+  get_url:
+    mode: "0600"
+    dest: "{{ ansible_user_dir }}/.ssh/authorized_keys"
+    url: https://raw.githubusercontent.com/hashicorp/vagrant/master/keys/vagrant.pub
+
+- block:
+    - name: configure sshd
+      lineinfile:
+        line: UseDNS no
+        path: /etc/ssh/sshd_config
+
+    - name: check for the sshd_config.d directory
+      stat:
+        path: /etc/ssh/sshd_config.d
+      register: _vagrant_sshd_config_d
+
+    - name: be sure that sshd is configured properly to accept the pubkey
+      copy:
+        content: PubkeyAcceptedKeyTypes +ssh-rsa
+        mode: "0600"
+        owner: root
+        group: root
+        dest: /etc/ssh/sshd_config.d/00-vagrant_accept_pubkey.conf
+      when: _vagrant_sshd_config_d.stat.exists
+
+    - name: enable sshd
+      service:
+        name: "{{ vagrant_ssh_service_name }}"
+        state: started
+        enabled: true
+      # Fedora 31 has a bug in systemd with kernel >= 5.8 that makes us
+      # unable to determine state of the service. However, if we were able
+      # to connect to it to run this Ansible, then we clearly are up
+      # and running and we can safely ignore this error
+      ignore_errors: >-
+        {{ ansible_facts.distribution == 'Fedora' and
+        ansible_facts.distribution_major_version == '31' }}
+  become: true

@@ -1,0 +1,4 @@
+output_*
+*.box
+*.iso
+.vagrant

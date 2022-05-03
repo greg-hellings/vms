@@ -1,0 +1,24 @@
+- name: install guest additions
+  hosts: default
+  pre_tasks:
+    - name: update all the things
+      become: true
+      package:
+        name: "*"
+        state: latest
+      when: ansible_facts.pkg_mgr not in ['atomic_container']
+
+    - name: update atomic things
+      become: true
+      command: rpm-ostree upgrade
+      when: ansible_facts.pkg_mgr in ['atomic_container']
+  roles:
+    - role: virtualbox
+      when: packer_builder_type == 'virtualbox-iso'
+    - role: vmware
+      when: packer_builder_type == 'vmware-iso'
+    - role: init
+    - role: epel
+    - role: locale
+    - role: vagrant
+    - role: cleanup
