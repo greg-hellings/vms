@@ -1,0 +1,12 @@
+[submodule "http/fedora/f34"]
+	path = http/fedora/f34
+	url = https://pagure.io/fedora-kickstarts.git
+	branch = f34
+[submodule "http/fedora/f35"]
+	path = http/fedora/f35
+	url = https://pagure.io/fedora-kickstarts.git
+	branch = f35
+[submodule "http/fedora/f36"]
+	path = http/fedora/f36
+	url = https://pagure.io/fedora-kickstarts.git
+	branch = f36
