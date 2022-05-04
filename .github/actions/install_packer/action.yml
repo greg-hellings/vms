@@ -1,0 +1,21 @@
+name: Install Packer
+description: Installs the packerio executable and its attendant tools to ~/bin
+inputs:
+  version:
+    description: Version of Packer to install
+    required: true
+    default: "1.8.0"
+runs:
+  using: composite
+  steps:
+    - shell: bash
+      run: |
+        set -exo pipefail
+        sudo apt-get update
+        sudo apt-get install -y unzip python3-{virtualenv,yaml} cloud-utils qemu-system-{x86,ppc}
+        # Install packer.io
+        curl -O https://releases.hashicorp.com/packer/${{ inputs.version }}/packer_${{ inputs.version }}_linux_amd64.zip
+        unzip packer_${{ inputs.version }}_linux_amd64.zip
+        mkdir -p ~/bin/
+        chmod +x packer
+        mv packer ~/bin/packerio

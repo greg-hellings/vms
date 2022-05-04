@@ -1,0 +1,18 @@
+name: Test the components of it
+
+on:
+  push:
+  pull-request:
+
+jobs:
+  validate:
+    runs-on: ubuntu-20.04
+    tasks:
+      - name: Install packer
+        uses: .github/actions/install_packer/
+      - name: Run syntax check
+        run: |
+          set -exo pipefail
+          for vars in distros/*; do
+            ~/bin/packerio validate -var-file=${vars} sources/
+          done
