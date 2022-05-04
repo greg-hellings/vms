@@ -14,5 +14,5 @@ jobs:
         run: |
           set -exo pipefail
           for vars in distros/*; do
-            ~/bin/packerio validate -var-file=${vars} sources/
+            ~/bin/packerio validate -except=upload -var-file=${vars} sources/
           done

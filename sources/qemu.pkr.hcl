@@ -59,6 +59,13 @@ variable "headless" {
 
 locals {
 	name = "${var.distro}-${var.version}-${var.arch}"
+	build = formatdate("YYYYMMDDhh", timestamp())
+	description = templatefile("../README.box.md", {
+		distro = var.distro
+		arch = var.arch
+		version = var.version
+		build = local.build
+	})
 }
 
 source "qemu" "x86_64" {
@@ -106,8 +113,8 @@ build {
 		post-processor "vagrant-cloud" {
 			name = "upload"
 			box_tag = "greg-hellings/${local.name}"
-			version = "{{isotime \"2006010203\"}}"
-			version_description = templatefile("../README.box.md")
+			version = local.build
+			version_description = local.description
 		}
 	}
 }
