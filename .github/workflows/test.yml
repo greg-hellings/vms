@@ -55,11 +55,11 @@ jobs:
         shell: python
         run: |
           import json
-          ubuntu = json.parse(${{ steps.id.collection.outputs.tox-envs }})
-          macos  = json.parse(${{ steps.id.vagrant.outputs.tox-envs }})
+          ubuntu = json.loads(${{ steps.id.collection.outputs.tox-envs }})
+          macos  = json.loads(${{ steps.id.vagrant.outputs.tox-envs }})
           ub_zip = [{'os': 'ubuntu-latest', 'scenario': u} for u in ubuntu]
           mac_zip = [{'os': 'macos-10.15', 'scenario': m} for m in macos]
-          print("::set-output name=scenarios::" + json.stringify(ub_zip + mac_zip))
+          print("::set-output name=scenarios::" + json.dumps(ub_zip + mac_zip))
 
   lint:
     name: Lint Ansible code
