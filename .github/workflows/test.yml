@@ -31,6 +31,7 @@ jobs:
     outputs:
       scenarios: ${{ steps.collection.outputs.tox-envs }}
       vagrant: ${{ steps.vagrant.outputs.tox-envs }}
+      all: ${{ steps.zippa.outputs.scenarios }}
     steps:
       - uses: actions/checkout@v3
         with:
@@ -50,23 +51,62 @@ jobs:
         uses: greg-hellings/tox-list@v1
         with:
           tox-args: --ansible-driver vagrant
+      - id: zipped
+        shell: python
+        run: |
+          import json
+          ubuntu = json.parse(${{ steps.id.collection.outputs.tox-envs }})
+          macos  = json.parse(${{ steps.id.vagrant.outputs.tox-envs }})
+          ub_zip = [{'os': 'ubuntu-latest', 'scenario': u} for u in ubuntu]
+          mac_zip = [{'os': 'macos-10.15', 'scenario': m} for m in macos]
+          print("::set-output name=scenarios::" + json.stringify(ub_zip + mac_zip))
 
   lint:
     name: Lint Ansible code
-    uses: devroles/meta_test/.github/workflows/lint.yml@master
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: true
+      - name: Install Python
+        uses: actions/setup-python@v2
+      - name: Install dependencies
+        run: python -m pip install --upgrade tox
+      - name: Run lint
+        run: tox -e lint_all
 
-  vagrant_build:
-    name: Ansible tests on VMs
-    needs:
-      - collect
-    uses: devroles/meta_test/.github/workflows/vagrant_build.yml@master
-    with:
-      scenarios: "${{ needs.collect.outputs.vagrant }}"
+          # vagrant_build:
+          #   name: Ansible tests on VMs
+          #   runs-on: macos-10.15
+          #   needs:
+          #     - collect
+          #   matrix:
+          #     scenarios: "${{ needs.collect.outputs.vagrant }}"
+          #   steps:
+          #     - uses: actions/checkout@v3
+          #       with:
+          #         submodules: true
+          #     - name: Install Python
+          #       uses: actions/setup-python@v2
+          #     - name: Install dependencies
+          #       run: python -m pip install --upgrade tox
+          #     - name: Run scenario
+          #       run: tox -e "${{ matrix.scenarios }}"
 
   build:
     name: Ansible tests on containers
+    runs-on: ${{ matrix.scenarios.os }}
     needs:
       - collect
-    uses: devroles/meta_test/.github/workflows/container_build.yml@master
-    with:
-      scenarios: "${{ needs.collect.outputs.scenarios }}"
+    matrix:
+      scenarios: "${{ needs.collect.outputs.all }}"
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: true
+      - name: Install Python
+        uses: actions: actions/setup-python@v2
+      - name: Install dependencies
+        run: python -m pip install --upgrade tox
+      - name: Run scenario
+        run: tox -e "${{ matrix.scenarios.scenario }}"
