@@ -1,3 +1,4 @@
 collections:
-  - community.general>=4.8.0
+  - name: community.general
+    version: 4.8.0
   - devroles.system
