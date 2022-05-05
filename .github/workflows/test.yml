@@ -2,14 +2,19 @@ name: Test the components of it
 
 "on":
   push:
+    branches:
+      - main
   pull_request:
 
 jobs:
   validate:
+    name: Validate Packer templates are reasonable
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+        with:
+          submodules: true
       - name: Install packer
         uses: ./.github/actions/install_packer/
       - name: Run syntax check
@@ -20,6 +25,7 @@ jobs:
           done
 
   collect:
+    name: Collect all Ansible-related jobs
     runs-on: ubuntu-latest
     outputs:
       scenarios: ${{ steps.collection.outputs.tox-envs }}
@@ -45,9 +51,11 @@ jobs:
           tox-args: --ansible-driver vagrant
 
   lint:
+    name: Lint Ansible code
     uses: devroles/meta_test/.github/workflows/lint.yml@master
 
   vagrant_build:
+    name: Ansible tests on VMs
     needs:
       - collect
     uses: devroles/meta_test/.github/workflows/vagrant_build.yml@master
@@ -55,6 +63,7 @@ jobs:
       scenarios: "${{ needs.collect.outputs.vagrant }}"
 
   build:
+    name: Ansible tests on containers
     needs:
       - collect
     uses: devroles/meta_test/.github/workflows/container_build.yml@master
