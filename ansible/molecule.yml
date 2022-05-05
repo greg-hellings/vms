@@ -1,8 +1,8 @@
 dependency:
   name: galaxy
   options:
-    role-file: ../../requirements.yml  # relative to the role dir
-    requirements-file: ../../requirements.yml
+    role-file: ../requirements.yml  # relative to the role dir
+    requirements-file: ../requirements.yml
 provisioner:
   name: ansible
   playbooks:  # These paths are relative to scenario dir
