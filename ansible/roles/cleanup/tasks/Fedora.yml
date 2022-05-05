@@ -1,4 +1,5 @@
 - name: clean up Fedora
   become: true
-  command: dnf clean all
+  ansible.builtin.command: dnf clean all  # noqa command-instead-of-module
   when: ansible_facts.pkg_mgr not in ['atomic_container']
+  changed_when: false

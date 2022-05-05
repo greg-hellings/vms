@@ -1,5 +1,5 @@
 - name: load vars, if needed
-  include_vars: "{{ item }}"
+  ansible.builtin.include_vars: "{{ item }}"
   loop:
     - "{{ role_path }}/vars/default.yml"
     - "{{ role_path }}/vars/{{ ansible_facts.distribution }}.yml"
@@ -8,14 +8,14 @@
 
 - name: remove cloud-init
   become: true
-  package:
+  ansible.builtin.package:
     name: cloud-init
     state: absent
   when: ansible_facts.pkg_mgr not in ['atomic_container']
 
 - name: get build time
   become: true
-  copy:
+  ansible.builtin.copy:
     content: "{{ ansible_facts.date_time.date }}"
     dest: /etc/vagrant_box_build_time
     owner: root
@@ -23,30 +23,30 @@
     mode: 0644
 
 - name: create .ssh directory
-  file:
+  ansible.builtin.file:
     path: "{{ ansible_user_dir }}/.ssh"
     state: directory
     mode: "0700"
 
 - name: fetch authorized_keys
-  get_url:
+  ansible.builtin.get_url:
     mode: "0600"
     dest: "{{ ansible_user_dir }}/.ssh/authorized_keys"
     url: https://raw.githubusercontent.com/hashicorp/vagrant/master/keys/vagrant.pub
 
 - block:
     - name: configure sshd
-      lineinfile:
+      ansible.builtin.lineinfile:
         line: UseDNS no
         path: /etc/ssh/sshd_config
 
     - name: check for the sshd_config.d directory
-      stat:
+      ansible.builtin.stat:
         path: /etc/ssh/sshd_config.d
       register: _vagrant_sshd_config_d
 
     - name: be sure that sshd is configured properly to accept the pubkey
-      copy:
+      ansible.builtin.copy:
         content: PubkeyAcceptedKeyTypes +ssh-rsa
         mode: "0600"
         owner: root
@@ -55,7 +55,7 @@
       when: _vagrant_sshd_config_d.stat.exists
 
     - name: enable sshd
-      service:
+      ansible.builtin.service:
         name: "{{ vagrant_ssh_service_name }}"
         state: started
         enabled: true
@@ -63,6 +63,7 @@
       # unable to determine state of the service. However, if we were able
       # to connect to it to run this Ansible, then we clearly are up
       # and running and we can safely ignore this error
+      # noqa ignore-errors
       ignore_errors: >-
         {{ ansible_facts.distribution == 'Fedora' and
         ansible_facts.distribution_major_version == '31' }}

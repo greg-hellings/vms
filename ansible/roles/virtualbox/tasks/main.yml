@@ -1,12 +1,12 @@
 - name: install build deps for virtualbox addons
   become: true
-  package:
+  ansible.builtin.package:
     name: "{{ virtualbox_packages }}"
     state: present
 
 - name: start services
   become: true
-  service:
+  ansible.builtin.service:
     name: "{{ item }}"
     state: started
     enabled: true
@@ -14,7 +14,7 @@
 
 - name: mount iso file
   become: true
-  command: "{{ item }}"
+  ansible.builtin.command: "{{ item }}"
   changed_when: false
   loop:
     - mount -o loop,ro {{ ansible_user_dir }}/VBoxGuestAdditions.iso /mnt
@@ -22,6 +22,6 @@
     - umount /mnt
 
 - name: remove iso
-  file:
+  ansible.builtin.file:
     name: "{{ ansible_user_dir }}/VBoxGuestAdditions.iso"
     state: absent

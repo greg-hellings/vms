@@ -1,0 +1,10 @@
+exclude_paths:
+  - ../.cache/
+  - .cache/
+  # Must not be relatively anchored
+  - /**/molecule/*/*.yml
+
+skip_list:
+  - "204"
+  - yaml
+use_default_rules: true

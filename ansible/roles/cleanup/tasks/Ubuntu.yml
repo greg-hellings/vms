@@ -1,3 +1,4 @@
 - name: clean apt files
   become: true
-  command: apt-get clean
+  ansible.builtin.command: apt-get clean  # noqa command-instead-of-module
+  changed_when: false

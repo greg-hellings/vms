@@ -3,22 +3,23 @@
   pre_tasks:
     - name: update all the things
       become: true
-      package:
+      ansible.builtin.package:  # noqa package-latest
         name: "*"
         state: latest
       when: ansible_facts.pkg_mgr not in ['atomic_container']
 
     - name: update atomic things
       become: true
-      command: rpm-ostree upgrade
+      ansible.builtin.command: rpm-ostree upgrade
       when: ansible_facts.pkg_mgr in ['atomic_container']
+      changed_when: false
   roles:
     - role: virtualbox
       when: packer_builder_type == 'virtualbox-iso'
     - role: vmware
       when: packer_builder_type == 'vmware-iso'
     - role: init
-    - role: epel
+    - role: devroles.system.epel
     - role: locale
     - role: vagrant
     - role: cleanup

@@ -94,6 +94,7 @@ build {
 
 	provisioner "ansible" {
 		playbook_file = "ansible/playbook.yml"
+		galaxy_file = "ansible/requirements.yml"
 	}
 
 	provisioner "shell" {

@@ -1,5 +1,6 @@
 - name: create hgfs dir
   become: true
-  file:
+  ansible.builtin.file:
     state: directory
     path: /mnt/hgfs
+    mode: 0700

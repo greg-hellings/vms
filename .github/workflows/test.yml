@@ -1,12 +1,12 @@
 name: Test the components of it
 
-on:
+"on":
   push:
   pull_request:
 
 jobs:
   validate:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -18,3 +18,45 @@ jobs:
           for vars in distros/*; do
             ~/bin/packerio validate -except=upload -var-file=${vars} sources/
           done
+
+  collect:
+    runs-on: ubuntu-latest
+    outputs:
+      scenarios: ${{ steps.collection.outputs.tox-envs }}
+      vagrant: ${{ steps.vagrant.outputs.tox-envs }}
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: 'recursive'
+      - name: Set up Python
+        uses: actions/setup-python@v2
+      - name: Install dependencies
+        run: |
+          set -ex
+          python -m pip install --upgrade tox
+      - name: Collect dependencies
+        id: collection
+        uses: greg-hellings/tox-list@v1
+        with:
+          tox-args: --ansible-driver docker --ansible-driver podman --ansible-driver containers
+      - id: vagrant
+        uses: greg-hellings/tox-list@v1
+        with:
+          tox-args: --ansible-driver vagrant
+
+  lint:
+    uses: devroles/meta_test/.github/workflows/lint.yml@master
+
+  vagrant_build:
+    needs:
+      - collect
+    uses: devroles/meta_test/.github/workflows/vagrant_build.yml@master
+    with:
+      scenarios: "${{ needs.collect.outputs.vagrant }}"
+
+  build:
+    needs:
+      - collect
+    uses: devroles/meta_test/.github/workflows/container_build.yml@master
+    with:
+      scenarios: "${{ needs.collect.outputs.scenarios }}"
