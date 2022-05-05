@@ -98,8 +98,10 @@ jobs:
     runs-on: ${{ matrix.scenarios.os }}
     needs:
       - collect
-    matrix:
-      scenarios: "${{ needs.collect.outputs.all }}"
+    strategy:
+      fail-fast: false
+      matrix:
+        scenarios: "${{ needs.collect.outputs.all }}"
     steps:
       - uses: actions/checkout@v3
         with:
