@@ -29,8 +29,7 @@ jobs:
     name: Collect all Ansible-related jobs
     runs-on: ubuntu-latest
     outputs:
-      scenarios: ${{ steps.collection.outputs.tox-envs }}
-      vagrant: ${{ steps.vagrant.outputs.tox-envs }}
+      all: ${{ steps.zipped.outputs.scenarios }}
     steps:
       - uses: actions/checkout@v3
         with:
@@ -50,23 +49,50 @@ jobs:
         uses: greg-hellings/tox-list@v1
         with:
           tox-args: --ansible-driver vagrant
+      - id: zipped
+        name: Zip arrays together
+        shell: python
+        run: |
+          import json
+          ubuntu = json.loads('${{ steps.collection.outputs.tox-envs }}')
+          macos  = json.loads('${{ steps.vagrant.outputs.tox-envs }}')
+          ub_zip = [{'os': 'ubuntu-latest', 'scenario': u} for u in ubuntu]
+          mac_zip = [{'os': 'macos-10.15', 'scenario': m} for m in macos]
+          print("::set-output name=scenarios::" + json.dumps(ub_zip + mac_zip))
 
   lint:
     name: Lint Ansible code
-    uses: devroles/meta_test/.github/workflows/lint.yml@master
-
-  vagrant_build:
-    name: Ansible tests on VMs
-    needs:
-      - collect
-    uses: devroles/meta_test/.github/workflows/vagrant_build.yml@master
-    with:
-      scenarios: "${{ needs.collect.outputs.vagrant }}"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: true
+      - name: Install Python
+        uses: actions/setup-python@v2
+      - name: Install dependencies
+        run: |-
+          set -ex
+          python -m pip install --upgrade tox ansible
+          ansible-galaxy collection install -r ansible/requirements.yml
+      - name: Run lint
+        run: tox -e lint_all
 
   build:
-    name: Ansible tests on containers
+    name: Ansible tests on roles
+    runs-on: ${{ matrix.scenarios.os }}
     needs:
       - collect
-    uses: devroles/meta_test/.github/workflows/container_build.yml@master
-    with:
-      scenarios: "${{ needs.collect.outputs.scenarios }}"
+    strategy:
+      fail-fast: false
+      matrix:
+        scenarios: "${{ fromJson(needs.collect.outputs.all) }}"
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: true
+      - name: Install Python
+        uses: actions/setup-python@v2
+      - name: Install dependencies
+        run: python -m pip install --upgrade tox
+      - name: Run scenario
+        run: tox -e "${{ matrix.scenarios.scenario }}"
