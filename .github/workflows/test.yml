@@ -78,7 +78,7 @@ jobs:
         run: tox -e lint_all
 
   build:
-    name: Ansible tests on containers
+    name: Ansible tests on roles
     runs-on: ${{ matrix.scenarios.os }}
     needs:
       - collect
