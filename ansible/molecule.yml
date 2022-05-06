@@ -15,14 +15,6 @@ provisioner:
       force_color: true
       remote_tmp: /tmp/${USER}/ansible
 verifier:
-  name: testinfra
-  options:
-    # Add a -v so you see the individual test names,
-    # particularly useful with parameterized tests
-    v: true
-    junit-xml: junit.xml
-  # Using the shared directory is useful for sharing tests across scenarios,
-  # but is not a requirement. For scenario specific tests, add the appropriate
-  # file path to the test or test directory below
+  name: ansible
   additional_files_or_dirs:
     - ../../shared/tests  # relative to the scenario tests dir
