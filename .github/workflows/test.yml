@@ -85,7 +85,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        scenarios: "${{ needs.collect.outputs.all }}"
+        scenarios: "${{ jsonDecode(needs.collect.outputs.all) }}"
     steps:
       - uses: actions/checkout@v3
         with:
