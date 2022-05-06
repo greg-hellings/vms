@@ -29,9 +29,7 @@ jobs:
     name: Collect all Ansible-related jobs
     runs-on: ubuntu-latest
     outputs:
-      scenarios: ${{ steps.collection.outputs.tox-envs }}
-      vagrant: ${{ steps.vagrant.outputs.tox-envs }}
-      all: ${{ steps.zippa.outputs.scenarios }}
+      all: ${{ steps.zipped.outputs.scenarios }}
     steps:
       - uses: actions/checkout@v3
         with:
@@ -78,24 +76,6 @@ jobs:
           ansible-galaxy collection install -r ansible/requirements.yml
       - name: Run lint
         run: tox -e lint_all
-
-          # vagrant_build:
-          #   name: Ansible tests on VMs
-          #   runs-on: macos-10.15
-          #   needs:
-          #     - collect
-          #   matrix:
-          #     scenarios: "${{ needs.collect.outputs.vagrant }}"
-          #   steps:
-          #     - uses: actions/checkout@v3
-          #       with:
-          #         submodules: true
-          #     - name: Install Python
-          #       uses: actions/setup-python@v2
-          #     - name: Install dependencies
-          #       run: python -m pip install --upgrade tox
-          #     - name: Run scenario
-          #       run: tox -e "${{ matrix.scenarios }}"
 
   build:
     name: Ansible tests on containers
