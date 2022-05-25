@@ -1,0 +1,34 @@
+name: Build the boxes
+
+"on":
+  workflow_dispatch:
+
+jobs:
+  collect:
+    name: Discover distros
+    runs-on: ubuntu-latest
+    outputs:
+      distros: ${{ steps.distros.outputs.distros }}
+    steps:
+      - uses: actions/checkout@v3
+      - name: Discover boxes
+        id: distros
+        run: |-
+          set -eo pipefail
+          distros=$(ls distros/ | jq -cRs 'split("\n") | [ .[] | if length > 0 then . else empty end ]')
+          echo "::set-output name=distros::${distros}"
+
+  build:
+    name: Build box
+    runs-on: ubuntu-latest
+    needs:
+      - collect
+    strategy:
+      fail-fast: false
+      matrix:
+        distro: ${{ fromJson( needs.collect.outputs.distros ) }}
+    steps:
+      - uses: actions/checkout@v3
+      - name: Echo name
+        run: |-
+          echo ${{ matrix.distro }}
