@@ -5,7 +5,7 @@ autoinstall:
   network:  # Should disable networking, workaround for unattended-updates failing in install
     version: 2
   refresh-installer:
-    update: yes
+    update: no
   keyboard:
     layout: us
   storage:
