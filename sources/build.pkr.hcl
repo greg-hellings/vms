@@ -22,7 +22,7 @@ build {
 
 		post-processor "vagrant-cloud" {
 			name = "upload"
-			box_tag = "greg-hellings/${local.name}"
+			box_tag = "boxen/${local.name}"
 			version = local.build
 			version_description = local.description
 		}
