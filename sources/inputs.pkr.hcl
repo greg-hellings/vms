@@ -62,6 +62,11 @@ variable "vagrant_cloud_token" {
 	default = env("VAGRANT_CLOUD_TOKEN")
 }
 
+variable "qemu_accelerator" {
+	type = string
+	default = "kvm"
+}
+
 locals {
 	name = "${var.distro}-${var.version}-${var.arch}"
 	build = formatdate("YYYYMMDDhh", timestamp())

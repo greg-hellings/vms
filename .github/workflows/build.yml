@@ -48,7 +48,7 @@ jobs:
         shell: bash
         run: |
           set -e
-          ./packerio build -var-file=${{ matrix.distro }} -except=upload sources
+          ./packerio build -var-file=${{ matrix.distro }} -var "qemu_accelerator=none" -except=upload sources
         env:
           VAGRANT_CLOUD_TOKEN: ${{ secrets.VAGRANT_CLOUD_TOKEN }}
           PACKER_LOG: 1

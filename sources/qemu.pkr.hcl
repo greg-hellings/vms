@@ -12,7 +12,7 @@ source "qemu" "x86_64" {
 	boot_command = var.boot_command
 	http_directory = "http"
 	ssh_handshake_attempts = var.ssh_handshake_attempts
-	accelerator = "kvm"
+	accelerator = var.qemu_accelerator
 	cpus = 2
 	memory = 2048
 	qemuargs = [["-serial", "stdio"]]
