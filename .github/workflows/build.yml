@@ -15,7 +15,7 @@ jobs:
         id: distros
         run: |-
           set -eo pipefail
-          distros=$(ls distros/ | jq -cRs 'split("\n") | [ .[] | if length > 0 then . else empty end ]')
+          distros=$(ls distros/*.hcl | jq -cRs 'split("\n") | [ .[] | if length > 0 then . else empty end ]')
           echo "::set-output name=distros::${distros}"
 
   build:
@@ -27,8 +27,28 @@ jobs:
       fail-fast: false
       matrix:
         distro: ${{ fromJson( needs.collect.outputs.distros ) }}
+        packer_version:
+          - "1.8.0"
     steps:
       - uses: actions/checkout@v3
-      - name: Echo name
-        run: |-
-          echo ${{ matrix.distro }}
+        with:
+          submodules: 'recursive'
+      - name: install dependencies
+        shell: bash
+        run: |
+          set -e
+          sudo apt-get update
+          sudo apt-get install -y unzip qemu-system-{x86,ppc}
+          # Install packer.io
+          curl -O https://releases.hashicorp.com/packer/${{ matrix.packer_version }}/packer_${{ matrix.packer_version }}_linux_amd64.zip
+          unzip packer_${{ matrix.packer_version }}_linux_amd64.zip
+          mv packer packerio
+          chmod +x packerio
+      - name: try build
+        shell: bash
+        run: |
+          set -e
+          ./packerio build -var-file=${{ matrix.distro }} -except=upload sources
+        env:
+          VAGRANT_CLOUD_TOKEN: ${{ secrets.VAGRANT_CLOUD_TOKEN }}
+          PACKER_LOG: 1
