@@ -4,6 +4,8 @@ name: Test the components of it
   push:
     branches:
       - main
+    paths-ignore:
+      - '.github/workflow/build.yml'
   pull_request:
   workflow_dispatch:
 
