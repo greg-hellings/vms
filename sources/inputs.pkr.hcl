@@ -57,6 +57,11 @@ variable "headless" {
 	default = true
 }
 
+variable "vagrant_cloud_token" {
+	type = string
+	default = env("VAGRANT_CLOUD_TOKEN")
+}
+
 locals {
 	name = "${var.distro}-${var.version}-${var.arch}"
 	build = formatdate("YYYYMMDDhh", timestamp())
