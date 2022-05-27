@@ -14,6 +14,7 @@ boot_command = [
       "auto=true priority=critical ",
       "DEBIAN_FRONTEND=noninteractive ",
       "preseed/url=http://{{.HTTPIP}}:{{.HTTPPort}}/ubuntu/18.04/preseed.cfg ",
+      "console=ttyS0 ",
       "<enter><wait1>"
 ]
 ssh_handshake_attempts = 1000

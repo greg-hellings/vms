@@ -8,6 +8,7 @@ iso = {
 boot_wait = "3s"
 boot_command = [
   "<enter><enter><wait1><f6><esc><wait><bs><bs><bs><bs>",
+  "console=ttyS0 ",
   "autoinstall ds=nocloud-net;s=http://{{.HTTPIP}}:{{.HTTPPort}}/ubuntu/20.04/<enter><wait>"
 ]
 ssh_handshake_attempts = 1000
