@@ -9,6 +9,7 @@ boot_wait = "15s"
 boot_command = [
   "e<down><down><down><end><bs><bs><bs>",
   "console=ttyS0 ",
+  "fsck.mode=skip ",
   "autoinstall ds=\"nocloud-net;s=http://{{.HTTPIP}}:{{.HTTPPort}}/ubuntu/22.04/\" console=ttyS0<F10>"
 ]
 ssh_handshake_attempts = 1000

@@ -9,12 +9,13 @@ iso = {
 }
 boot_wait = "15s"
 boot_command = [
-      "<esc><wait1>",
-      "<f6><esc><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
-      "auto=true priority=critical ",
-      "DEBIAN_FRONTEND=noninteractive ",
-      "preseed/url=http://{{.HTTPIP}}:{{.HTTPPort}}/ubuntu/18.04/preseed.cfg ",
-      "console=ttyS0 ",
-      "<enter><wait1>"
+    "<esc><wait1>",
+    "<f6><esc><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
+    "auto=true priority=critical ",
+    "DEBIAN_FRONTEND=noninteractive ",
+    "preseed/url=http://{{.HTTPIP}}:{{.HTTPPort}}/ubuntu/18.04/preseed.cfg ",
+    "fsck.mode=skip ",
+    "console=ttyS0 ",
+    "<enter><wait1>"
 ]
 ssh_handshake_attempts = 1000
