@@ -29,6 +29,8 @@ jobs:
         distro: ${{ fromJson( needs.collect.outputs.distros ) }}
         packer_version:
           - "1.8.0"
+        needs_timeout:
+          - distros/ubuntu-20.04-x86_64.pkrvars.hcl
     steps:
       - uses: actions/checkout@v3
         with:
@@ -49,6 +51,10 @@ jobs:
           unzip packer_${{ matrix.packer_version }}_linux_amd64.zip
           mv packer packerio
           chmod +x packerio
+      - name: modify build timeouts, if necessary
+        if: contains(matrix.needs_timeout, matrix.distro)
+        shell: bash
+        run: ./modify_timeout.sh "${{ matrix.distro }}"
       - name: try build
         shell: bash
         run: |
