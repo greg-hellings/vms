@@ -2,6 +2,10 @@ name: Build the boxes
 
 "on":
   workflow_dispatch:
+  release:
+    types:
+      - published
+      - prereleased
 
 jobs:
   collect:
@@ -53,7 +57,7 @@ jobs:
           # Strip .sh if it is a dynamic one
           file="$(printf "${{ matrix.distro }}" | sed -E -e 's/^(.*).sh$/\1/')"
           # Add a retry in case something bogus like a network failure happens
-          until packer build -var-file="${file}" -var "qemu_accelerator=tcg" -except=upload sources; do
+          until packer build -var-file="${file}" -var "qemu_accelerator=tcg" ${{ github.event_name != 'release' && '-except=upload' || '' }} sources; do
             sleep 1
           done
         env:
