@@ -26,6 +26,7 @@ sed -i -e 's/timeout.*/timeout 300/' "${new}/isolinux/isolinux.cfg"  # Uses 10th
 chmod -w "${new}/boot/grub" "${new}/boot/grub/grub.cfg"
 chmod -w "${new}/isolinux" "${new}/isolinux/isolinux.cfg"
 cat "${new}/boot/grub/grub.cfg"
+cat "${new}/isolinux/isolinux.cfg"
 
 # Create new ISO file
 sudo umount "${old}"
