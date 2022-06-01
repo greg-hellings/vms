@@ -25,6 +25,10 @@ jobs:
         run: |
           set -exo pipefail
           for vars in distros/*; do
+            if [[ "${vars}" == *.sh ]]; then
+              "./${vars}"
+              vars=${vars%.sh}
+            fi
             packer validate -except=upload -var-file=${vars} sources/
           done
 
