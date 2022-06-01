@@ -20,7 +20,7 @@ variable "version" {
 
 variable "boot_wait" {
 	type = string
-	default = "20s"
+	default = "15s"
 	description = "Length of time to wait before entering boot commands"
 }
 
@@ -39,7 +39,7 @@ variable "boot_command" {
 
 variable "ssh_handshake_attempts" {
 	type = number
-	default = 100
+	default = 1000
 }
 
 variable "shutdown_command" {

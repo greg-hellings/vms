@@ -28,18 +28,15 @@ sha="$(cat "${checksums}" | grep dvd | grep SHA256 | cut -d' ' -f 4)"
 # Write out HCL file
 cat << EOF > "${name}"
 distro = "fedora"
-arch = "x86_64"
 version = "rawhide"
 iso = {
 	url = "${iso}"
 	checksum = "${sha}"
 }
-boot_wait = "20s"
 boot_command = [
   "<up><tab><bs><bs><bs><bs><bs>",
   "edd=off net.ifnames=0 biosdevnames=0 inst.ks=http://{{.HTTPIP}}:{{.HTTPPort}}/fedora/rawhide-x86_64.ks console=ttyS0<enter><wait>"
 ]
-ssh_handshake_attempts = 1000
 EOF
 
 rm -r "${tmp}"

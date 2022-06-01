@@ -1,5 +1,4 @@
 distro = "ubuntu"
-arch = "x86_64"
 version = "20.04"
 iso = {
 	url = "https://releases.ubuntu.com/20.04/ubuntu-20.04.4-live-server-amd64.iso"
@@ -12,4 +11,3 @@ boot_command = [
 	"fsck.mode=skip ",
 	"autoinstall ds=nocloud-net;s=http://{{.HTTPIP}}:{{.HTTPPort}}/ubuntu/20.04/<enter><wait>"
 ]
-ssh_handshake_attempts = 1000
