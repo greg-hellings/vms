@@ -30,6 +30,10 @@ jobs:
         needs_timeout:
           - distros/ubuntu-20.04-x86_64.pkrvars.hcl
     steps:
+      - name: Checkout project
+        uses: actions/checkout@v3
+        with:
+          submodules: recursive
       - uses: ./.github/actions/setup
         with:
           ansible: true
