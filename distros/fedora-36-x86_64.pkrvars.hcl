@@ -8,6 +8,6 @@ iso = {
 boot_wait = "20s"
 boot_command = [
   "<up><tab><bs><bs><bs><bs><bs>",
-  "edd=off net.ifnames=0 biosdevnames=0 inst.ks=http://{{.HTTPIP}}:{{.HTTPPort}}/fedora/35-x86_64.ks console=ttyS0<enter><wait>"
+  "edd=off net.ifnames=0 biosdevnames=0 inst.ks=http://{{.HTTPIP}}:{{.HTTPPort}}/fedora/36-x86_64.ks console=ttyS0<enter><wait>"
 ]
 ssh_handshake_attempts = 1000
