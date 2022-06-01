@@ -5,6 +5,10 @@ inputs:
     description: Version of Packer to install
     required: true
     default: "1.8.0"
+  pup_version:
+    description: Version of Pup to install
+    required: true
+    default: "v0.4.0"
 runs:
   using: composite
   steps:
@@ -17,3 +21,5 @@ runs:
         curl -O https://releases.hashicorp.com/packer/${{ inputs.version }}/packer_${{ inputs.version }}_linux_amd64.zip
         unzip packer_${{ inputs.version }}_linux_amd64.zip
         chmod +x packer
+        # Install pup
+        sudo curl -L -o - https://github.com/ericchiang/pup/releases/download/${{ inputs.pup_version }}/pup_${{ inputs.pup_version }}_linux_amd64.zip | sudo unzip pup_${{ inputs.pup_version }}_linux_amd64.zip -d /usr/local/bin
