@@ -1,0 +1,9 @@
+name: Install virtualbox on Mac
+description: Installs virtualbox on Mac runners
+runs:
+  using: composite
+  steps:
+    - shell: bash
+      run: |
+        set -exo pipefail
+        brew install virtualbox vagrant
