@@ -58,4 +58,4 @@ jobs:
           done
         env:
           VAGRANT_CLOUD_TOKEN: ${{ secrets.VAGRANT_CLOUD_TOKEN }}
-          PACKER_LOG: ${{ contains(matrix.needs_timeout, matrix.distro) && '1' || '0' }}
+          PACKER_LOG: ${{ contains(matrix.needs_timeout, matrix.distro) && '1' || '1' }}
