@@ -16,6 +16,4 @@ runs:
         # Install packer.io
         curl -O https://releases.hashicorp.com/packer/${{ inputs.version }}/packer_${{ inputs.version }}_linux_amd64.zip
         unzip packer_${{ inputs.version }}_linux_amd64.zip
-        mkdir -p ~/bin/
         chmod +x packer
-        mv packer ~/bin/packerio

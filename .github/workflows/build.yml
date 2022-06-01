@@ -27,35 +27,14 @@ jobs:
       fail-fast: false
       matrix:
         distro: ${{ fromJson( needs.collect.outputs.distros ) }}
-        packer_version:
-          - "1.8.0"
         needs_timeout:
           - distros/ubuntu-20.04-x86_64.pkrvars.hcl
     steps:
-      - uses: actions/checkout@v3
+      - uses: ./.github/actions/setup
         with:
-          submodules: 'recursive'
+          ansible: true
+      - uses: ./.github/actions/install_packer
       - uses: greg-hellings/make-space@main
-      - uses: actions/setup-python@v3
-        with:
-          python-version: "3"
-      - uses: actions/cache@v3
-        with:
-          path: ~/.cache/pip
-          key: python-pip
-      - name: install dependencies
-        shell: bash
-        run: |
-          set -e
-          sudo apt-get update
-          sudo apt-get install -y unzip cloud-utils qemu-system-{x86,ppc}
-          python3 -m pip install -U wheel
-          python3 -m pip install -U ansible
-          # Install packer.io
-          curl -O https://releases.hashicorp.com/packer/${{ matrix.packer_version }}/packer_${{ matrix.packer_version }}_linux_amd64.zip
-          unzip packer_${{ matrix.packer_version }}_linux_amd64.zip
-          mv packer packerio
-          chmod +x packerio
       - name: modify build timeouts, if necessary
         if: contains(matrix.needs_timeout, matrix.distro)
         shell: bash
@@ -64,6 +43,8 @@ jobs:
         shell: bash
         run: |
           set -e
+          # Add a retry in case something bogus like a network failure happens
+          ./packerio build -var-file=${{ matrix.distro }} -var "qemu_accelerator=tcg" -except=upload sources || \
           ./packerio build -var-file=${{ matrix.distro }} -var "qemu_accelerator=tcg" -except=upload sources
         env:
           VAGRANT_CLOUD_TOKEN: ${{ secrets.VAGRANT_CLOUD_TOKEN }}

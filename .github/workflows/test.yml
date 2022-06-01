@@ -18,17 +18,13 @@ jobs:
     name: Validate Packer templates are reasonable
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-        with:
-          submodules: true
-      - name: Install packer
-        uses: ./.github/actions/install_packer/
+      - uses: ./.github/actions/setup
+      - uses: ./.github/actions/install_packer
       - name: Run syntax check
         run: |
           set -exo pipefail
           for vars in distros/*; do
-            ~/bin/packerio validate -except=upload -var-file=${vars} sources/
+            packer validate -except=upload -var-file=${vars} sources/
           done
 
   collect:
@@ -37,19 +33,7 @@ jobs:
     outputs:
       all: ${{ steps.zipped.outputs.scenarios }}
     steps:
-      - uses: actions/checkout@v3
-        with:
-          submodules: true
-      - name: Set up Python
-        uses: actions/setup-python@v2
-      - uses: actions/cache@v3
-        with:
-          path: ~/.cache/pip
-          key: python-pip
-      - name: Install dependencies
-        run: |
-          set -ex
-          python -m pip install --upgrade tox
+      - uses: ./.github/actions/setup
       - name: Collect dependencies
         id: collection
         uses: greg-hellings/tox-list@v1
@@ -74,20 +58,9 @@ jobs:
     name: Lint Ansible code
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: ./.github/actions/setup
         with:
-          submodules: true
-      - name: Install Python
-        uses: actions/setup-python@v2
-      - uses: actions/cache@v3
-        with:
-          path: ~/.cache/pip
-          key: python-pip
-      - name: Install dependencies
-        run: |-
-          set -ex
-          python -m pip install --upgrade tox ansible
-          ansible-galaxy collection install -r ansible/requirements.yml
+          ansible: true
       - name: Run lint
         run: tox -e lint_all
 
@@ -101,16 +74,6 @@ jobs:
       matrix:
         scenarios: "${{ fromJson(needs.collect.outputs.all) }}"
     steps:
-      - uses: actions/checkout@v3
-        with:
-          submodules: true
-      - name: Install Python
-        uses: actions/setup-python@v2
-      - uses: actions/cache@v3
-        with:
-          path: ~/.cache/pip
-          key: python-pip
-      - name: Install dependencies
-        run: python -m pip install --upgrade tox
+      - uses: ./.github/actions/setup
       - name: Run scenario
         run: tox -e "${{ matrix.scenarios.scenario }}"
