@@ -15,7 +15,7 @@ jobs:
         id: distros
         run: |-
           set -eo pipefail
-          distros=$(ls distros/*.hcl | jq -cRs 'split("\n") | [ .[] | if length > 0 then . else empty end ]')
+          distros=$(ls distros/*.hcl{,.sh} | jq -cRs 'split("\n") | [ .[] | if length > 0 then . else empty end ]')
           echo "::set-output name=distros::${distros}"
 
   build:
@@ -43,13 +43,18 @@ jobs:
         if: contains(matrix.needs_timeout, matrix.distro)
         shell: bash
         run: ./modify_timeout.sh "${{ matrix.distro }}"
+      - name: Run generator, if necessary
+        if: endsWith(matrix.distro, '.sh')
+        run: "${{ matrix.distro }}"
       - name: try build
         shell: bash
         run: |
           set -e
+          # Strip .sh if it is a dynamic one
+          file="$(printf "${{ matrix.distro }}" | sed -E -e 's/^(.*).sh$/\1/')"
           # Add a retry in case something bogus like a network failure happens
-          ./packer build -var-file=${{ matrix.distro }} -var "qemu_accelerator=tcg" -except=upload sources || \
-          ./packer build -var-file=${{ matrix.distro }} -var "qemu_accelerator=tcg" -except=upload sources
+          ./packer build -var-file="${file}" -var "qemu_accelerator=tcg" -except=upload sources || \
+          ./packer build -var-file="${file}" -var "qemu_accelerator=tcg" -except=upload sources
         env:
           VAGRANT_CLOUD_TOKEN: ${{ secrets.VAGRANT_CLOUD_TOKEN }}
           PACKER_LOG: ${{ contains(matrix.needs_timeout, matrix.distro) && '1' || '0' }}

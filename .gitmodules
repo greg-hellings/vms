@@ -10,3 +10,7 @@
 	path = http/fedora/f36
 	url = https://pagure.io/fedora-kickstarts.git
 	branch = f36
+[submodule "http/fedora/rawhide"]
+	path = http/fedora/rawhide
+	url = https://pagure.io/fedora-kickstarts.git
+	branch = main

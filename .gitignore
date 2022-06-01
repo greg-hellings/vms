@@ -2,3 +2,6 @@ output_*
 *.box
 *.iso
 .vagrant
+
+# Generated distros
+distros/fedora-rawhide-*.hcl
