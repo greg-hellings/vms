@@ -48,8 +48,8 @@ jobs:
         run: |
           set -e
           # Add a retry in case something bogus like a network failure happens
-          ./packerio build -var-file=${{ matrix.distro }} -var "qemu_accelerator=tcg" -except=upload sources || \
-          ./packerio build -var-file=${{ matrix.distro }} -var "qemu_accelerator=tcg" -except=upload sources
+          ./packer build -var-file=${{ matrix.distro }} -var "qemu_accelerator=tcg" -except=upload sources || \
+          ./packer build -var-file=${{ matrix.distro }} -var "qemu_accelerator=tcg" -except=upload sources
         env:
           VAGRANT_CLOUD_TOKEN: ${{ secrets.VAGRANT_CLOUD_TOKEN }}
           PACKER_LOG: ${{ contains(matrix.needs_timeout, matrix.distro) && '1' || '0' }}

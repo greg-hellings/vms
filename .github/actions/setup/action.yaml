@@ -16,7 +16,7 @@ runs:
       uses: actions/cache@v3
       with:
         path: ~/.cache/pip
-        key: python-pip
+        key: ${{ runner.os }}-pip
     - name: Install Pip and tox
       shell: bash
       run: |
