@@ -34,7 +34,8 @@
     dest: "{{ ansible_user_dir }}/.ssh/authorized_keys"
     url: https://raw.githubusercontent.com/hashicorp/vagrant/master/keys/vagrant.pub
 
-- block:
+- name: Sudo commands
+  block:
     - name: configure sshd
       ansible.builtin.lineinfile:
         line: UseDNS no
