@@ -19,7 +19,9 @@ runs:
         sudo apt-get install -y unzip python3-{virtualenv,yaml} cloud-utils qemu-system-{x86,ppc}
         # Install packer.io
         curl -O https://releases.hashicorp.com/packer/${{ inputs.version }}/packer_${{ inputs.version }}_linux_amd64.zip
-        unzip packer_${{ inputs.version }}_linux_amd64.zip
-        chmod +x packer
+        unzip -o packer_${{ inputs.version }}_linux_amd64.zip -d /usr/local/bin
+        chmod +x /usr/local/bin/packer
         # Install pup
-        sudo curl -L -o - https://github.com/ericchiang/pup/releases/download/${{ inputs.pup_version }}/pup_${{ inputs.pup_version }}_linux_amd64.zip | sudo unzip pup_${{ inputs.pup_version }}_linux_amd64.zip -d /usr/local/bin
+        curl -L -o pup.zip "https://github.com/ericchiang/pup/releases/download/${{ inputs.pup_version }}/pup_${{ inputs.pup_version }}_linux_amd64.zip"
+        sudo unzip pup.zip -d /usr/local/bin
+        sudo chmod +x /usr/local/bin/pup
