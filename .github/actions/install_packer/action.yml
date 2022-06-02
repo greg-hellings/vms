@@ -1,5 +1,6 @@
 name: Install Packer
-description: Installs the packerio executable and its attendant tools to ~/bin
+description: Installs the packerio executable and its attendant tools to /usr/local/bin
+  for Ubuntu hosts
 inputs:
   version:
     description: Version of Packer to install
