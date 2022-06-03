@@ -8,6 +8,10 @@ build {
 		galaxy_file = "ansible/requirements.yml"
 		user = local.ssh.username
 		use_sftp = true
+		ansible_ssh_extra_args = [
+			"-o HostKeyAlgorithms=+ssh-rsa",
+			"-o IdentitiesOnly=yes"
+		]
 	}
 
 	provisioner "shell" {
