@@ -9,7 +9,8 @@ build {
 		user = local.ssh.username
 		use_sftp = true
 		ansible_ssh_extra_args = [
-			"-o HostKeyAlgorithms=+ssh-rsa",
+			"-o HostKeyAlgorithms=+ssh-rsa ",
+			"-o PubkeyAcceptedKeyTypes=+ssh-rsa ",
 			"-o IdentitiesOnly=yes"
 		]
 	}

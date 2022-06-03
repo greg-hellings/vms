@@ -6,6 +6,7 @@ name: Build the boxes
     types:
       - published
       - prereleased
+  pull_request:
 
 jobs:
   collect:
