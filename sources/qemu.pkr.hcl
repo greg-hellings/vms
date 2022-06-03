@@ -22,7 +22,7 @@ source "qemu" "x86_64" {
 	memory = local.memory
 	headless = var.headless
 	disk_cache = "none"
-	format = "raw"
+	format = "qcow2"
 
 	qemuargs = [["-serial", "stdio"]]
 	http_directory = "http"
