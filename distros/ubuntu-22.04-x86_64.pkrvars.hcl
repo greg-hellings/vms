@@ -6,7 +6,7 @@ iso = {
 }
 boot_command = [
 	"e<down><down><down><end><bs><bs><bs>",
-	"console=ttyS0 console=tty0 ",
+	"console=ttyS0 ",
 	"fsck.mode=skip ",
 	"autoinstall ds=\"nocloud-net;s=http://{{.HTTPIP}}:{{.HTTPPort}}/ubuntu/22.04/\" console=ttyS0<F10>"
 ]
