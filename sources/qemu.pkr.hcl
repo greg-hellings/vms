@@ -21,6 +21,8 @@ source "qemu" "x86_64" {
 	cpus = local.cpus
 	memory = local.memory
 	headless = var.headless
+	disk_cache = "none"
+	format = "raw"
 
 	qemuargs = [["-serial", "stdio"]]
 	http_directory = "http"

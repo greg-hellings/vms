@@ -56,7 +56,7 @@ locals {
 
 	cpus = 2
 	memory = 2048
-	disk_size = 20
+	disk_size = 10
 	ssh = {
 		username = "vagrant"
 		password = "vagrant"
