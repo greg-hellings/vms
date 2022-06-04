@@ -14,6 +14,7 @@ runs:
   using: composite
   steps:
     - shell: bash
+      if: runner.os == 'Linux'
       run: |
         set -exo pipefail
         sudo apt-get update
@@ -26,3 +27,10 @@ runs:
         curl -L -o pup.zip "https://github.com/ericchiang/pup/releases/download/${{ inputs.pup_version }}/pup_${{ inputs.pup_version }}_linux_amd64.zip"
         sudo unzip pup.zip -d /usr/local/bin
         sudo chmod +x /usr/local/bin/pup
+    - shell: bash
+      if: runner.os == 'macOS'
+      run: |
+        set -exo pipefail
+        brew install qemu
+        brew install pup
+        # Packer is already installed

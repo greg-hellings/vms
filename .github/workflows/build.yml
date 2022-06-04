@@ -25,7 +25,7 @@ jobs:
 
   build:
     name: Build box
-    runs-on: ubuntu-22.04
+    runs-on: macos-12
     needs:
       - collect
     strategy:
