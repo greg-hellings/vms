@@ -1,9 +1,18 @@
 build {
-	sources = ["source.qemu.x86_64"]
+	sources = [
+		"source.qemu.x86_64",
+	]
 
 	provisioner "ansible" {
 		playbook_file = "ansible/playbook.yml"
 		galaxy_file = "ansible/requirements.yml"
+		user = local.ssh.username
+		use_sftp = true
+		ansible_ssh_extra_args = [
+			"-o HostKeyAlgorithms=+ssh-rsa ",
+			"-o PubkeyAcceptedKeyTypes=+ssh-rsa ",
+			"-o IdentitiesOnly=yes"
+		]
 	}
 
 	provisioner "shell" {

@@ -24,32 +24,14 @@ variable "boot_wait" {
 	description = "Length of time to wait before entering boot commands"
 }
 
-variable "ssh" {
-	type = map(string)
-	default = {
-		username = "vagrant"
-		password = "vagrant"
-	}
-}
-
 variable "boot_command" {
 	type = list(string)
 	default = []
 }
 
-variable "ssh_handshake_attempts" {
-	type = number
-	default = 1000
-}
-
 variable "shutdown_command" {
 	type = string
 	default = "sudo systemctl poweroff"
-}
-
-variable "disk_size" {
-	type = string
-	default = "20G"
 }
 
 variable "headless" {
@@ -62,11 +44,6 @@ variable "vagrant_cloud_token" {
 	default = env("VAGRANT_CLOUD_TOKEN")
 }
 
-variable "qemu_accelerator" {
-	type = string
-	default = "kvm"
-}
-
 locals {
 	name = "${var.distro}-${var.version}-${var.arch}"
 	build = formatdate("YYYYMMDDhh", timestamp())
@@ -76,4 +53,14 @@ locals {
 		version = var.version
 		build = local.build
 	})
+
+	cpus = 2
+	memory = 2048
+	disk_size = 10
+	ssh = {
+		username = "vagrant"
+		password = "vagrant"
+		handshake_attempts = 1000
+		timeout = "5h50m"
+	}
 }

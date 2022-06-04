@@ -6,5 +6,5 @@ iso = {
 }
 boot_command = [
   "<up><tab><bs><bs><bs><bs><bs>",
-  "edd=off net.ifnames=0 biosdevnames=0 inst.ks=http://{{.HTTPIP}}:{{.HTTPPort}}/fedora/35-x86_64.ks console=ttyS0<enter><wait>"
+  "net.ifnames=0 biosdevnames=0 inst.ks=http://{{.HTTPIP}}:{{.HTTPPort}}/fedora/35-x86_64.ks console=ttyS0 <enter><wait>"
 ]
