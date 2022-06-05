@@ -6,3 +6,4 @@ virtualbox_packages:
   - perl
 virtualbox_services:
   - dkms
+virtualbox_from_iso: true

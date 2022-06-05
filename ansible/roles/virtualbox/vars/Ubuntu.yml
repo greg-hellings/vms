@@ -1,5 +1,5 @@
 virtualbox_packages:
   - dkms
-  - make
-virtualbox_services:
-  - dkms
+  - virtualbox-guest-dkms
+virtualbox_services: []
+virtualbox_from_iso: false
