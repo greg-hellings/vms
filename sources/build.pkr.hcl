@@ -1,6 +1,7 @@
 build {
 	sources = [
 		"source.qemu.x86_64",
+		"source.virtualbox-iso.x86_64"
 	]
 
 	provisioner "ansible" {
