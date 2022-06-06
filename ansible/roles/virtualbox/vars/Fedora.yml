@@ -1,8 +1,16 @@
 virtualbox_packages:
+  - kernel
+  - kernel-devel
+  - kernel-headers
+  - gcc
+  - make
+  - perl
+  - elfutils-libelf-devel
+  - tar
   - bzip2
   - dkms
-  - kernel-devel
-  - make
 virtualbox_services:
   - dkms
+virtualbox_iso_location: "{{ ansible_user_dir }}/VBoxGuestAdditions.iso"
 virtualbox_from_iso: true
+virtualbox_pre_commands: []
