@@ -25,12 +25,15 @@ jobs:
 
   build:
     name: Build box
-    runs-on: ubuntu-22.04
+    runs-on: ${{ builder == 'virtualbox-iso.x86_64' && 'macOS-12' || 'ubuntu-22.04' }}
     needs:
       - collect
     strategy:
       fail-fast: false
       matrix:
+        builder:
+          - virtualbox-iso.x86_64
+          - qemu.x86_64
         distro: ${{ fromJson( needs.collect.outputs.distros ) }}
         needs_timeout:
           - distros/ubuntu-20.04-x86_64.pkrvars.hcl
@@ -58,7 +61,7 @@ jobs:
           # Strip .sh if it is a dynamic one
           file="$(printf "${{ matrix.distro }}" | sed -E -e 's/^(.*).sh$/\1/')"
           # Add a retry in case something bogus like a network failure happens
-          until packer build -var-file="${file}" -var "qemu_accelerator=tcg" ${{ github.event_name != 'release' && '-except=upload' || '' }} sources; do
+          until packer build -only="${{ matrix.builder }}" -var-file="${file}" -var "qemu_accelerator=tcg" ${{ github.event_name != 'release' && '-except=upload' || '' }} sources; do
             sleep 1
           done
         env:
