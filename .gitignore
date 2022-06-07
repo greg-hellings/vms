@@ -2,6 +2,7 @@ output_*
 *.box
 *.iso
 .vagrant
+serial-output
 
 # Generated distros
 distros/fedora-rawhide-*.hcl
