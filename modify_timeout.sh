@@ -9,11 +9,11 @@ curl -C - -O "${url}"
 
 # Mount and copy
 file=$(printf "${url}" | sed -E -e 's#.*/(.*)$#\1#')
-old=$(mktemp -d)
 new=$(mktemp -d)
 if [ "$(uname)" == "Darwin" ]; then
-	hdiutil attach -mountpoint "${old}" "${file}"
+	old="$(hdiutil attach "${file}" | awk '{print $2}')"
 else
+	old=$(mktemp -d)
 	sudo mount -t iso9660 -o loop "${file}" "${old}"
 fi
 {
@@ -34,7 +34,7 @@ cat "${new}/isolinux/isolinux.cfg"
 
 # Create new ISO file
 if [ "$(uname)" == "Darwin" ]; then
-	hdiutil unmount "${old}"
+	hdiutil unmount "${file}"
 else
 	sudo umount "${old}"
 fi
