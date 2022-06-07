@@ -12,7 +12,7 @@ file=$(printf "${url}" | sed -E -e 's#.*/(.*)$#\1#')
 old=$(mktemp -d)
 new=$(mktemp -d)
 if [ "$(uname)" == "Darwin" ]; then
-	hdiutil mount "${file}" "${old}"
+	hdiutil attach -mountpoint "${old}" "${file}"
 else
 	sudo mount -t iso9660 -o loop "${file}" "${old}"
 fi
