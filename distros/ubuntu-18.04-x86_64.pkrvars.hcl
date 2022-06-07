@@ -13,6 +13,7 @@ boot_command = [
 	"DEBIAN_FRONTEND=noninteractive ",
 	"preseed/url=http://{{.HTTPIP}}:{{.HTTPPort}}/ubuntu/18.04/preseed.cfg ",
 	"fsck.mode=skip ",
-	"console=ttyS0",
+	"console=ttyS0 ",
+	"console=tty0 ",
 	"<enter><wait1>"
 ]
