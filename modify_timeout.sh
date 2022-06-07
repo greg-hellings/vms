@@ -11,7 +11,11 @@ curl -C - -O "${url}"
 file=$(printf "${url}" | sed -E -e 's#.*/(.*)$#\1#')
 old=$(mktemp -d)
 new=$(mktemp -d)
-sudo mount -t iso9660 -o loop "${file}" "${old}"
+if [ "$(uname)" == "Darwin" ]; then
+	hdiutil mount "${file}" "${old}"
+else
+	sudo mount -t iso9660 -o loop "${file}" "${old}"
+fi
 {
 	cd "${old}"
 	tar -cvf - . | (cd "${new}" && tar -xf -)
@@ -29,7 +33,11 @@ cat "${new}/boot/grub/grub.cfg"
 cat "${new}/isolinux/isolinux.cfg"
 
 # Create new ISO file
-sudo umount "${old}"
+if [ "$(uname)" == "Darwin" ]; then
+	hdiutil unmount "${old}"
+else
+	sudo umount "${old}"
+fi
 rm "${file}"
 chmod +w "${new}/isolinux/isolinux.bin"
 mkisofs -b isolinux/isolinux.bin -c isolinux/boot.cat -no-emul-boot -boot-load-size 4 -boot-info-table -J -R -V "Boot" -r -iso-level 4 -chrp-boot -o "${file}" "${new}"

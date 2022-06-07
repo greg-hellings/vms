@@ -45,4 +45,5 @@ runs:
         set -exo pipefail
         brew install qemu
         brew install pup
+        brew install dvdrtools  # mkisofs
         # Packer is already installed
