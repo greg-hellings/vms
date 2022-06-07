@@ -1,8 +1,9 @@
 virtualbox_packages:
   - virtualbox-guest-utils
-  - virtualbox-guest-additions-iso
+  - bzip2
+  - tar
+  - build-essential
 virtualbox_services: []
 virtualbox_from_iso: true
-virtualbox_iso_location: /usr/share/virtualbox/VBoxGuestAdditions.iso
-virtualbox_remove_packages:
-  - virtualbox-guest-additions-iso
+virtualbox_iso_location: /home/vagrant/VBoxGuestAdditions.iso
+virtualbox_remove_packages: []
