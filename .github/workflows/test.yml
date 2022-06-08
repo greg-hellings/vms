@@ -68,6 +68,8 @@ jobs:
         uses: actions/checkout@v3
       - name: Setup test environment
         uses: ./.github/actions/setup
+        with:
+          ansible: true
       - name: Run lint
         run: tox -e lint_all
 
