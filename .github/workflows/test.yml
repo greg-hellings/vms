@@ -94,12 +94,5 @@ jobs:
           sudo usermod -a -G libvirt $USER
           sudo systemctl start libvirtd
           sudo ls -la /var/run/libvirt/
-          groups
-          newgrp libvirt
-          groups
       - name: Run scenario
-        run: |
-          set -ex
-          newgrp libvirt
-          groups
-          tox -e "${{ matrix.scenarios.scenario }}"
+        run: su -c 'groups && tox -e "${{ matrix.scenarios.scenario }}"' $USER
