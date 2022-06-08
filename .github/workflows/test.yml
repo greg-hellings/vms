@@ -95,4 +95,7 @@ jobs:
           sudo systemctl start libvirtd
           sudo ls -la /var/run/libvirt/
       - name: Run scenario
-        run: sudo -E su -m -c "PATH=${PATH} groups && tox -e \"${{ matrix.scenarios.scenario }}\"" $USER
+        run: |
+          set -ex
+          TOX="$(which tox)"
+          sudo -E su -m -c "groups && ${TOX} -e \"${{ matrix.scenarios.scenario }}\"" $USER
