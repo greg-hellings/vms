@@ -102,5 +102,5 @@ jobs:
       - name: Get possible output
         if: ${{ failure() }}
         run: |
-          set -xo pipefail
+          set -x
           [ -e /home/runner/.cache/molecule/init/ubuntu18/vagrant.err ] && cat /home/runner/.cache/molecule/init/ubuntu18/vagrant.err
