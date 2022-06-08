@@ -25,7 +25,7 @@ source "qemu" "x86_64" {
 	format = "qcow2"
 
 	qemuargs = [
-		["-chardev", "stdio,id=char0,logfile=serial-output,signal=off"],
+		["-chardev", "stdio,id=char0,logfile=serial-output-qemu-${var.arch}-${var.distro}-${var.version},signal=off"],
 		["-serial", "chardev:char0"]
 	]
 	http_directory = "http"
