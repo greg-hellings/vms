@@ -103,4 +103,4 @@ jobs:
         if: ${{ failure() }}
         run: |
           set -x
-          [ -e /home/runner/.cache/molecule/init/ubuntu18/vagrant.err ] && cat /home/runner/.cache/molecule/init/ubuntu18/vagrant.err
+          cat /home/runner/.cache/molecule/init/ubuntu18/vagrant.err
