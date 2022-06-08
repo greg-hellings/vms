@@ -11,7 +11,7 @@ name: Build the boxes
 jobs:
   collect:
     name: Discover distros
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     outputs:
       distros: ${{ steps.distros.outputs.distros }}
       build: ${{ steps.time.outputs.time }}

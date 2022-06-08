@@ -1,8 +1,5 @@
 driver:
   name: containers
-  provider:
-    name: libvirt
 platforms:
-  - name: test-ubuntu18-init
+  - name: test-ubuntu18-virtualbox
     image: ubuntu:18.04
-    box: generic/ubuntu1804

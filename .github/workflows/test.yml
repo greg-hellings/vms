@@ -16,7 +16,7 @@ name: Test the components of it
 jobs:
   validate:
     name: Validate Packer templates are reasonable
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
@@ -34,7 +34,7 @@ jobs:
 
   collect:
     name: Collect all Ansible-related jobs
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     outputs:
       all: ${{ steps.zipped.outputs.scenarios }}
     steps:
@@ -56,13 +56,13 @@ jobs:
           import json
           ubuntu = json.loads('${{ steps.collection.outputs.tox-envs }}')
           macos  = json.loads('${{ steps.vagrant.outputs.tox-envs }}')
-          ub_zip = [{'os': 'ubuntu-latest', 'scenario': u} for u in ubuntu]
-          mac_zip = [{'os': 'macos-12', 'scenario': m} for m in macos]
+          ub_zip = [{'os': 'ubuntu-22.04', 'scenario': u} for u in ubuntu]
+          mac_zip = [{'os': 'ubuntu-22.04', 'scenario': m} for m in macos]
           print("::set-output name=scenarios::" + json.dumps(ub_zip + mac_zip))
 
   lint:
     name: Lint Ansible code
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
@@ -83,7 +83,6 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
-      - uses: ./.github/actions/install_virtualbox
-        if: startsWith(matrix.scenarios.os, 'macos')
+      - uses: ./.github/actions/install_packer
       - name: Run scenario
         run: tox -e "${{ matrix.scenarios.scenario }}"

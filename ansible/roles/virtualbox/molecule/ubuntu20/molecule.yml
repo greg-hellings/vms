@@ -1,8 +1,5 @@
 driver:
   name: containers
-  provider:
-    name: libvirt
 platforms:
-  - name: test-ubuntu20-init
+  - name: test-ubuntu20-virtualbox
     image: ubuntu:20.04
-    box: generic/ubuntu2004

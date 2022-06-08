@@ -1,8 +1,0 @@
-driver:
-  name: vagrant
-  provider:
-    name: libvirt
-platforms:
-  - name: test-ubuntu16-init
-    image: ubuntu:16.04
-    box: generic/ubuntu1604

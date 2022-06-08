@@ -13,7 +13,8 @@ inputs:
 runs:
   using: composite
   steps:
-    - shell: bash
+    - name: Install Packer and deps in Linux
+      shell: bash
       if: runner.os == 'Linux'
       run: |
         set -exo pipefail
@@ -29,9 +30,10 @@ runs:
         curl -L -o pup.zip "https://github.com/ericchiang/pup/releases/download/${{ inputs.pup_version }}/pup_${{ inputs.pup_version }}_linux_amd64.zip"
         sudo unzip pup.zip -d /usr/local/bin
         sudo chmod +x /usr/local/bin/pup
-    - shell: bash
+    - name: Install Packer's deps in macOS
+      shell: bash
       if: runner.os == 'macOS'
       run: |
         set -exo pipefail
-        brew install pup dvdrtools xorriso coreutils gsed
+        brew install pup dvdrtools xorriso coreutils gsed virtualbox vagrant
         # Packer is already installed
