@@ -1,18 +1,22 @@
 - name: install guest additions
   hosts: default
   pre_tasks:
-    - name: update all the things
+    - name: Update all the things
       become: true
       ansible.builtin.package:  # noqa package-latest
         name: "*"
         state: latest
       when: ansible_facts.pkg_mgr not in ['atomic_container']
 
-    - name: update atomic things
+    - name: Update atomic things
       become: true
       ansible.builtin.command: rpm-ostree upgrade
       when: ansible_facts.pkg_mgr in ['atomic_container']
       changed_when: false
+
+    - name: Restart the machine
+      become: true
+      ansible.builtin.reboot:
   roles:
     - role: virtualbox
       when: packer_builder_type == 'virtualbox-iso'

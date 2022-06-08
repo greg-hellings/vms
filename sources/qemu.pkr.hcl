@@ -24,7 +24,10 @@ source "qemu" "x86_64" {
 	disk_cache = "writeback"
 	format = "qcow2"
 
-	qemuargs = [["-serial", "stdio"]]
+	qemuargs = [
+		["-chardev", "stdio,id=char0,logfile=serial-output-qemu-${var.arch}-${var.distro}-${var.version},signal=off"],
+		["-serial", "chardev:char0"]
+	]
 	http_directory = "http"
 	accelerator = var.qemu_accelerator
 }

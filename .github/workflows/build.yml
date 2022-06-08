@@ -25,12 +25,15 @@ jobs:
 
   build:
     name: Build box
-    runs-on: ubuntu-22.04
+    runs-on: ${{ matrix.builder == 'virtualbox-iso.x86_64' && 'macOS-12' || 'ubuntu-22.04' }}
     needs:
       - collect
     strategy:
       fail-fast: false
       matrix:
+        builder:
+          - virtualbox-iso.x86_64
+          - qemu.x86_64
         distro: ${{ fromJson( needs.collect.outputs.distros ) }}
         needs_timeout:
           - distros/ubuntu-20.04-x86_64.pkrvars.hcl
@@ -39,28 +42,35 @@ jobs:
         uses: actions/checkout@v3
         with:
           submodules: recursive
-      - uses: ./.github/actions/setup
+      - name: Setup system dependnecies
+        uses: ./.github/actions/setup
         with:
           ansible: true
-      - uses: ./.github/actions/install_packer
-      - uses: greg-hellings/make-space@main
-      - name: modify build timeouts, if necessary
+      - name: Install Packer and related tools
+        uses: ./.github/actions/install_packer
+      - name: Clear disk space
+        uses: greg-hellings/make-space@main
+      - name: Modify build timeouts, if necessary
         if: contains(matrix.needs_timeout, matrix.distro)
         shell: bash
         run: ./modify_timeout.sh "${{ matrix.distro }}"
       - name: Run generator, if necessary
         if: endsWith(matrix.distro, '.sh')
         run: "${{ matrix.distro }}"
-      - name: try build
+      - name: Build
         shell: bash
         run: |
           set -e
           # Strip .sh if it is a dynamic one
           file="$(printf "${{ matrix.distro }}" | sed -E -e 's/^(.*).sh$/\1/')"
           # Add a retry in case something bogus like a network failure happens
-          until packer build -var-file="${file}" -var "qemu_accelerator=tcg" ${{ github.event_name != 'release' && '-except=upload' || '' }} sources; do
-            sleep 1
-          done
+          packer build -only="${{ matrix.builder }}" -var-file="${file}" -var "qemu_accelerator=tcg" ${{ github.event_name != 'release' && '-except=upload' || '' }} sources
         env:
           VAGRANT_CLOUD_TOKEN: ${{ secrets.VAGRANT_CLOUD_TOKEN }}
-          PACKER_LOG: ${{ contains(matrix.needs_timeout, matrix.distro) && '1' || '1' }}
+          PACKER_LOG: ${{ contains(matrix.needs_timeout, matrix.distro) && '0' || '0' }}
+      - name: Upload artifact
+        if: ${{ failure() }}
+        uses: actions/upload-artifact@v3
+        with:
+          name: serial-output
+          path: serial-output*

@@ -16,4 +16,8 @@ ks=$(printf "${cmdline}" | sed -E -e 's/.*inst\.ks=([^ ]*).*/\1/')
 mkdir -p /tmp/packer_ks
 cd /tmp/packer_ks
 wget -m -nH "$(dirname "${ks}")"
+
+if [ ! -e /dev/vda ]; then
+  ln -s /dev/sda /dev/vda
+fi
 %end

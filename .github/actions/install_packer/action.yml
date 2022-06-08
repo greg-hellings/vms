@@ -17,8 +17,10 @@ runs:
       if: runner.os == 'Linux'
       run: |
         set -exo pipefail
+        # Install virtualbox
         sudo apt-get update
-        sudo apt-get install -y unzip python3-{virtualenv,yaml} cloud-utils qemu-system-{x86,ppc}
+        # Install QEmu, etc
+        sudo apt-get install -y unzip python3-{virtualenv,yaml} cloud-utils xorriso qemu-system-{x86,ppc}
         # Install packer.io
         curl -O https://releases.hashicorp.com/packer/${{ inputs.version }}/packer_${{ inputs.version }}_linux_amd64.zip
         unzip -o packer_${{ inputs.version }}_linux_amd64.zip -d /usr/local/bin
@@ -31,6 +33,5 @@ runs:
       if: runner.os == 'macOS'
       run: |
         set -exo pipefail
-        brew install qemu
-        brew install pup
+        brew install pup dvdrtools xorriso coreutils gsed
         # Packer is already installed

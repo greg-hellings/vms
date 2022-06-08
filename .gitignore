@@ -2,6 +2,9 @@ output_*
 *.box
 *.iso
 .vagrant
+serial-output
+grub.cfg
+isolinux.cfg
 
 # Generated distros
 distros/fedora-rawhide-*.hcl

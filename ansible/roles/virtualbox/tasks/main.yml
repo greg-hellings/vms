@@ -1,10 +1,23 @@
-- name: install build deps for virtualbox addons
+- name: Load version information
+  ansible.builtin.include_vars: "{{ item }}"
+  loop:
+    - "{{ role_path }}/vars/{{ ansible_facts['os_family'] }}.yml"
+    - "{{ role_path }}/vars/{{ ansible_facts['distribution'] }}.yml"
+    - "{{ role_path }}/vars/{{ ansible_facts['distribution'] }}_{{ ansible_facts['distribution_major_version'] }}.yml"
+    - "{{ role_path }}/vars/{{ ansible_facts['distribution'] }}_{{ ansible_facts['distribution_version'] }}.yml"
+  when: item is file
+
+- name: Install build deps for virtualbox addons
   become: true
   ansible.builtin.package:
     name: "{{ virtualbox_packages }}"
     state: present
+    update_cache: true
+  register: _pkg_install
+  retries: 3
+  until: _pkg_install is success
 
-- name: start services
+- name: Start services
   become: true
   ansible.builtin.service:
     name: "{{ item }}"
@@ -12,16 +25,21 @@
     enabled: true
   loop: "{{ virtualbox_services }}"
 
-- name: mount iso file
-  become: true
-  ansible.builtin.command: "{{ item }}"
-  changed_when: false
-  loop:
-    - mount -o loop,ro {{ ansible_user_dir }}/VBoxGuestAdditions.iso /mnt
-    - /mnt/VBoxLinuxAdditions.run
-    - umount /mnt
+- when: virtualbox_from_iso
+  block:
+    - name: Mount iso file
+      become: true
+      ansible.builtin.command: "{{ item }}"
+      changed_when: false
+      failed_when: _cmd.rc not in [0, 2]
+      register: _cmd
+      loop:
+        - mount -o loop,ro {{ virtualbox_iso_location }} /mnt
+        - /mnt/VBoxLinuxAdditions.run --nox11
+        - umount /mnt
 
-- name: remove iso
-  ansible.builtin.file:
-    name: "{{ ansible_user_dir }}/VBoxGuestAdditions.iso"
+- name: Remove packages
+  become: true
+  ansible.builtin.package:
+    name: "{{ virtualbox_remove_packages | default([]) }}"
     state: absent
