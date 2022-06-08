@@ -34,7 +34,7 @@ build {
 			name = "upload"
 			access_token = var.vagrant_cloud_token
 			box_tag = "boxen/${local.name}"
-			version = local.build
+			version = var.build
 			version_description = local.description
 		}
 	}
