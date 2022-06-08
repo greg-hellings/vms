@@ -64,10 +64,10 @@ jobs:
     name: Lint Ansible code
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v3
-      - uses: ./.github/actions/setup
-        with:
-          ansible: true
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Setup test environment
+        uses: ./.github/actions/setup
       - name: Run lint
         run: tox -e lint_all
 
