@@ -91,6 +91,7 @@ jobs:
         run: |
           set -exo pipefail
           sudo apt-get install libvirt-daemon-system
+          sudo usermod -a -G libvirt $USER
           sudo systemctl start libvirtd
       - name: Run scenario
         run: tox -e "${{ matrix.scenarios.scenario }}"
