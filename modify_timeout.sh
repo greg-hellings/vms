@@ -21,7 +21,7 @@ chmod -R -w "${work}"
 # Create new ISO file
 rm "${file}"
 chmod +w "${work}/ubuntu" "${work}/isolinux/isolinux.bin"
-mkisofs -b isolinux/isolinux.bin -c isolinux/boot.cat -no-emul-boot -boot-load-size 4 -boot-info-table -J -R -V "Boot" -r -iso-level 4 -chrp-boot -o "${file}" "${work}"
+mkisofs -b isolinux/isolinux.bin -c isolinux/boot.cat -no-emul-boot -boot-load-size 4 -boot-info-table -J -R -V "Boot" -r -iso-level 3 -chrp-boot -o "${file}" "${work}"
 new_sum=$(sha256sum "${file}" | cut -f1 -d' ')
 
 # Update distro file
