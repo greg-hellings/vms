@@ -19,18 +19,8 @@ runs:
         set -exo pipefail
         # Install virtualbox
         sudo apt-get update
-        #sudo apt-get install -y software-properties-common
-        #Download
-        #curl https://www.virtualbox.org/download/oracle_vbox_2016.asc -O oracle_vbox_2016.gpg
-        #curl https://www.virtualbox.org/download/oracle_vbox.asc -O oracle_vbox.gpg
-        ##Install on system
-        #sudo install -o root -g root -m 644 oracle_vbox_2016.gpg /etc/apt/trusted.gpg.d/
-        #sudo install -o root -g root -m 644 oracle_vbox.gpg /etc/apt/trusted.gpg.d/
-        #echo "deb [arch=amd64] http://download.virtualbox.org/virtualbox/debian $(lsb_release -cs) contrib" | sudo tee /etc/apt/sources.list.d/virtualbox.list
-        #sudo apt-get update
-        #sudo apt-get install -y virtualbox-6.1
         # Install QEmu, etc
-        sudo apt-get install -y unzip python3-{virtualenv,yaml} cloud-utils qemu-system-{x86,ppc}
+        sudo apt-get install -y unzip python3-{virtualenv,yaml} cloud-utils xorriso qemu-system-{x86,ppc}
         # Install packer.io
         curl -O https://releases.hashicorp.com/packer/${{ inputs.version }}/packer_${{ inputs.version }}_linux_amd64.zip
         unzip -o packer_${{ inputs.version }}_linux_amd64.zip -d /usr/local/bin
@@ -46,4 +36,5 @@ runs:
         brew install qemu
         brew install pup
         brew install dvdrtools  # mkisofs
+        brew install xorriso
         # Packer is already installed
