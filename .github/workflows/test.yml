@@ -98,4 +98,8 @@ jobs:
           newgrp libvirt
           groups
       - name: Run scenario
-        run: tox -e "${{ matrix.scenarios.scenario }}"
+        run: |
+          set -ex
+          newgrp libvirt
+          groups
+          tox -e "${{ matrix.scenarios.scenario }}"
