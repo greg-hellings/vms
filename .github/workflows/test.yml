@@ -93,5 +93,9 @@ jobs:
           sudo apt-get install libvirt-daemon-system
           sudo usermod -a -G libvirt $USER
           sudo systemctl start libvirtd
+          sudo ls -la /var/run/libvirt/
+          groups
+          newgrp libvirt
+          groups
       - name: Run scenario
         run: tox -e "${{ matrix.scenarios.scenario }}"
