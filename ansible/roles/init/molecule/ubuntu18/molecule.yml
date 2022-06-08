@@ -4,5 +4,6 @@ driver:
     name: libvirt
 platforms:
   - name: test-ubuntu18-init
-    image: ubuntu:18.04
-    box: generic/ubuntu1804
+    box: boxen/ubuntu-18.04-x86_64
+    provider_options:
+      driver: qemu
