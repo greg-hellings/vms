@@ -25,7 +25,8 @@
     enabled: true
   loop: "{{ virtualbox_services }}"
 
-- when: virtualbox_from_iso
+- name: Run commands to install from ISO
+  when: virtualbox_from_iso
   block:
     - name: Mount iso file
       become: true
