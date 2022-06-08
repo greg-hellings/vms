@@ -6,7 +6,7 @@ set -x
 rm -rf /home/vagrant/.ansible
 sudo rm -rf /root/.ansible
 
-if [[ ! -e /etc/fedora-release ]]; then
+if [ ! -e /etc/fedora-release ]; then
 	sudo dd if=/dev/zero of=/var/EMPTY bs=1M || :
 	sync
 	sudo rm /var/EMPTY
