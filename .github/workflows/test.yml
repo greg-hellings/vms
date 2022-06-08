@@ -98,7 +98,7 @@ jobs:
         run: |
           set -ex
           TOX="$(which tox)"
-          sudo -E su -m -c "groups && ${TOX} -e \"${{ matrix.scenarios.scenario }}\"" $USER
+          sudo -E su -m -c "groups && ${TOX} -e \"${{ matrix.scenarios.scenario }}\" -- --destroy=never" $USER
       - name: Get possible output
         if: ${{ failure() }}
         run: |
