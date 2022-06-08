@@ -25,9 +25,14 @@ mkisofs -b isolinux/isolinux.bin -c isolinux/boot.cat -no-emul-boot -boot-load-s
 new_sum=$(sha256sum "${file}" | cut -f1 -d' ')
 
 # Update distro file
-sed -i "${distro}" -e "s/checksum = \".*\"/checksum = \"${new_sum}\"/"
-sed -i "${distro}" -e "s/url = \".*\"/url = \"${file}\"/"
-sed -i "${distro}" -e "s/boot_wait = \".*\"/boot_wait = \"15s\"/"
+if [ "$(uname)" == "Darwin" ]; then
+	SED=$(which gsed)
+else
+	SED=$(which sed)
+fi
+"${SED}" -i -e "s/checksum = \".*\"/checksum = \"${new_sum}\"/" "${distro}"
+"${SED}" -i -e "s/url = \".*\"/url = \"${file}\"/" "${distro}"
+"${SED}" -i -e "s/boot_wait = \".*\"/boot_wait = \"15s\"/" "${distro}"
 
 # Cleanup remaining directories
 rm -r "${work}" || true
