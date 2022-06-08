@@ -95,4 +95,4 @@ jobs:
           sudo systemctl start libvirtd
           sudo ls -la /var/run/libvirt/
       - name: Run scenario
-        run: su -c 'groups && tox -e "${{ matrix.scenarios.scenario }}"' $USER
+        run: sudo su -c 'groups && tox -e "${{ matrix.scenarios.scenario }}"' $USER
