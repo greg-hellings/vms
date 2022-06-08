@@ -4,4 +4,4 @@ driver:
     name: libvirt
 platforms:
   - name: test-ubuntu18-init
-    box: boxen/ubuntu1804
+    box: boxen/ubuntu-18.04-x86_64
