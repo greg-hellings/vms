@@ -14,6 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       distros: ${{ steps.distros.outputs.distros }}
+      build: ${{ steps.time.outputs.time }}
     steps:
       - uses: actions/checkout@v3
       - name: Discover boxes
@@ -22,6 +23,11 @@ jobs:
           set -eo pipefail
           distros=$(ls distros/*.hcl{,.sh} | jq -cRs 'split("\n") | [ .[] | if length > 0 then . else empty end ]')
           echo "::set-output name=distros::${distros}"
+      - name: Find timestamp for versioning
+        id: time
+        uses: nanzm/get-time-action@v1.1
+        with:
+          format: 'YYYY.MM.DD.HH'
 
   build:
     name: Build box
@@ -64,7 +70,7 @@ jobs:
           # Strip .sh if it is a dynamic one
           file="$(printf "${{ matrix.distro }}" | sed -E -e 's/^(.*).sh$/\1/')"
           # Add a retry in case something bogus like a network failure happens
-          packer build -only="${{ matrix.builder }}" -var-file="${file}" -var "qemu_accelerator=tcg" ${{ github.event_name != 'release' && '-except=upload' || '' }} sources
+          packer build -only="${{ matrix.builder }}" -var-file="${file}" -var "qemu_accelerator=tcg" -var "build=${{ needs.collect.outputs.build }}" ${{ github.event_name != 'release' && '-except=upload' || '' }} sources
         env:
           VAGRANT_CLOUD_TOKEN: ${{ secrets.VAGRANT_CLOUD_TOKEN }}
           PACKER_LOG: ${{ contains(matrix.needs_timeout, matrix.distro) && '0' || '0' }}

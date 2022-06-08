@@ -44,14 +44,18 @@ variable "vagrant_cloud_token" {
 	default = env("VAGRANT_CLOUD_TOKEN")
 }
 
+variable "build" {
+	type = string
+	default = "0.1"
+}
+
 locals {
 	name = "${var.distro}-${var.version}-${var.arch}"
-	build = formatdate("YYYYMMDDhh", timestamp())
 	description = templatefile("../README.box.md", {
 		distro = var.distro
 		arch = var.arch
 		version = var.version
-		build = local.build
+		build = var.build
 	})
 
 	cpus = 2
