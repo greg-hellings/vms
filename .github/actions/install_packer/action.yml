@@ -33,8 +33,5 @@ runs:
       if: runner.os == 'macOS'
       run: |
         set -exo pipefail
-        brew install qemu
-        brew install pup
-        brew install dvdrtools  # mkisofs
-        brew install xorriso
+        brew install pup dvdrtools xorriso coreutils
         # Packer is already installed
