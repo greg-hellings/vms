@@ -99,3 +99,8 @@ jobs:
           set -ex
           TOX="$(which tox)"
           sudo -E su -m -c "groups && ${TOX} -e \"${{ matrix.scenarios.scenario }}\"" $USER
+      - name: Get possible output
+        if: ${{ failure() }}
+        run: |
+          set -xo pipefail
+          [ -e /home/runner/.cache/molecule/init/ubuntu18/vagrant.err ] && cat /home/runner/.cache/molecule/init/ubuntu18/vagrant.err
