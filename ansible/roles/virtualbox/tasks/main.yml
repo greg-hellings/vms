@@ -27,17 +27,27 @@
 
 - name: Run commands to install from ISO
   when: virtualbox_from_iso
+  become: true
   block:
-    - name: Mount iso file
-      become: true
-      ansible.builtin.command: "{{ item }}"
+    - name: Mount ISO file
+      ansible.posix.mount:
+        fstype: auto
+        path: /mnt
+        src: "{{ virtualbox_iso_location }}"
+        state: mounted
+        boot: false
+        opts: loop
+
+    - name: Install additions
+      ansible.builtin.command: /mnt/VBoxLinuxAdditions.run --nox11 2>&1 > /root/vbox_addon_install.log
       changed_when: false
       failed_when: _cmd.rc not in [0, 2]
       register: _cmd
-      loop:
-        - mount -o loop,ro {{ virtualbox_iso_location }} /mnt
-        - /mnt/VBoxLinuxAdditions.run --nox11
-        - umount /mnt
+
+    - name: Unmount ISO file
+      ansible.posix.mount:
+        path: /mnt
+        state: absent
 
 - name: Remove packages
   become: true
