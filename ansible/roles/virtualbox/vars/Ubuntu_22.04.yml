@@ -4,6 +4,5 @@ virtualbox_packages:
   - tar
   - build-essential
 virtualbox_services: []
-virtualbox_from_iso: true
-virtualbox_iso_location: /home/vagrant/VBoxGuestAdditions.iso
+virtualbox_from_iso: false
 virtualbox_remove_packages: []
