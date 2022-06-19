@@ -1,4 +1,4 @@
-# Format and labels used aim to match those used by Ansible project
+# Format and labels
 # https://github.com/marketplace/actions/github-labeler
 - name: bug
   color: "fbca04"
