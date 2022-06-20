@@ -57,7 +57,7 @@ jobs:
           ubuntu = json.loads('${{ steps.collection.outputs.tox-envs }}')
           macos  = json.loads('${{ steps.vagrant.outputs.tox-envs }}')
           ub_zip = [{'os': 'ubuntu-22.04', 'scenario': u} for u in ubuntu]
-          mac_zip = [{'os': 'ubuntu-22.04', 'scenario': m} for m in macos]
+          mac_zip = [{'os': 'macos-12', 'scenario': m} for m in macos]
           print("::set-output name=scenarios::" + json.dumps(ub_zip + mac_zip))
 
   lint:
@@ -88,6 +88,7 @@ jobs:
       - uses: ./.github/actions/install_packer
       - name: Install libvirt
         shell: bash
+        if: ${{ startsWith('ubuntu-', matrix.scenarios.os) }}
         run: |
           set -exo pipefail
           sudo apt-get install libvirt-daemon-system
@@ -98,7 +99,7 @@ jobs:
         run: |
           set -ex
           TOX="$(which tox)"
-          sudo -E su -m -c "groups && ${TOX} -e \"${{ matrix.scenarios.scenario }}\" -- --destroy=never" $USER
+          ${TOX} -e "${{ matrix.scenarios.scenario }}" -- --destroy=never
       - name: Get possible output
         if: ${{ failure() }}
         run: |
