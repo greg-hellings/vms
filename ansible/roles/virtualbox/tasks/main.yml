@@ -54,3 +54,8 @@
   ansible.builtin.package:
     name: "{{ virtualbox_remove_packages | default([]) }}"
     state: absent
+
+- name: Remove file
+  ansible.builtin.file:
+    path: "{{ virtualbox_iso_location }}"
+    state: absent
