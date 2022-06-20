@@ -1,0 +1,8 @@
+virtualbox_packages:
+  - dkms
+  - bzip2
+  - linux-headers-amd64
+  - make
+virtualbox_services: []
+virtualbox_from_iso: true
+virtualbox_iso_location: "{{ ansible_user_dir }}/VBoxGuestAdditions.iso"
