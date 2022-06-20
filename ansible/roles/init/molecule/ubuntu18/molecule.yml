@@ -1,9 +1,0 @@
-driver:
-  name: vagrant
-  provider:
-    name: libvirt
-platforms:
-  - name: test-ubuntu18-init
-    box: boxen/ubuntu-18.04-x86_64
-    provider_options:
-      driver: qemu
