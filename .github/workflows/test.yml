@@ -86,15 +86,13 @@ jobs:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/install_packer
-      - name: Install libvirt
+      - name: Container setup
         shell: bash
-        if: ${{ startsWith('ubuntu-', matrix.scenarios.os) }}
+        if: ${{ startsWith(matrix.scenarios.os, 'ubuntu') }}
         run: |
           set -exo pipefail
-          sudo apt-get install libvirt-daemon-system
-          sudo usermod -a -G libvirt $USER
-          sudo systemctl start libvirtd
-          sudo ls -la /var/run/libvirt/
+          # Enable cgroupv2 systemd stuff
+          sudo loginctl enable-linger 1001
       - name: Run scenario
         run: |
           set -ex
