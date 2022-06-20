@@ -1,0 +1,5 @@
+virtualbox_packages:
+  - virtualbox-guest-modules
+virtualbox_services: []
+virtualbox_from_iso: false
+virtualbox_iso_location: "{{ ansible_user_dir }}/VBoxGuestAdditions.iso"
