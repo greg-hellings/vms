@@ -9,3 +9,4 @@ isolinux.cfg
 # Generated distros
 distros/fedora-rawhide-*.hcl
 distros/centos-8stream-*.hcl
+distros/centos-9stream-*.hcl
