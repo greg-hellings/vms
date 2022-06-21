@@ -18,3 +18,7 @@
 	path = http/centos-upstream
 	url = https://git.centos.org/centos/kickstarts.git
 	branch = master
+[submodule "http/centos-stream"]
+	path = http/centos-stream
+	url = https://gitlab.com/redhat/centos-stream/release-engineering/kickstarts.git
+	branch = main
