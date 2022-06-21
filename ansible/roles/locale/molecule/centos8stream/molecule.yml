@@ -1,0 +1,5 @@
+driver:
+  name: containers
+platforms:
+  - name: test-centos8-locale
+    image: quay.io/centos/centos:stream8

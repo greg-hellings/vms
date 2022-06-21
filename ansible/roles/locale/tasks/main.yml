@@ -1,10 +1,11 @@
 - name: update locale info
   become: true
   ansible.builtin.shell: |
-    set -eo pipefail
-    localedef --list-archive | grep -a -v en_US.utf8 | xargs sudo localedef --delete-from-archive
+    set -exo pipefail
+    localedef --list-archive | ( grep -a -v en_US.utf8 || printf '' ) | xargs -r sudo localedef --delete-from-archive
     cp /usr/lib/locale/locale-archive{,.tmpl}
     build-locale-archive
   when: >
-    ansible_facts['distribution'] in ['CentOS'] and
-    ansible_facts['version'] <= 7
+    ( ansible_facts['distribution'] in ['CentOS'] ) and
+    ( ansible_facts['distribution_major_version'] is version('8', '<') )
+  changed_when: false
