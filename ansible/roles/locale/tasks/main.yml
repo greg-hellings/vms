@@ -6,4 +6,5 @@
     cp /usr/lib/locale/locale-archive{,.tmpl}
     build-locale-archive
   when: >
-    ansible_facts['distribution'] in ['CentOS']
+    ansible_facts['distribution'] in ['CentOS'] and
+    ansible_facts['version'] <= 7

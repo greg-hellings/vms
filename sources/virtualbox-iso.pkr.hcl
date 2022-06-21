@@ -11,6 +11,7 @@ source "virtualbox-iso" "x86_64" {
 	ssh_username = local.ssh.username
 	ssh_password = local.ssh.password
 	ssh_handshake_attempts = local.ssh.handshake_attempts
+	ssh_private_key_file = "vagrant/insecure_key"
 
 	vm_name = "packer-${local.name}"
 	disk_size = "${local.disk_size}000"
