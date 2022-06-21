@@ -18,12 +18,12 @@
       become: true
       ansible.builtin.reboot:
   roles:
+    - role: devroles.system.epel
     - role: virtualbox
       when: packer_builder_type == 'virtualbox-iso'
     - role: vmware
       when: packer_builder_type == 'vmware-iso'
     - role: init
-    - role: devroles.system.epel
     - role: locale
     - role: vagrant
     - role: cleanup
