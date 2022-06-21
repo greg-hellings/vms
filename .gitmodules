@@ -20,5 +20,5 @@
 	branch = master
 [submodule "http/centos-stream"]
 	path = http/centos-stream
-	url = https://gitlab.com/redhat/centos-stream/release-engineering/kickstarts.git
+	url = https://github.com/greg-hellings/centos-stream-kickstarts-mirror.git
 	branch = main
