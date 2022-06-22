@@ -34,8 +34,8 @@ iso = {
 	checksum = "${sha}"
 }
 boot_command = [
-  "<up><tab><bs><bs><bs><bs><bs>",
-  "edd=off net.ifnames=0 biosdevnames=0 inst.ks=http://{{.HTTPIP}}:{{.HTTPPort}}/fedora/rawhide-x86_64.ks console=ttyS0 <enter><wait>"
+  "<up>e<down><down><end><bs><bs><bs><bs><bs>",
+  "edd=off net.ifnames=0 biosdevnames=0 inst.ks=http://{{.HTTPIP}}:{{.HTTPPort}}/fedora/rawhide-x86_64.ks console=ttyS0<f10>"
 ]
 EOF
 

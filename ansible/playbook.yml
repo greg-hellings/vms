@@ -7,23 +7,29 @@
         name: "*"
         state: latest
       when: ansible_facts.pkg_mgr not in ['atomic_container']
+      register: _update_all
+      retries: 3
+      until: _update_all is success
 
     - name: Update atomic things
       become: true
       ansible.builtin.command: rpm-ostree upgrade
       when: ansible_facts.pkg_mgr in ['atomic_container']
       changed_when: false
+      register: _update_atomic
+      retries: 3
+      until: _update_atomic is success
 
     - name: Restart the machine
       become: true
       ansible.builtin.reboot:
   roles:
+    - role: devroles.system.epel
     - role: virtualbox
       when: packer_builder_type == 'virtualbox-iso'
     - role: vmware
       when: packer_builder_type == 'vmware-iso'
     - role: init
-    - role: devroles.system.epel
     - role: locale
     - role: vagrant
     - role: cleanup

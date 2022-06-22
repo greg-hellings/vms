@@ -1,0 +1,1 @@
+virtualbox_iso_location: "{{ ansible_user_dir }}/VBoxGuestAdditions.iso"

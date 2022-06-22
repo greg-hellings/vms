@@ -11,6 +11,5 @@ virtualbox_packages:
   - dkms
 virtualbox_services:
   - dkms
-virtualbox_iso_location: "{{ ansible_user_dir }}/VBoxGuestAdditions.iso"
 virtualbox_from_iso: true
 virtualbox_pre_commands: []

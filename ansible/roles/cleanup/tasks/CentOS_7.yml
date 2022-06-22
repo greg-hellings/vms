@@ -6,6 +6,7 @@
       - perl
       - gcc
       - kernel-devel
-      - net-tools
+      - kernel-headers
       - bzip2
+      - epel-release
     state: absent

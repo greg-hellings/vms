@@ -1,0 +1,5 @@
+driver:
+  name: containers
+platforms:
+  - name: test-centos9-locale
+    image: quay.io/centos/centos:stream9

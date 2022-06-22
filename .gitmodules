@@ -14,3 +14,11 @@
 	path = http/fedora/rawhide
 	url = https://pagure.io/fedora-kickstarts.git
 	branch = main
+[submodule "http/centos-upstream"]
+	path = http/centos-upstream
+	url = https://git.centos.org/centos/kickstarts.git
+	branch = master
+[submodule "http/centos-stream"]
+	path = http/centos-stream
+	url = https://github.com/greg-hellings/centos-stream-kickstarts-mirror.git
+	branch = main

@@ -2,8 +2,10 @@ virtualbox_packages:
   - bzip2
   - dkms
   - kernel-devel
+  - kernel-headers
   - make
   - perl
+  - gcc
 virtualbox_services:
   - dkms
 virtualbox_from_iso: true

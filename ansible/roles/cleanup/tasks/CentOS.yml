@@ -2,7 +2,7 @@
   become: true
   ansible.builtin.shell: |-
     set -e
-    yum --enablerepo=epel clean all
+    yum clean all
     yum history new
     truncate -c -s 0 /var/log/yum.log
   changed_when: false

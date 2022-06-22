@@ -1,8 +1,0 @@
-- name: remove unnecessesary packages
-  become: true
-  ansible.builtin.package:
-    name:
-      - perl
-      - gcc
-      - kernel-devel
-    state: absent

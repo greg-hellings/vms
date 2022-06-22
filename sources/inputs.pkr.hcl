@@ -65,6 +65,6 @@ locals {
 		username = "vagrant"
 		password = "vagrant"
 		handshake_attempts = 1000
-		timeout = "5h50m"
+		timeout = "5h45m"
 	}
 }
