@@ -5,6 +5,7 @@ output_*
 serial-output*
 grub.cfg
 isolinux.cfg
+Vagrantfile
 
 # Generated distros
 distros/fedora-rawhide-*.hcl

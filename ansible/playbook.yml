@@ -1,11 +1,16 @@
 - name: install guest additions
   hosts: default
   pre_tasks:
+    - name: Pause for a moment in case we need cloud-init to finish
+      ansible.builtin.pause:
+        seconds: 20
+
     - name: Update all the things
       become: true
       ansible.builtin.package:  # noqa package-latest
         name: "*"
         state: latest
+        update_cache: true
       when: ansible_facts.pkg_mgr not in ['atomic_container']
       register: _update_all
       retries: 3
@@ -23,12 +28,15 @@
     - name: Restart the machine
       become: true
       ansible.builtin.reboot:
+      when: (_update_atomic is changed) or (_update_all is changed)
   roles:
     - role: devroles.system.epel
     - role: virtualbox
       when: packer_builder_type == 'virtualbox-iso'
     - role: vmware
       when: packer_builder_type == 'vmware-iso'
+    - role: qemu
+      when: packer_builder_type == 'qemu'
     - role: init
     - role: locale
     - role: vagrant

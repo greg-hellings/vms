@@ -1,15 +1,5 @@
 virtualbox_packages:
-  - kernel
-  - kernel-devel
-  - kernel-headers
-  - gcc
-  - make
-  - perl
-  - elfutils-libelf-devel
-  - tar
-  - bzip2
-  - dkms
-virtualbox_services:
-  - dkms
-virtualbox_from_iso: true
+  - virtualbox-guest-additions
+virtualbox_services: []
+virtualbox_from_iso: false
 virtualbox_pre_commands: []

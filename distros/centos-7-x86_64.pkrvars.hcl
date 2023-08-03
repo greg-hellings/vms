@@ -6,6 +6,6 @@ iso = {
 }
 boot_command = [
   "<esc><wait>",
-  "linux net.ifnames=0 biosdevnames=0 inst.ks=http://{{.HTTPIP}}:{{.HTTPPort}}/centos/7-x86_64.ks console=ttyS0",
+  "linux inst.ks=cdrom:/http/centos/7-x86_64.ks console=ttyS0",
   "<enter>"
 ]

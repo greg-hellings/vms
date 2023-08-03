@@ -15,6 +15,7 @@ source "qemu" "x86_64" {
 	ssh_username = local.ssh.username
 	ssh_password = local.ssh.password
 	ssh_handshake_attempts = local.ssh.handshake_attempts
+	ssh_private_key_file = local.ssh.private_key_file
 
 	vm_name = "packer-${local.name}"
 	disk_size = "${local.disk_size}G"
@@ -23,11 +24,15 @@ source "qemu" "x86_64" {
 	headless = var.headless
 	disk_cache = "writeback"
 	format = "qcow2"
+	cpu_model = "host"
 
 	qemuargs = [
 		["-chardev", "stdio,id=char0,logfile=serial-output-qemu-${var.arch}-${var.distro}-${var.version},signal=off"],
 		["-serial", "chardev:char0"]
 	]
-	http_directory = "http"
 	accelerator = var.qemu_accelerator
+
+	http_directory = "http"
+	cd_files = var.cd_files
+	cd_label = var.cd_label
 }

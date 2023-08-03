@@ -16,7 +16,7 @@
 - name: get build time
   become: true
   ansible.builtin.copy:
-    content: "{{ ansible_facts.date_time.date }}"
+    content: "{{ ansible_facts.date_time.date }} {{ ansible_facts.date_time.hour }}:{{ ansible_facts.date_time.minute }}"
     dest: /etc/vagrant_box_build_time
     owner: root
     group: root

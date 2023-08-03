@@ -1,8 +1,8 @@
 distro = "debian"
 version = "11"
 iso = {
-	url = "https://cdimage.debian.org/cdimage/archive/11.2.0/amd64/iso-cd/debian-11.2.0-amd64-netinst.iso"
-	checksum = "45c9feabba213bdc6d72e7469de71ea5aeff73faea6bfb109ab5bad37c3b43bd"
+	url = "https://cdimage.debian.org/cdimage/archive/11.7.0/amd64/iso-cd/debian-11.7.0-amd64-netinst.iso"
+	checksum = "eb3f96fd607e4b67e80f4fc15670feb7d9db5be50f4ca8d0bf07008cb025766b"
 }
 boot_command = [
 	"<esc><wait>",

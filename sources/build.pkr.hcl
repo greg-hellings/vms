@@ -1,3 +1,20 @@
+packer {
+  required_plugins {
+    qemu = {
+      source  = "github.com/hashicorp/qemu"
+      version = "~> 1"
+    }
+    ansible = {
+      source  = "github.com/hashicorp/ansible"
+      version = "~> 1"
+    }
+    vagrant = {
+      source  = "github.com/hashicorp/vagrant"
+      version = "~> 1"
+    }
+  }
+}
+
 build {
 	sources = [
 		"source.qemu.x86_64",
@@ -10,9 +27,9 @@ build {
 		user = local.ssh.username
 		use_sftp = true
 		ansible_ssh_extra_args = [
-			"-o HostKeyAlgorithms=+ssh-rsa ",
-			"-o PubkeyAcceptedKeyTypes=+ssh-rsa ",
-			"-o IdentitiesOnly=yes"
+			#"-o", "HostKeyAlgorithms=+ssh-rsa",
+			#"-o", "PubkeyAcceptedKeyTypes=+ssh-rsa",
+			"-o", "IdentitiesOnly=yes"
 		]
 	}
 

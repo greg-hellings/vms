@@ -49,6 +49,16 @@ variable "build" {
 	default = "0.1"
 }
 
+variable "cd_files" {
+	type = list(string)
+	default = []
+}
+
+variable "cd_label" {
+	type = string
+	default = "cidata"
+}
+
 locals {
 	name = "${var.distro}-${var.version}-${var.arch}"
 	description = templatefile("../README.box.md", {
@@ -66,5 +76,6 @@ locals {
 		password = "vagrant"
 		handshake_attempts = 1000
 		timeout = "5h45m"
+		private_key_file = "vagrant/insecure_key"
 	}
 }

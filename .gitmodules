@@ -22,3 +22,11 @@
 	path = http/centos-stream
 	url = https://github.com/greg-hellings/centos-stream-kickstarts-mirror.git
 	branch = main
+[submodule "http/fedora/f37"]
+	path = http/fedora/f37
+	url = https://pagure.io/fedora-kickstarts.git
+	branch = f37
+[submodule "http/fedora/f38"]
+	path = http/fedora/f38
+	url = https://pagure.io/fedora-kickstarts.git
+	branch = f38

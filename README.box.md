@@ -5,8 +5,7 @@
 * Date: ${formatdate("DD MMM YYYY", timestamp())}
 * Bugs: [vms](https://github.com/greg-hellings/vms/issues)
 
-A bare-minimum installation of the guest OS. x86_64/amd64 builds are done on
-[Github Actions](https://github.com/greg-hellings/vms/actions) at regular intervals.
+A bare-minimum installation of the guest OS.
 
 If you encounter a bug in the box, please file an issue. If you
 want a newer version of your desired operating system or want to add a distribution to this
@@ -17,7 +16,3 @@ works.
 The goal is to have the bare minimum software to be considered a basic installation of the guest
 OS that is still accessible with Vagrant. Straggling packages or leftover files from the build
 process should be considered as bugs to be filed.
-
-A big shoutout to Github Actions for offering a full VM experience, by default, and generous
-execution times ranging up to 6 hours per task, which allows use of their platform to build
-these boxes with no additional cost to the community.

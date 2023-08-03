@@ -2,82 +2,19 @@
 # vim: set ft=yaml:
 autoinstall:
   version: 1
-  apt:
-    preserve_sources_list: false
-    primary:
-      - arches: [i386, amd64]
-        uri: http://archive.ubuntu.com/ubuntu
-      - arches: [default]
-        uri: http://ports.ubuntu.com/ubuntu-ports
-    geoip: false
   network:  # Should disable networking, workaround for unattended-updates failing in install
     version: 2
+    ethernets:
+      eth0:
+        dhcp4: yes
+        dhcp6: no
   refresh-installer:
     update: no
   keyboard:
     layout: us
-    variant: ""
     toggle: null
-  storage:
-    config:
-      - id: drive
-        type: disk
-        ptable: gpt
-        name: hard-drive
-        preserve: false
-        grub_device: true
-        wipe: superblock
-      - id: bios-grub
-        type: partition
-        device: drive
-        size: 1M
-        flag: bios_grub
-      - id: boot-partition
-        type: partition
-        device: drive
-        size: 1G
-        name: boot
-      - id: swap-partition
-        type: partition
-        device: drive
-        size: 10%
-        name: swap
-        flag: swap
-      - id: root-partition
-        type: partition
-        device: drive
-        name: root
-        size: -1
-      - id: boot-format
-        type: format
-        fstype: ext4
-        volume: boot-partition
-        label: boot
-        preserve: false
-      - id: swap-format
-        type: format
-        fstype: swap
-        volume: swap-partition
-        label: swap
-        preserve: false
-      - id: root-format
-        type: format
-        fstype: ext4
-        volume: root-partition
-        label: root
-        preserve: false
-      - type: mount
-        id: root-mount
-        device: root-format
-        path: /
-      - type: mount
-        id: boot-mount
-        device: boot-format
-        path: /boot
-      - type: mount
-        id: swap-mount
-        device: swap-format
-        path: none
+    variant: ''
+  locale: en_US.UTF-8
   identity:
     hostname: vagrant
     username: vagrant
@@ -89,18 +26,17 @@ autoinstall:
     allow-pw: yes
   user-data:
     disable_root: false
+    package_update: false  # These will be done by Ansible after install
+    package_upgrade: false
   late-commands:
     - echo 'Defaults:vagrant !requiretty' > /target/etc/sudoers.d/vagrant
     - echo 'vagrant ALL=(ALL) NOPASSWD:ALL' >> /target/etc/sudoers.d/vagrant
     - chmod 440 /target/etc/sudoers.d/vagrant
     # Restore network after bypassing unattended updates
-    - "echo -n 'network:\n  version: 2\n  ethernets:\n    eth0:\n      dhcp4: true\n      dhcp-identifier: mac' > /target/etc/netplan/00-installer-config.yaml"
-    - netplan apply
     - sed -i -E -e 's/GRUB_CMDLINE_LINUX="(.*)"/GRUB_CMDLINE_LINUX="net.ifnames=0 biosdevnames=0\1"/' /target/etc/default/grub
-    - mount -o bind /dev /target/dev
-    - mount -o bind /sys /target/sys
-    - mount -o bind /proc /target/proc
-    - chroot /target /usr/sbin/update-grub
+    - curtin in-target --target=/target -- update-grub
+    - curtin in-target --target=/target -- logger "finished late-commands"
   packages:
+    - ca-certificates
     - curl
     - sudo

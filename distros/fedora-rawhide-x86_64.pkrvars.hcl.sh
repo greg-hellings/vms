@@ -35,7 +35,7 @@ iso = {
 }
 boot_command = [
   "<up>e<down><down><end><bs><bs><bs><bs><bs>",
-  "edd=off net.ifnames=0 biosdevnames=0 inst.ks=http://{{.HTTPIP}}:{{.HTTPPort}}/fedora/rawhide-x86_64.ks console=ttyS0<f10>"
+  "net.ifnames=0 biosdevnames=0 inst.ks=cdrom:/http/fedora/rawhide-x86_64.ks console=tty0 console=ttyS0<f10>"
 ]
 EOF
 

@@ -17,8 +17,8 @@ iso = {
 	checksum = "${sha}"
 }
 boot_command = [
-  "<esc><wait>",
-  "linux net.ifnames=0 biosdevnames=0 inst.ks=http://{{.HTTPIP}}:{{.HTTPPort}}/centos/8stream/x86_64.ks console=ttyS0",
-  "<enter>"
+  "<up><tab><wait><bs><bs><bs><bs><bs>",
+  "inst.text inst.ks=cdrom:/http/centos/8stream/x86_64.ks console=ttyS0",
+  "<enter><wait>"
 ]
 EOF
