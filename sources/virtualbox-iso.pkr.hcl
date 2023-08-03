@@ -27,6 +27,7 @@ source "virtualbox-iso" "x86_64" {
 		["modifyvm", "{{ .Name }}", "--uartmode1", "file", "serial-output-virtualbox-${var.arch}-${var.distro}-${var.version}"]
 	]
 
-	http_directory = "http"
-	cd_files = [ "http/${var.cd_files_path}" ]
+	http_content = var.http_files
+	cd_content = var.cd_files
+	cd_label = var.cd_label
 }

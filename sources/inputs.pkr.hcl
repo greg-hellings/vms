@@ -50,13 +50,18 @@ variable "build" {
 }
 
 variable "cd_files" {
-	type = list(string)
-	default = []
+	type = map(string)
+	default = {}
 }
 
 variable "cd_label" {
 	type = string
 	default = "cidata"
+}
+
+variable "http_files" {
+	type = map(string)
+	default = {}
 }
 
 locals {

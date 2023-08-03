@@ -30,6 +30,24 @@ def get_builds():
     builds = [str(p.stem).rsplit(".", 1)[0] for p in distros.glob("**/*.pkrvars.hcl")]
     return builds
 
+
+def get_parser(args):
+    parser = argparse.ArgumentParser("Builder")
+    parser.add_argument("--headless", action="store_true")
+    parser.add_argument("--upload", action="store_true")
+    parsed = parser.parse_args(args)
+    opts = {}
+    if parsed.headless:
+        opts["headless"] = "hadless=true"
+    else:
+        opts["headless"] = "headless=false"
+    if parsed.upload:
+        opts["upload"] = ""
+    else:
+        opts["upload"] = "-except=upload"
+    return opts
+
+
 def main():
     # Equivalent of `set -e` in Bash
     $RAISE_SUBPROC_ERROR = True

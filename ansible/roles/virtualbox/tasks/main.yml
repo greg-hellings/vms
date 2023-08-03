@@ -39,7 +39,7 @@
         opts: loop
 
     - name: Install additions
-      ansible.builtin.command: /mnt/VBoxLinuxAdditions.run --nox11 2>&1 > /root/vbox_addon_install.log
+      ansible.builtin.shell: /mnt/VBoxLinuxAdditions.run install 2>&1 > /root/vbox_addon_install.log
       changed_when: false
       failed_when: _cmd.rc not in [0, 2]
       register: _cmd

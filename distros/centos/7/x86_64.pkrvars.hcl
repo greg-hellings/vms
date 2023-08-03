@@ -1,6 +1,20 @@
+distro = "centos"
+version = "7"
+iso = {
+	url = "http://mirror.centos.org/centos/7/isos/x86_64/CentOS-7-x86_64-NetInstall-2009.iso"
+	checksum = "b79079ad71cc3c5ceb3561fff348a1b67ee37f71f4cddfec09480d4589c191d6"
+}
+boot_command = [
+  "<esc><wait>",
+  "linux inst.ks=cdrom:/ks.cfg console=tty0",
+  "<enter>"
+]
+cd_files = {
+	"ks.cfg" = <<KICKSTART
 install
 text
 reboot
+network --bootproto=dhcp --activate
 url --url=http://mirror.centos.org/centos/7/os/x86_64/
 repo --name=updates --baseurl=http://mirror.centos.org/centos/7/updates/x86_64/
 lang en_US.UTF-8
@@ -50,3 +64,5 @@ ONBOOT="yes"
 TYPE="Ethernet"
 EOF
 %end
+KICKSTART
+}
