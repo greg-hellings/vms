@@ -7,7 +7,11 @@ base = self.parent.parent.parent.parent
 source @(base / "test.xsh")
 
 
-opts = get_parser(sys.argv[1:])
+unsupported = set({
+    #"virtualbox-iso.x86_64"
+})
+
+opts = get_parser(sys.argv[1:], unsupported)
 
 cd @(str(base))
 for provider in opts["providers"]:

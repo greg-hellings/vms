@@ -1,3 +1,30 @@
+distro = "debian"
+version = "9"
+iso = {
+	url = "https://cdimage.debian.org/cdimage/archive/9.13.0/amd64/iso-cd/debian-9.13.0-amd64-netinst.iso"
+	checksum = "71c7e9eb292acc880f84605b1ca2b997f25737fe0a43fc9586f61d35cd2eb43b"
+}
+boot_command = [
+	"<esc><wait>",
+	"auto ",
+	"DEBIAN_FRONTEND=text ",
+	"preseed/url=http://{{.HTTPIP}}:{{ .HTTPPort }}/preseed.cfg ",
+	"console=tty0 ",
+	"--- ",  # Lines after this are copied to the resulting system?!
+	"biosdevnames=0 ",
+	"net.ifnames=0 ",
+	"<enter>"
+]
+http_files = {
+	"/preseed.cfg" = <<KICKSTART
+d-i mirror/country string manual
+d-i mirror/http/hostname string archive.kernel.org
+d-i mirror/http/directory string /debian-archive/debian
+
+d-i apt-setup/security_host string archive.kernel.org/debian-archive
+
+d-i netcfg/hostname string vagrant
+
 d-i debian-installer/locale string en_US
 d-i keyboard-configuration/xkb-keymap select us
 
@@ -56,3 +83,6 @@ d-i preseed/late_command string                                                 
         echo 'Defaults:vagrant !requiretty' > /target/etc/sudoers.d/vagrant;      \
         echo 'vagrant ALL=(ALL) NOPASSWD: ALL' >> /target/etc/sudoers.d/vagrant;  \
         chmod 440 /target/etc/sudoers.d/vagrant
+
+KICKSTART
+}

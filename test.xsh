@@ -3,6 +3,7 @@
 import argparse
 import pathlib
 import re
+import sys
 import time
 
 
@@ -16,10 +17,10 @@ def get_vagrant_provider(provider):
 
 def get_providers():
     "List of providers as defined in sources/"
-    providers: list[str] = [
+    providers: set[str] = {
         "virtualbox-iso.x86_64",
         "qemu.x86_64"
-    ]
+    }
     return providers
 
 
@@ -31,46 +32,40 @@ def get_builds():
     return builds
 
 
-def get_parser(args):
+def get_parser(args, unsupported=set()):
     parser = argparse.ArgumentParser("Builder")
     parser.add_argument("--headless", action="store_true")
     parser.add_argument("--upload", action="store_true")
+    parser.add_argument("--provider", action="append")
     parsed = parser.parse_args(args)
     opts = {}
     if parsed.headless:
-        opts["headless"] = "hadless=true"
+        opts["headless"] = "headless=true"
     else:
         opts["headless"] = "headless=false"
     if parsed.upload:
         opts["upload"] = ""
     else:
         opts["upload"] = "-except=upload"
+    if parsed.provider:
+        opts["providers"] = set(parsed.provider)
+    else:
+        opts["providers"] = get_providers()
+    # Filter providers
+    opts["providers"] -= unsupported
     return opts
 
 
 def main():
     # Equivalent of `set -e` in Bash
-    $RAISE_SUBPROC_ERROR = True
-
-    # Parse user arguments
-    parser = argparse.ArgumentParser("Test script")
-    parser.add_argument("--build", "-b", required=True, choices=get_builds())
-    parser.add_argument("--provider", "-p", default="virtualbox-iso.x86_64", choices=get_providers())
-    parser.add_argument("--headless", action="store_true")
-    args = parser.parse_args()
-
-    if args.headless:
-        headless = "headless=true"
-    else:
-        headless = "headless=false"
-
-    packer build -var @(headless) -var-file distros/@(args.build).pkrvars.hcl -except=upload -only=@(args.provider) sources/
-    vagrant box add --force --name @(args.build) @(args.build).box
-    sed -e f's/@@BOX@@/{args.build}/' Vagrantfile.in > Vagrantfile
-    vagrant up --provider @(get_vagrant_provider(args.provider)) --provision
-    vagrant ssh -c "ls -la ~/"
-    vagrant destroy -f
-    rm -r .vagrant
+    #$RAISE_SUBPROC_ERROR = True
+    for box in g`*.box`:
+        sed -e f's#@@BOX@@#file:///home/greg/src/vms/vms/{box}#' -e f's/@@BOX_NAME@@/{box}/' Vagrantfile.in > Vagrantfile
+        #vagrant box add --force --name @(args.build) @(args.build).box
+        #vagrant up --provider @(get_vagrant_provider(args.provider)) --provision
+        vagrant up --provider libvirt
+        vagrant destroy -f
+        rm -rf .vagrant
 
 
 if __name__ == '__main__':

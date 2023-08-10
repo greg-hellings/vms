@@ -5,8 +5,8 @@ iso = {
 	checksum = "b79079ad71cc3c5ceb3561fff348a1b67ee37f71f4cddfec09480d4589c191d6"
 }
 boot_command = [
-  "<esc><wait>",
-  "linux inst.ks=cdrom:/ks.cfg console=tty0",
+  "<up><tab><wait>",
+  "<bs><bs><bs><bs><bs> inst.ks=cdrom:/ks.cfg console=tty0",
   "<enter>"
 ]
 cd_files = {

@@ -7,7 +7,10 @@ base = self.parent.parent.parent.parent
 source @(base / "test.xsh")
 
 
-opts = get_parser(sys.argv[1:])
+unsupported = set({
+})
+
+opts = get_parser(sys.argv[1:], unsupported)
 
 cd @(str(base))
 for provider in opts["providers"]:

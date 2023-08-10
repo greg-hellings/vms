@@ -18,8 +18,7 @@ source "virtualbox-iso" "x86_64" {
 	cpus = local.cpus
 	memory = local.memory
 	headless = var.headless
-	nic_type = "virtio"
-	guest_os_type = "RedHat_64"
+	guest_os_type = "Linux_64"
 	guest_additions_url = "http://download.virtualbox.org/virtualbox/7.0.10/VBoxGuestAdditions_7.0.10.iso"
 	guest_additions_sha256 = "bbabd89b8fff38a257bab039a278f0c4dc4426eff6e4238c1db01edb7284186a"
 	vboxmanage = [

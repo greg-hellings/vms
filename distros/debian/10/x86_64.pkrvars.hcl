@@ -1,3 +1,19 @@
+distro = "debian"
+version = "10"
+iso = {
+	url = "https://cdimage.debian.org/cdimage/archive/10.13.0/amd64/iso-cd/debian-10.13.0-amd64-netinst.iso"
+	checksum = "75aa64071060402a594dcf1e14afd669ca0f8bf757b56d4c9c1a31b8f7c8f931"
+}
+boot_command = [
+	"<esc><wait>",
+	"auto ",
+	"DEBIAN_FRONTEND=text ",
+	"preseed/url=http://{{.HTTPIP}}:{{ .HTTPPort }}/preseed.cfg ",
+	"console=tty0 ",
+	"<enter>"
+]
+http_files = {
+	"/preseed.cfg" = <<KICKSTART
 d-i debian-installer/locale string en_US
 d-i keyboard-configuration/xkb-keymap select us
 
@@ -56,3 +72,5 @@ d-i preseed/late_command string                                                 
         echo 'Defaults:vagrant !requiretty' > /target/etc/sudoers.d/vagrant;      \
         echo 'vagrant ALL=(ALL) NOPASSWD: ALL' >> /target/etc/sudoers.d/vagrant;  \
         chmod 440 /target/etc/sudoers.d/vagrant
+KICKSTART
+}

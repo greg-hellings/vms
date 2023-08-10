@@ -33,6 +33,9 @@
     mode: "0600"
     dest: "{{ ansible_user_dir }}/.ssh/authorized_keys"
     url: https://raw.githubusercontent.com/hashicorp/vagrant/master/keys/vagrant.pub
+  register: _fetch_authorized_keys
+  retries: 3
+  until: _fetch_authorized_keys is success
 
 - name: Sudo commands
   block:
