@@ -49,7 +49,7 @@ def do_build(build):
         headless = "headless=true"
     else:
         headless = "headless=false"
-    echo packer build -var @(headless) @(build.var_file) @(build.only) @(upload) @(BASE / "sources")
+    packer build -var @(headless) @(build.var_file) @(build.only) @(upload) @(BASE / "sources")
 
 if args.all or (args.distro and args.version and args.build):
     process_all()
