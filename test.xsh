@@ -24,14 +24,6 @@ def get_providers():
     return providers
 
 
-def get_builds():
-    "List of builds as supported in distros/"
-    base = pathlib.Path(__file__)
-    distros = base.parent / "distros"
-    builds = [str(p.stem).rsplit(".", 1)[0] for p in distros.glob("**/*.pkrvars.hcl")]
-    return builds
-
-
 def get_parser(args, unsupported=set()):
     parser = argparse.ArgumentParser("Builder")
     parser.add_argument("--headless", action="store_true")

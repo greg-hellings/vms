@@ -12,3 +12,7 @@ distros/fedora-rawhide-*.hcl
 distros/centos-8stream-*.hcl
 distros/centos-9stream-*.hcl
 cellar/centos-9stream-*.hcl
+
+__pycache__
+*.pyc
+*.pyo

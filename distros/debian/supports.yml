@@ -1,0 +1,12 @@
+9:
+  - arch: x86_64
+    provider: qemu
+10:
+  - arch: x86_64
+    provider: qemu
+11:
+  - arch: x86_64
+    provider: qemu
+12:
+  - arch: x86_64
+    provider: qemu
