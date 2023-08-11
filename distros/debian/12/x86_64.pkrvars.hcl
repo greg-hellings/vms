@@ -1,8 +1,8 @@
 distro = "debian"
-version = "10"
+version = "12"
 iso = {
-	url = "https://cdimage.debian.org/cdimage/archive/10.13.0/amd64/iso-cd/debian-10.13.0-amd64-netinst.iso"
-	checksum = "75aa64071060402a594dcf1e14afd669ca0f8bf757b56d4c9c1a31b8f7c8f931"
+	url = "https://cdimage.debian.org/cdimage/archive/12.0.0/amd64/iso-cd/debian-12.0.0-amd64-netinst.iso"
+	checksum = "3b0e9718e3653435f20d8c2124de6d363a51a1fd7f911b9ca0c6db6b3d30d53e"
 }
 boot_command = [
 	"<esc><wait>",
@@ -10,10 +10,12 @@ boot_command = [
 	"DEBIAN_FRONTEND=text ",
 	"preseed/url=http://{{.HTTPIP}}:{{ .HTTPPort }}/preseed.cfg ",
 	"console=tty0 ",
+	"--- net.ifnames=0 biosdevnames=0 ",
 	"<enter>"
 ]
 http_files = {
 	"/preseed.cfg" = <<KICKSTART
+d-i auto-install/enable boolean true
 d-i debian-installer/locale string en_US
 d-i keyboard-configuration/xkb-keymap select us
 

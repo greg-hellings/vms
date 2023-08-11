@@ -10,6 +10,7 @@ boot_command = [
 	"DEBIAN_FRONTEND=text ",
 	"preseed/url=http://{{.HTTPIP}}:{{ .HTTPPort }}/preseed.cfg ",
 	"console=tty0 ",
+	"--- net.ifnames=0 biosdevnames=0 ",
 	"<enter>"
 ]
 http_files = {
@@ -71,6 +72,11 @@ d-i preseed/early_command string                                                
 d-i preseed/late_command string                                                   \
         echo 'Defaults:vagrant !requiretty' > /target/etc/sudoers.d/vagrant;      \
         echo 'vagrant ALL=(ALL) NOPASSWD: ALL' >> /target/etc/sudoers.d/vagrant;  \
-        chmod 440 /target/etc/sudoers.d/vagrant
+        chmod 440 /target/etc/sudoers.d/vagrant; \
+        sed -i -e 's/ens3/ens5/g' /target/etc/network/interfaces
 KICKSTART
 }
+#echo '[Match]' >> /target/etc/systemd/network/dhcp.network; \
+#echo 'Name=en*' >> /target/etc/systemd/network/dhcp.network; \
+#echo '[Network]' >> /target/etc/systemd/network/dhcp.network; \
+#echo 'DHCP=yes' >> /target/etc/systemd/network/dhcp.network; \

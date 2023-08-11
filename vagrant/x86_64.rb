@@ -4,7 +4,7 @@ Vagrant.configure('2') do |c|
   c.vm.provider :libvirt do |v, override|
     v.driver = 'kvm'
     v.connect_via_ssh = false
-    v.username = 'root'
+    #v.username = 'root'
     v.memory = 2048
   end
   c.vm.provider :virtualbox do |v|

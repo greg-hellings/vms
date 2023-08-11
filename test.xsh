@@ -61,8 +61,6 @@ def main():
     #$RAISE_SUBPROC_ERROR = True
     for box in g`*.box`:
         sed -e f's#@@BOX@@#file:///home/greg/src/vms/vms/{box}#' -e f's/@@BOX_NAME@@/{box}/' Vagrantfile.in > Vagrantfile
-        #vagrant box add --force --name @(args.build) @(args.build).box
-        #vagrant up --provider @(get_vagrant_provider(args.provider)) --provision
         vagrant up --provider libvirt
         vagrant destroy -f
         rm -rf .vagrant
