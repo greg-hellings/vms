@@ -8,6 +8,7 @@ source @(base / "test.xsh")
 
 
 unsupported = set({
+    "vagrant-iso.x86_64"
 })
 
 opts = get_parser(sys.argv[1:], unsupported)
