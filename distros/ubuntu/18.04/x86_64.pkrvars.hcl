@@ -1,3 +1,23 @@
+distro = "ubuntu"
+version = "18.04"
+iso = {
+	url = "http://cdimage.ubuntu.com/ubuntu/releases/18.04/release/ubuntu-18.04.6-server-amd64.iso"
+	checksum = "f5cbb8104348f0097a8e513b10173a07dbc6684595e331cb06f93f385d0aecf6"
+}
+boot_command = [
+	"<esc><wait1>",
+	"<f6><esc><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
+	"auto=true priority=critical ",
+	"locale=en_US.UTF-8 ",
+	"DEBIAN_FRONTEND=text ",
+	"preseed/url=http://{{.HTTPIP}}:{{.HTTPPort}}/preseed.cfg ",
+	"fsck.mode=skip ",
+	"console=tty0 ",
+	"--- net.ifnames=0 biosdevnames=0 ",
+	"<enter><wait1>"
+]
+http_files = {
+	"/preseed.cfg" = <<HEREDOC
 d-i debian-installer/locale string C.UTF-8
 d-i keyboard-configuration/xkb-keymap select us
 
@@ -21,7 +41,7 @@ d-i time/zone string UTC
 d-i clock-setup/utc boolean true
 d-i clock-setup/utc-auto boolean true
 
-d-i debian-installer/missing-provide select ${DEFAULT}
+d-i debian-installer/missing-provide select $\{DEFAULT}
 
 d-i partman-auto/method string regular
 d-i partman-auto/expert_recipe string \
@@ -73,3 +93,5 @@ d-i preseed/late_command string \
         echo 'vagrant ALL=(ALL) NOPASSWD: ALL' >> /target/etc/sudoers.d/vagrant;  \
         chmod 440 /target/etc/sudoers.d/vagrant; \
         in-target update-initramfs -u
+HEREDOC
+}
