@@ -33,6 +33,8 @@ source "qemu" "x86_64" {
 	accelerator = var.qemu_accelerator
 
 	http_content = var.http_files
-	cd_content = var.cd_files
+	http_directory = var.http_directory
+	cd_content = var.cd_content
+	cd_files = var.cd_files
 	cd_label = var.cd_label
 }

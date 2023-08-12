@@ -49,9 +49,14 @@ variable "build" {
 	default = "0.1"
 }
 
-variable "cd_files" {
+variable "cd_content" {
 	type = map(string)
 	default = {}
+}
+
+variable "cd_files" {
+	type = list(string)
+	default = []
 }
 
 variable "cd_label" {
@@ -62,6 +67,11 @@ variable "cd_label" {
 variable "http_files" {
 	type = map(string)
 	default = {}
+}
+
+variable "http_directory" {
+	type = string
+	default = ""
 }
 
 locals {

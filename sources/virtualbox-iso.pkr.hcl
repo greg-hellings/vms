@@ -28,6 +28,8 @@ source "virtualbox-iso" "x86_64" {
 	]
 
 	http_content = var.http_files
-	cd_content = var.cd_files
+	http_directory = var.http_directory
+	cd_content = var.cd_content
+	cd_files = var.cd_files
 	cd_label = var.cd_label
 }

@@ -53,7 +53,7 @@ def main():
     #$RAISE_SUBPROC_ERROR = True
     for box in g`*.box`:
         sed -e f's#@@BOX@@#file:///home/greg/src/vms/vms/{box}#' -e f's/@@BOX_NAME@@/{box}/' Vagrantfile.in > Vagrantfile
-        vagrant up --provider libvirt
+        vagrant up --provider virtualbox
         vagrant destroy -f
         rm -rf .vagrant
 
