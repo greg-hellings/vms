@@ -51,9 +51,16 @@ def get_parser(args, unsupported=set()):
 def main():
     # Equivalent of `set -e` in Bash
     #$RAISE_SUBPROC_ERROR = True
-    for box in g`*.box`:
-        sed -e f's#@@BOX@@#file:///home/greg/src/vms/vms/{box}#' -e f's/@@BOX_NAME@@/{box}/' Vagrantfile.in > Vagrantfile
-        vagrant up --provider virtualbox
+    for box in g`output/**/*.box`:
+        p = pathlib.Path(box)
+        sed -e f's#@@BOX@@#file:///home/greg/src/vms/vms/{box}#' -e f's/@@BOX_NAME@@/{p.name}/' Vagrantfile.in > Vagrantfile
+        if str(p.parent.name) == "virtualbox":
+            vagrant up --provider virtualbox
+        elif str(p.parent.name) == "qemu":
+            vagrant up --provider libvirt
+        else:
+            print(f"Now whatcha wanna go and do that for? {box}")
+            continue
         vagrant destroy -f
         rm -rf .vagrant
 

@@ -27,8 +27,8 @@ source "qemu" "x86_64" {
 	cpu_model = "host"
 
 	qemuargs = [
-		["-chardev", "stdio,id=char0,logfile=serial-output-qemu-${var.arch}-${var.distro}-${var.version},signal=off"],
-		["-serial", "chardev:char0"]
+		#["-chardev", "stdio,id=char0,logfile=serial-output-qemu-${var.arch}-${var.distro}-${var.version},signal=off"],
+		#["-serial", "chardev:char0"]
 	]
 	accelerator = var.qemu_accelerator
 

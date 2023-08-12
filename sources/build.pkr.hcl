@@ -43,7 +43,7 @@ build {
 		post-processor "vagrant" {
 			keep_input_artifact = true
 			compression_level = 9
-			output = "${local.name}.box"
+			output = "output/{{ .Provider }}/${local.name}.box"
 			vagrantfile_template = "vagrant/${var.arch}.rb"
 		}
 

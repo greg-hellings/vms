@@ -31,6 +31,7 @@
           become: true
           ansible.builtin.reboot:
           when: (_update_atomic is changed) or (_update_all is changed)
+          failed_when: false  # This module is buggy and can't always understand a reboot
 
         - name: Wait for reboot to finish
           ansible.builtin.wait_for_connection:

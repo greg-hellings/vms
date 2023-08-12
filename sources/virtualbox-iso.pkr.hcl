@@ -1,7 +1,7 @@
 source "virtualbox-iso" "x86_64" {
 	iso_url = var.iso.url
 	iso_checksum = var.iso.checksum
-	output_directory = "output_virtualbox_${local.name}"
+	output_directory = "output/virtualbox/${local.name}"
 
 	boot_command = var.boot_command
 	shutdown_command = var.shutdown_command
@@ -23,7 +23,7 @@ source "virtualbox-iso" "x86_64" {
 	guest_additions_sha256 = "bbabd89b8fff38a257bab039a278f0c4dc4426eff6e4238c1db01edb7284186a"
 	vboxmanage = [
 		["modifyvm", "{{ .Name }}", "--uart1", "0x3F8", "4"],
-		["modifyvm", "{{ .Name }}", "--uartmode1", "file", "serial-output-virtualbox-${var.arch}-${var.distro}-${var.version}"],
+		#["modifyvm", "{{ .Name }}", "--uartmode1", "file", "output/vritualbox/serial-${var.arch}-${var.distro}-${var.version}"],
 		["modifyvm", "{{ .Name }}", "--nat-localhostreachable1", "on"],
 	]
 
