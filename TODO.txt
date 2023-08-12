@@ -1,1 +1,13 @@
-CentOS 7 with virtualbox-iso does not auto-build. Network will not enable by default during building
+Distros:
+* Arch
+* NixOS
+* SuSE
+
+Providers:
+* VMWare
+* Parallels
+* Hyper-V
+
+Architecture:
+* arm64
+* ppcle64
