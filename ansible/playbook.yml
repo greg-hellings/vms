@@ -25,10 +25,20 @@
       retries: 3
       until: _update_atomic is success
 
-    - name: Restart the machine
-      become: true
-      ansible.builtin.reboot:
-      when: (_update_atomic is changed) or (_update_all is changed)
+    - name: Reboot, but don't care if it doesn't
+      block:
+        - name: Restart the machine
+          become: true
+          ansible.builtin.reboot:
+          when: (_update_atomic is changed) or (_update_all is changed)
+
+        - name: Wait for reboot to finish
+          ansible.builtin.wait_for_connection:
+            delay: 15
+      rescue:
+        - name: Reboot failed? lol
+          ansible.builtin.debug:
+            msg: Reboot failed. lol.
   roles:
     - role: devroles.system.epel
     - role: virtualbox

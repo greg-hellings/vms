@@ -1,0 +1,7 @@
+37: &supp
+  - arch: x86_64
+    provider: qemu
+  - arch: x86_64
+    provider: virtualbox-iso
+38: *supp
+rawhide: []
