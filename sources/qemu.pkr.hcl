@@ -6,7 +6,7 @@ variable "qemu_accelerator" {
 source "qemu" "x86_64" {
 	iso_url = var.iso.url
 	iso_checksum = var.iso.checksum
-	output_directory = "output_qemu_${local.name}"
+	output_directory = "output/libvirt/${local.name}"
 
 	boot_command = var.boot_command
 	shutdown_command = var.shutdown_command

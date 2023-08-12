@@ -4,6 +4,7 @@ from pathlib import Path
 import sys
 sys.path.append(str(Path(__file__).parent / "lib"))
 from support import Support, BASE
+import time
 
 
 support = Support()
@@ -16,6 +17,10 @@ parser.add_argument("--all", "-a", help="Build all applicable targets", action="
 parser.add_argument("--upload", "-u", help="Force doing uploads", action="store_true")
 parser.add_argument("--headless", help="Run builds headless", action="store_true")
 args = parser.parse_args()
+
+year, month, day, hour, minute, second, wday, jday, dst = time.localtime()
+STAMP = f"build={year}.{month}.{day}.{hour}"
+
 
 # Now provide menus if we don't have defaults
 def process_all():
@@ -41,15 +46,19 @@ def process_builds(builds):
                 do_build(build)
 
 def do_build(build):
-    if args.upload:
-        upload = ""
-    else:
-        upload = "-except=upload"
     if args.headless:
         headless = "headless=true"
     else:
         headless = "headless=false"
-    packer build -var @(headless) @(build.var_file) @(build.only) @(upload) @(BASE / "sources")
+
+    if args.upload:
+        if "VAGRANT_CLOUD_TOKEN" not in ${...}:
+            print("You need to set your cloud token")
+            sys.exit(1)
+        packer build -var @(headless) -var @(STAMP) @(build.var_file) @(build.only) @(BASE / "sources")
+    else:
+        upload = "-except=upload"
+        packer build -var @(headless) -var @(STAMP) @(build.var_file) @(build.only) -except=upload @(BASE / "sources")
 
 if args.all or (args.distro and args.version and args.build):
     process_all()
