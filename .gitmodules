@@ -1,5 +1,5 @@
 [submodule "http/fedora/rawhide"]
-	path = http/fedora/rawhide
+	path = attic/http/fedora/rawhide
 	url = https://pagure.io/fedora-kickstarts.git
 	branch = main
 [submodule "http/centos-upstream"]
@@ -11,6 +11,6 @@
 	url = https://github.com/greg-hellings/centos-stream-kickstarts-mirror.git
 	branch = main
 [submodule "http/fedora/f38"]
-	path = http/fedora/f38
+	path = attic/http/fedora/f38
 	url = https://pagure.io/fedora-kickstarts.git
 	branch = f38
