@@ -1,0 +1,25 @@
+- name: Load update sciprt for proper distro
+  ansible.builtin.include_tasks:
+    file: "{{ item }}"
+  with_first_found:
+    - files:
+      - "{{ role_path }}/tasks/{{ ansible_facts['distribution'] }}_{{ ansible_facts['distribution_version'] }}.yml"
+      - "{{ role_path }}/tasks/{{ ansible_facts['distribution'] }}_{{ ansible_facts['distribution_major_version'] }}.yml"
+      - "{{ role_path }}/tasks/{{ ansible_facts['distribution'] }}.yml"
+      - "{{ role_path }}/tasks/{{ ansible_facts['os_family'] }}.yml"
+      - "{{ role_path }}/tasks/default.yml"
+
+- name: Reboot, but don't care if it doesn't
+  block:
+    - name: Restart the machine
+      become: true
+      ansible.builtin.reboot:
+      failed_when: false  # This module is buggy and can't always understand a reboot
+
+    - name: Wait for reboot to finish
+      ansible.builtin.wait_for_connection:
+        delay: 15
+  rescue:
+    - name: Reboot failed? lol
+      ansible.builtin.debug:
+        msg: Reboot failed. lol.

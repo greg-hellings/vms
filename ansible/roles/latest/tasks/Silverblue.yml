@@ -1,0 +1,7 @@
+- name: Update atomic things
+  become: true
+  ansible.builtin.command: rpm-ostree upgrade
+  changed_when: false
+  register: _update_atomic
+  retries: 3
+  until: _update_atomic is success

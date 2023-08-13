@@ -54,6 +54,7 @@
   ansible.builtin.package:
     name: "{{ virtualbox_remove_packages | default([]) }}"
     state: absent
+  when: virtualbox_remove_packages
 
 - name: Remove file
   ansible.builtin.file:

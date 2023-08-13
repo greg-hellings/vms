@@ -54,10 +54,8 @@ def main():
     for box in g`output/**/*.box`:
         p = pathlib.Path(box)
         sed -e f's#@@BOX@@#file:///home/greg/src/vms/vms/{box}#' -e f's/@@BOX_NAME@@/{p.name}/' Vagrantfile.in > Vagrantfile
-        if str(p.parent.name) == "virtualbox":
-            vagrant up --provider virtualbox
-        elif str(p.parent.name) == "qemu":
-            vagrant up --provider libvirt
+        if str(p.parent.name) in ["virtualbox", "libvirt"]:
+            vagrant up --provider @(p.parent.name)
         else:
             print(f"Now whatcha wanna go and do that for? {box}")
             continue

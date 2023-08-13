@@ -1,0 +1,6 @@
+- name: Update on Arch
+  become: true
+  community.general.pacman:
+    upgrade: true
+    update_cache: true
+    state: latest

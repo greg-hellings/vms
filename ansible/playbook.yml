@@ -1,46 +1,13 @@
 - name: install guest additions
   hosts: default
+  vars:
+    ansible_remote_tmp: /tmp
   pre_tasks:
     - name: Pause for a moment in case we need cloud-init to finish
       ansible.builtin.pause:
         seconds: 20
-
-    - name: Update all the things
-      become: true
-      ansible.builtin.package:  # noqa package-latest
-        name: "*"
-        state: latest
-        update_cache: true
-      when: ansible_facts.pkg_mgr not in ['atomic_container']
-      register: _update_all
-      retries: 3
-      until: _update_all is success
-
-    - name: Update atomic things
-      become: true
-      ansible.builtin.command: rpm-ostree upgrade
-      when: ansible_facts.pkg_mgr in ['atomic_container']
-      changed_when: false
-      register: _update_atomic
-      retries: 3
-      until: _update_atomic is success
-
-    - name: Reboot, but don't care if it doesn't
-      block:
-        - name: Restart the machine
-          become: true
-          ansible.builtin.reboot:
-          when: (_update_atomic is changed) or (_update_all is changed)
-          failed_when: false  # This module is buggy and can't always understand a reboot
-
-        - name: Wait for reboot to finish
-          ansible.builtin.wait_for_connection:
-            delay: 15
-      rescue:
-        - name: Reboot failed? lol
-          ansible.builtin.debug:
-            msg: Reboot failed. lol.
   roles:
+    - role: latest
     - role: devroles.system.epel
     - role: virtualbox
       when: packer_builder_type == 'virtualbox-iso'

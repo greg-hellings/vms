@@ -1,0 +1,6 @@
+virtualbox_packages:
+  - virtualbox-guest-utils-nox
+virtualbox_services:
+  - vboxservice
+virtualbox_from_iso: false
+virtualbox_remove_packages: []
