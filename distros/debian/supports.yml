@@ -1,8 +1,8 @@
-9: &supp
+10: &supp
   - arch: x86_64
     provider: qemu
   - arch: x86_64
     provider: virtualbox-iso
-10: *supp
 11: *supp
 12: *supp
+#9: *supp  # EOL
