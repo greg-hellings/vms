@@ -1,6 +1,6 @@
 Distros:
-* Arch
-* NixOS
+* Arch -- Done
+* NixOS -- Done
 * SuSE
 
 Providers:
