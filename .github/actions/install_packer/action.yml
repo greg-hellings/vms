@@ -5,7 +5,7 @@ inputs:
   version:
     description: Version of Packer to install
     required: true
-    default: "1.8.0"
+    default: "1.9.2"
   pup_version:
     description: Version of Pup to install
     required: true

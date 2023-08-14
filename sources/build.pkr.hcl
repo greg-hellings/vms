@@ -12,13 +12,18 @@ packer {
       source  = "github.com/hashicorp/vagrant"
       version = "~> 1"
     }
+    vmware = {
+      version = ">= 1.0"
+      source = "github.com/hashicorp/vmware"
+    }
   }
 }
 
 build {
 	sources = [
 		"source.qemu.x86_64",
-		"source.virtualbox-iso.x86_64"
+		"source.virtualbox-iso.x86_64",
+		"source.vmware-iso.x86_64"
 	]
 
 	provisioner "ansible" {

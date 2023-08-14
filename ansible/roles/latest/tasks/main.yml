@@ -3,11 +3,11 @@
     file: "{{ item }}"
   with_first_found:
     - files:
-      - "{{ role_path }}/tasks/{{ ansible_facts['distribution'] }}_{{ ansible_facts['distribution_version'] }}.yml"
-      - "{{ role_path }}/tasks/{{ ansible_facts['distribution'] }}_{{ ansible_facts['distribution_major_version'] }}.yml"
-      - "{{ role_path }}/tasks/{{ ansible_facts['distribution'] }}.yml"
-      - "{{ role_path }}/tasks/{{ ansible_facts['os_family'] }}.yml"
-      - "{{ role_path }}/tasks/default.yml"
+        - "{{ role_path }}/tasks/{{ ansible_facts['distribution'] }}_{{ ansible_facts['distribution_version'] }}.yml"
+        - "{{ role_path }}/tasks/{{ ansible_facts['distribution'] }}_{{ ansible_facts['distribution_major_version'] }}.yml"
+        - "{{ role_path }}/tasks/{{ ansible_facts['distribution'] }}.yml"
+        - "{{ role_path }}/tasks/{{ ansible_facts['os_family'] }}.yml"
+        - "{{ role_path }}/tasks/default.yml"
 
 - name: Reboot, but don't care if it doesn't
   block:

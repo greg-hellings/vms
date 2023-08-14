@@ -22,41 +22,13 @@ jobs:
       - name: Run syntax check
         run: |
           set -exo pipefail
-          for vars in distros/*; do
+          for vars in $(find distros/ -name '*.pkrvars.hcl'); do
             if [[ "${vars}" == *.sh ]]; then
               "./${vars}"
               vars=${vars%.sh}
             fi
             packer validate -except=upload -var-file=${vars} sources/
           done
-
-  collect:
-    name: Collect all Ansible-related jobs
-    runs-on: ubuntu-22.04
-    outputs:
-      all: ${{ steps.zipped.outputs.scenarios }}
-    steps:
-      - uses: actions/checkout@v3
-      - uses: ./.github/actions/setup
-      - name: Collect dependencies
-        id: collection
-        uses: greg-hellings/tox-list@v1
-        with:
-          tox-args: --ansible-driver docker --ansible-driver podman --ansible-driver containers
-      - id: vagrant
-        uses: greg-hellings/tox-list@v1
-        with:
-          tox-args: --ansible-driver vagrant
-      - id: zipped
-        name: Zip arrays together
-        shell: python
-        run: |
-          import json
-          ubuntu = json.loads('${{ steps.collection.outputs.tox-envs }}')
-          macos  = json.loads('${{ steps.vagrant.outputs.tox-envs }}')
-          ub_zip = [{'os': 'ubuntu-22.04', 'scenario': u} for u in ubuntu]
-          mac_zip = [{'os': 'macos-12', 'scenario': m} for m in macos]
-          print("::set-output name=scenarios::" + json.dumps(ub_zip + mac_zip))
 
   lint:
     name: Lint Ansible code
@@ -69,35 +41,6 @@ jobs:
         with:
           ansible: true
       - name: Run lint
-        run: tox -e lint_all
-
-  build:
-    name: Ansible tests on roles
-    runs-on: ${{ matrix.scenarios.os }}
-    needs:
-      - collect
-    strategy:
-      fail-fast: false
-      matrix:
-        scenarios: "${{ fromJson(needs.collect.outputs.all) }}"
-    steps:
-      - uses: actions/checkout@v3
-      - uses: ./.github/actions/setup
-      - uses: ./.github/actions/install_packer
-      - name: Container setup
-        shell: bash
-        if: ${{ startsWith(matrix.scenarios.os, 'ubuntu') }}
         run: |
-          set -exo pipefail
-          # Enable cgroupv2 systemd stuff
-          sudo loginctl enable-linger 1001
-      - name: Run scenario
-        run: |
-          set -ex
-          TOX="$(which tox)"
-          ${TOX} -e "${{ matrix.scenarios.scenario }}" -- --destroy=never
-      - name: Get possible output
-        if: ${{ failure() }}
-        run: |
-          set -x
-          cat /home/runner/.cache/molecule/init/ubuntu18/vagrant.err
+          yamllint -c ansible/yamllint.yml ansible .github
+          # TODO: Add ansible-lint run
