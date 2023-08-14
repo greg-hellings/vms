@@ -7,56 +7,88 @@
     - "{{ role_path }}/vars/{{ ansible_facts['distribution'] }}_{{ ansible_facts['distribution_version'] }}.yml"
   when: item is file
 
-- name: Install build deps for virtualbox addons
-  become: true
-  ansible.builtin.package:
-    name: "{{ virtualbox_packages }}"
-    state: present
-    update_cache: true
-  register: _pkg_install
-  retries: 3
-  until: _pkg_install is success
-
-- name: Start services
-  become: true
-  ansible.builtin.service:
-    name: "{{ item }}"
-    state: started
-    enabled: true
-  loop: "{{ virtualbox_services }}"
-
-- name: Run commands to install from ISO
-  when: virtualbox_from_iso
-  become: true
+- when: ansible_facts.distribution != 'NixOS'
   block:
-    - name: Mount ISO file
-      ansible.posix.mount:
-        fstype: auto
-        path: /mnt
-        src: "{{ virtualbox_iso_location }}"
-        state: mounted
-        boot: false
-        opts: loop
+    - name: Install build deps for virtualbox addons
+      become: true
+      ansible.builtin.package:
+        name: "{{ virtualbox_packages }}"
+        state: present
+        update_cache: true
+      register: _pkg_install
+      retries: 3
+      until: _pkg_install is success
 
-    - name: Install additions
-      ansible.builtin.shell: /mnt/VBoxLinuxAdditions.run install 2>&1 > /root/vbox_addon_install.log
-      changed_when: false
-      failed_when: _cmd.rc not in [0, 2]
-      register: _cmd
+    - name: Start services
+      become: true
+      ansible.builtin.service:
+        name: "{{ item }}"
+        state: started
+        enabled: true
+      loop: "{{ virtualbox_services }}"
 
-    - name: Unmount ISO file
-      ansible.posix.mount:
-        path: /mnt
+    - name: Run commands to install from ISO
+      when: virtualbox_from_iso
+      become: true
+      block:
+        - name: Mount ISO file
+          ansible.posix.mount:
+            fstype: auto
+            path: /mnt
+            src: "{{ virtualbox_iso_location }}"
+            state: mounted
+            boot: false
+            opts: loop
+
+        - name: Install additions
+          ansible.builtin.shell: /mnt/VBoxLinuxAdditions.run install 2>&1 > /root/vbox_addon_install.log
+          changed_when: false
+          failed_when: _cmd.rc not in [0, 2]
+          register: _cmd
+
+        - name: Unmount ISO file
+          ansible.posix.mount:
+            path: /mnt
+            state: absent
+
+    - name: Remove packages
+      become: true
+      ansible.builtin.package:
+        name: "{{ virtualbox_remove_packages | default([]) }}"
+        state: absent
+      when: virtualbox_remove_packages
+
+    - name: Remove file
+      ansible.builtin.file:
+        path: "{{ virtualbox_iso_location }}"
         state: absent
 
-- name: Remove packages
-  become: true
-  ansible.builtin.package:
-    name: "{{ virtualbox_remove_packages | default([]) }}"
-    state: absent
-  when: virtualbox_remove_packages
+###############################################################################
+###############################################################################
+###############################################################################
+###############################################################################
+###############################################################################
 
-- name: Remove file
-  ansible.builtin.file:
-    path: "{{ virtualbox_iso_location }}"
-    state: absent
+- when: ansible_facts.distribution == 'NixOS'
+  block:
+    - name: Tell the configuration to pick up guest agent
+      ansible.builtin.replace:
+        path: /etc/nixos/configuration.nix
+        regexp: "\\./hardware-configuration\\.nix"
+        replace: |
+          ./hardware-configuration.nix
+          ./guest-agent.nix
+
+    - name: Create guest additions configuration
+      ansible.builtin.copy:
+        dest: /etc/nixos/guest-agent.nix
+        owner: vagrant
+        content: |
+          {...}:
+          {
+            virtualisation.virtualbox.guest = {
+              enable = true;
+              x11 = false;
+            };
+          }
+      notify: Rebuild nixos

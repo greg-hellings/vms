@@ -13,15 +13,6 @@
     state: absent
   when: ansible_facts.pkg_mgr not in ['atomic_container']
 
-- name: get build time
-  become: true
-  ansible.builtin.copy:
-    content: "{{ ansible_facts.date_time.date }} {{ ansible_facts.date_time.hour }}:{{ ansible_facts.date_time.minute }}"
-    dest: /etc/vagrant_box_build_time
-    owner: root
-    group: root
-    mode: 0644
-
 - name: create .ssh directory
   ansible.builtin.file:
     path: "{{ ansible_user_dir }}/.ssh"

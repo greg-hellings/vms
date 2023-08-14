@@ -1,6 +1,43 @@
+- name: Load version information
+  ansible.builtin.include_vars: "{{ item }}"
+  loop:
+    - "{{ role_path }}/vars/{{ ansible_facts['os_family'] }}.yml"
+    - "{{ role_path }}/vars/{{ ansible_facts['distribution'] }}.yml"
+    - "{{ role_path }}/vars/{{ ansible_facts['distribution'] }}_{{ ansible_facts['distribution_major_version'] }}.yml"
+    - "{{ role_path }}/vars/{{ ansible_facts['distribution'] }}_{{ ansible_facts['distribution_version'] }}.yml"
+  when: item is file
+
 - name: Install qemu-guest-agent
   become: true
   ansible.builtin.package:
     name:
       - qemu-guest-agent
     state: present
+  when: ansible_facts.distribution != 'NixOS'
+
+###############################################################################
+###############################################################################
+###############################################################################
+###############################################################################
+###############################################################################
+
+- when: ansible_facts.distribution == 'NixOS'
+  block:
+    - name: Tell the configuration to pick up guest agent
+      ansible.builtin.replace:
+        path: /etc/nixos/configuration.nix
+        regexp: "\\./hardware-configuration\\.nix"
+        replace: |
+          ./hardware-configuration.nix
+          ./guest-agent.nix
+
+    - name: Create guest additions configuration
+      ansible.builtin.copy:
+        dest: /etc/nixos/guest-agent.nix
+        owner: vagrant
+        content: |
+          {...}:
+          {
+            services.qemuGuest.enable = true;
+          }
+      notify: Rebuild nixos
