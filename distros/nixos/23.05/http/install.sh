@@ -3,6 +3,7 @@
 set -ex
 
 port="${1}"  # HTTP port that packer is running on
+host="${2}"
 
 if [ -e /dev/vda ]; then
 	disk="/dev/vda"
@@ -34,13 +35,13 @@ mount "${disk}1" /mnt
 
 # Bootstrap system
 nixos-generate-config --root /mnt
-curl -o /mnt/etc/nixos/configuration.nix http://10.0.2.2:"${port}"/configuration.nix
+curl -o /mnt/etc/nixos/configuration.nix "http://${host}:${port}/configuration.nix"
 sed -i -E -e "s,@BOOT_DEVICE@,${disk}," /mnt/etc/nixos/configuration.nix
 sed -i -E -e 's,(.*device = "/dev/disk/).*(".*),\1by-label/root\2,' /mnt/etc/nixos/hardware-configuration.nix
 nixos-install --no-root-password
 
 # Run stuff in the chroot
-curl -o /mnt/root/in-chroot.sh http://10.0.2.2:"${port}"/in-chroot.sh
+curl -o /mnt/root/in-chroot.sh "http://${host}:${port}/in-chroot.sh"
 nixos-enter --root /mnt -c 'bash /root/in-chroot.sh'
 rm /mnt/root/in-chroot.sh
 

@@ -18,7 +18,7 @@ source "vmware-iso" "x86_64" {
 	cpus = local.cpus
 	memory = local.memory
 	headless = var.headless
-	guest_os_type = "Linux_64"
+	#guest_os_type = "Linux_64"
 
 	http_content = var.http_files
 	http_directory = var.http_directory

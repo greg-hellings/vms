@@ -13,13 +13,16 @@ def get_vagrant_provider(provider):
         return "libvirt"
     elif provider.startswith("virtualbox"):
         return "virtualbox"
+    elif provider.startswith("vmware"):
+        return "vmware"
 
 
 def get_providers():
     "List of providers as defined in sources/"
     providers: set[str] = {
-        "virtualbox-iso.x86_64",
         "qemu.x86_64"
+        "virtualbox-iso.x86_64",
+        "vmware-iso.x86_64"
     }
     return providers
 
@@ -54,8 +57,9 @@ def main():
     for box in g`output/**/*.box`:
         p = pathlib.Path(box)
         sed -e f's#@@BOX@@#file:///home/greg/src/vms/vms/{box}#' -e f's/@@BOX_NAME@@/{p.name}/' Vagrantfile.in > Vagrantfile
-        if str(p.parent.name) in ["virtualbox", "libvirt"]:
-            vagrant up --provider @(p.parent.name)
+        vagrant box add @(box) --name @(p.name)
+        if str(p.parent.name) in ["virtualbox", "libvirt", "vmware"]:
+            vagrant up --provider vmware_fusion
         else:
             print(f"Now whatcha wanna go and do that for? {box}")
             continue

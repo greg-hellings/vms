@@ -3,5 +3,7 @@
     provider: qemu
   - arch: x86_64
     provider: virtualbox-iso
+  - arch: x86_64
+    provider: vmware-iso
 38: *supp
 rawhide: []

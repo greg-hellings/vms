@@ -3,6 +3,7 @@
 set -ex
 
 port="${1}"  # HTTP port that packer is running on
+host="${2}"
 
 loadkeys en  # Probably not necessary in a script, but here we are
 
@@ -40,7 +41,7 @@ pacstrap -K /mnt base linux nano sudo networkmanager openssh grub python3
 genfstab -L /mnt >> /mnt/etc/fstab
 
 # Run stuff in the chroot
-curl -o /mnt/in-chroot.sh http://10.0.2.2:"${port}"/in-chroot.sh
+curl -o /mnt/in-chroot.sh "http://${host}:${port}/in-chroot.sh"
 arch-chroot /mnt /usr/bin/bash /in-chroot.sh "${disk}"
 rm /mnt/in-chroot.sh
 

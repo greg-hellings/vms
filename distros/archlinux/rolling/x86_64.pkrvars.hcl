@@ -9,7 +9,7 @@ boot_command = [
   "<wait60>",  # Wait for system to come up?
   "curl -o /tmp/install.sh http://{{ .HTTPIP }}:{{ .HTTPPort }}/install.sh<enter>",
   "<wait5>",
-  "/usr/bin/bash /tmp/install.sh {{ .HTTPPort }}<enter>"
+  "/usr/bin/bash /tmp/install.sh {{ .HTTPPort }} {{ .HTTPIP }}<enter>"
 ]
 http_directory = "distros/archlinux/rolling/http/"
 boot_wait = "10s"
