@@ -7,6 +7,9 @@ from support import Support, BASE
 import time
 
 
+year, month, day, hour, minute, second, wday, jday, dst = time.localtime()
+STAMP = f"build={year}.{month}.{day}.{hour}"
+
 support = Support()
 parser = ArgumentParser("Build a box")
 parser.add_argument("--distro", "-d", help="Name of the distro/ folder")
@@ -16,10 +19,8 @@ parser.add_argument("--list", "-l", help="List all build targets")
 parser.add_argument("--all", "-a", help="Build all applicable targets", action="store_true")
 parser.add_argument("--upload", "-u", help="Force doing uploads", action="store_true")
 parser.add_argument("--headless", help="Run builds headless", action="store_true")
+parser.add_argument("--stamp", "-s", help="Time stamp for builds", default=STAMP)
 args = parser.parse_args()
-
-year, month, day, hour, minute, second, wday, jday, dst = time.localtime()
-STAMP = f"build={year}.{month}.{day}.{hour}"
 
 
 # Now provide menus if we don't have defaults
@@ -55,10 +56,10 @@ def do_build(build):
         if "VAGRANT_CLOUD_TOKEN" not in ${...}:
             print("You need to set your cloud token")
             sys.exit(1)
-        packer build -var @(headless) -var @(STAMP) @(build.var_file) @(build.only) @(BASE / "sources")
+        packer build -var @(headless) -var @(args.stamp) @(build.var_file) @(build.only) @(BASE / "sources")
     else:
         upload = "-except=upload"
-        packer build -var @(headless) -var @(STAMP) @(build.var_file) @(build.only) -except=upload @(BASE / "sources")
+        packer build -var @(headless) -var @(args.stamp) @(build.var_file) @(build.only) -except=upload @(BASE / "sources")
 
 if args.all or (args.distro and args.version and args.build):
     process_all()
