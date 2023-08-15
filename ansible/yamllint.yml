@@ -9,6 +9,7 @@ rules:
     level: error
   comments:
     require-starting-space: false
+  truthy: disable  # user-data files have lots of palces where the correct response is yes/no
 
 ignore: |
   .tox

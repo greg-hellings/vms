@@ -42,5 +42,6 @@ jobs:
           ansible: true
       - name: Run lint
         run: |
-          yamllint -c ansible/yamllint.yml ansible .github
+          yamllint -c ansible/yamllint.yml ansible .github distros
+          find distros/ -name user-data | xargs yamllint -c ansible/yamllint.yml
           # TODO: Add ansible-lint run

@@ -1,7 +1,7 @@
 rolling:
-- arch: x86_64
-  provider: qemu
-- arch: x86_64
-  provider: virtualbox-iso
-- arch: x86_64
-  provider: vmware-iso
+  - arch: x86_64
+    provider: qemu
+  - arch: x86_64
+    provider: virtualbox-iso
+  - arch: x86_64
+    provider: vmware-iso
