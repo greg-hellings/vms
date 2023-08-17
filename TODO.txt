@@ -4,10 +4,11 @@ Distros:
 * SuSE
 
 Providers:
-* VMWare
-* Parallels
+* VMWare -- Done
+* Parallels -- Requires money
 * Hyper-V
 
 Architecture:
 * arm64
 * ppcle64
+* RISC-V
