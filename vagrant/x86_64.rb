@@ -6,6 +6,8 @@ Vagrant.configure('2') do |c|
     v.connect_via_ssh = false
     #v.username = 'root'
     v.memory = 2048
+    # QEmu Guest Agent channel
+    v.qemu_use_agent = true
   end
   c.vm.provider :virtualbox do |v|
     v.gui = false

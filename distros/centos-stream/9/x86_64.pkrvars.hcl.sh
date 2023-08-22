@@ -14,8 +14,8 @@ sha="$(cat "${checksums}" | awk '/SHA256/ {print $4}')"
 rm "${checksums}"
 
 cat << HERPDERP > "${name}"
-distro = "centos"
-version = "9stream"
+distro = "centos-stream"
+version = "9"
 iso = {
 	url = "${baseurl}"
 	checksum = "${sha}"

@@ -24,9 +24,10 @@ sed -e 's/\s*\([\+0-9a-zA-Z]*\).*/\1/' << EOF | fdisk ${disk}
     # default start
     # default to full disk
   p # print, for debugging
-  r # return to normal mode
   w # write the partition table and exit
 EOF
+
+sleep 10  # Let me at least read it!
   #t # set partition type
   #1 # on partition 1
   #4 # BIOS boot

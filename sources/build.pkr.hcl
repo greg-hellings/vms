@@ -26,20 +26,29 @@ build {
 		"source.vmware-iso.x86_64"
 	]
 
-	provisioner "ansible" {
-		playbook_file = "ansible/playbook.yml"
-		galaxy_file = "ansible/requirements.yml"
-		user = local.ssh.username
-		use_sftp = true
-		ansible_ssh_extra_args = [
-			#"-o", "HostKeyAlgorithms=+ssh-rsa",
-			#"-o", "PubkeyAcceptedKeyTypes=+ssh-rsa",
-			"-o", "IdentitiesOnly=yes"
-		]
+	# If anything needs specific support for one of the distros
+	provisioner "shell" {
+		execute_command = "sudo -S sh -c '{{ .Vars }} {{ .Path }}'"
+		only = ["qemu.x86_64"]
+		script = "distros/${var.distro}/${var.version}/qemu.sh"
+	}
+	provisioner "shell" {
+		execute_command = "sudo -S sh -c '{{ .Vars }} {{ .Path }}'"
+		only = ["virtualbox-iso.x86_64"]
+		script = "distros/${var.distro}/${var.version}/virtualbox.sh"
+	}
+	provisioner "shell" {
+		execute_command = "sudo -S sh -c '{{ .Vars }} {{ .Path }}'"
+		only = ["vmware-iso.x86_64"]
+		script = "distros/${var.distro}/${var.version}/vmware.sh"
 	}
 
+	# Generic wrapping up the provisioner before packaging
 	provisioner "shell" {
+		execute_command = "sudo -S sh -c '{{ .Vars }} {{ .Path }}'"
 		scripts = [
+			"scripts/vagrant.sh",
+			"distros/${var.distro}/${var.version}/finalize.sh",
 			"scripts/minimize.sh"
 		]
 	}

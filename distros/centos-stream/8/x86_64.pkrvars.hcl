@@ -1,5 +1,5 @@
-distro = "centos"
-version = "8stream"
+distro = "centos-stream"
+version = "8"
 iso = {
 	url = "http://mirror.centos.org/centos/8-stream/isos/x86_64/CentOS-Stream-8-x86_64-latest-boot.iso"
 	checksum = "029ead89f720becd5ee2a8cf9935aad12fda7494d61674710174b4674b357530"

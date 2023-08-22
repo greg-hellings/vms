@@ -3,6 +3,7 @@
 {
 	imports = [
 		./hardware-configuration.nix
+		#PROVIDER_PLACEHOLDER
 	];
 
 	# Packages installed on the whole system
@@ -17,8 +18,10 @@
 		#xserver.enable = true;
 	};
 	# User setup
+	users.groups.vagrant = {};
 	users.users.vagrant = {
 		isNormalUser = true;
+		group = "vagrant";
 		extraGroups = [ "wheel" ];
 		password = "vagrant";
 	};

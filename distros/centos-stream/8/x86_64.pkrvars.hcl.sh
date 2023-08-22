@@ -12,8 +12,8 @@ done
 sha="$(cat "${checksums}" | grep latest-boot | grep SHA256 | cut -d' ' -f 4)"
 
 cat << HERPDERP > "${name}"
-distro = "centos"
-version = "8stream"
+distro = "centos-stream"
+version = "8"
 iso = {
 	url = "http://mirror.centos.org/centos/8-stream/isos/x86_64/CentOS-Stream-8-x86_64-latest-boot.iso"
 	checksum = "${sha}"

@@ -12,20 +12,7 @@
     - name: Help with debugging
       ansible.builtin.debug:
         msg: "Detected distro: {{ ansible_facts['distribution'] }}"
-
-    - name: get build time
-      become: true
-      ansible.builtin.copy:
-        content: "{{ ansible_facts.date_time.date }} {{ ansible_facts.date_time.hour }}:{{ ansible_facts.date_time.minute }}"
-        dest: /etc/vagrant_box_build_time
-        owner: root
-        group: root
-        mode: 0644
   roles:
-    - role: latest
-      when:
-        - ansible_facts.distribution not in no_touchy
-
     - role: devroles.system.epel
 
     - role: virtualbox
@@ -40,18 +27,6 @@
     - role: qemu
       when:
         - packer_builder_type == 'qemu'
-
-    - role: init
-      when:
-        - ansible_facts.distribution not in no_touchy
-
-    - role: locale
-      when:
-        - ansible_facts.distribution not in no_touchy
-
-    - role: vagrant
-      when:
-        - ansible_facts.distribution not in no_touchy
 
     - role: cleanup
       when:
