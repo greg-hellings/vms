@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -ex
 
-sed -i -e 's,#PROVIDER_PLACEHOLDER,guest-agent.nix,' /etc/nixos/configuration.nix
+sed -i -e 's,#PROVIDER_PLACEHOLDER,./guest-agent.nix,' /etc/nixos/configuration.nix
 cat << EOF > /etc/nixos/guest-agent.nix
 {...}:
 {

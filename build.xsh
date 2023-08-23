@@ -6,6 +6,8 @@ sys.path.append(str(Path(__file__).parent / "lib"))
 from support import Support, BASE
 import time
 
+source test.xsh
+
 
 year, month, day, hour, minute, second, wday, jday, dst = time.localtime()
 STAMP = f"build={year}.{month}.{day}.{hour}"
@@ -59,7 +61,12 @@ def do_build(build):
         packer build -var @(headless) -var @(args.stamp) @(build.var_file) @(build.only) @(BASE / "sources")
     else:
         upload = "-except=upload"
-        packer build -var @(headless) -var @(args.stamp) @(build.var_file) @(build.only) -except=upload @(BASE / "sources")
+        # Skip building file if we already have built it
+        output = Path(__file__).parent / "output" / get_vagrant_provider(build.provider.name) / f"{build.distro}-{build.version}-{build.provider.arch}.box"
+        if output.exists():
+            print(f"Skipping {build} as box already exists")
+        else:
+            packer build -var @(headless) -var @(args.stamp) @(build.var_file) @(build.only) -except=upload @(BASE / "sources")
 
 if args.all or (args.distro and args.version and args.build):
     process_all()

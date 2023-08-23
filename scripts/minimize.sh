@@ -1,7 +1,6 @@
 #!/bin/sh
 
-set -e
-set -x
+set -ex
 
 rm -rf /home/vagrant/.ansible
 sudo rm -rf /root/.ansible

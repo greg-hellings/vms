@@ -5,10 +5,8 @@ apt update
 apt upgrade -y
 
 # Configure sshd to be faster
-echo << EOF > /etc/ssh/sshd_config.d/00-vagrant_accept_pubkey.conf
-UseDNS no
-PubkeyAcceptedKeyTypes +ssh-rsa
-EOF
+sed -i -E -e 's,^.*(UseDNS).*$,\1 No,' /etc/ssh/sshd_config
+echo "PubkeyAcceptedKeyTypes +ssh-rsa" >> /etc/ssh/sshd_config
 
 # Clean up after ourselves
 apt-get clean

@@ -9,10 +9,8 @@ isolinux.cfg
 Vagrantfile
 
 # Generated distros
-distros/fedora-rawhide-*.hcl
-distros/centos-8stream-*.hcl
-distros/centos-9stream-*.hcl
-cellar/centos-9stream-*.hcl
+distros/fedora/rawhide/*.hcl
+distros/nixos/**/*.hcl
 
 __pycache__
 *.pyc
