@@ -6,4 +6,6 @@
   - arch: x86_64
     provider: vmware-iso
 38: *supp
-rawhide: *supp
+rawhide:
+  - arch: x86_64
+    provider: qemu

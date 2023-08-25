@@ -2,6 +2,7 @@
 set -ex
 
 apt update
+apt autoremove -y
 apt upgrade -y
 
 # Configure sshd to be faster

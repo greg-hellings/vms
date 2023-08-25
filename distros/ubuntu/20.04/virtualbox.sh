@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 set -ex
 
-apt install -y virtualbox-guest-dkms
-systemctl start vboxservice
-systemctl enable vboxservice
+# Nothing to install here, as the package is provided by the
+# kernal image in Ubuntu 20.04

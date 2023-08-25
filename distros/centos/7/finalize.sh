@@ -3,6 +3,6 @@ set -ex
 
 yum -y update
 
-yum remove make perl gcc kernel-devel kernel-headers bzip2
+yum remove -y make perl gcc kernel-devel kernel-headers bzip2
 
 yum clean all
