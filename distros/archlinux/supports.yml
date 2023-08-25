@@ -5,3 +5,5 @@ rolling:
     provider: virtualbox-iso
   - arch: x86_64
     provider: vmware-iso
+  - arch: x86_64
+    provider: hyperv-iso

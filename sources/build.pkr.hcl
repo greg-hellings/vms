@@ -16,6 +16,10 @@ packer {
       version = ">= 1.0"
       source = "github.com/hashicorp/vmware"
     }
+	hyperv = {
+	  version = "= 1.1.1"
+	  source = "github.com/hashicorp/hyperv"
+	}
   }
 }
 
@@ -23,7 +27,8 @@ build {
 	sources = [
 		"source.qemu.x86_64",
 		"source.virtualbox-iso.x86_64",
-		"source.vmware-iso.x86_64"
+		"source.vmware-iso.x86_64",
+		"source.hyperv-iso.x86_64"
 	]
 
 	# If anything needs specific support for one of the distros
