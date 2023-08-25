@@ -36,3 +36,16 @@ groupadd vagrant
 useradd vagrant -g vagrant -G wheel -m
 [ -d /home/vagrant ] || exit 1
 echo "vagrant:vagrant" | chpasswd
+
+# Do host-specific things
+virt="$(systemd-detect-virt)"
+# Values I've found so far
+#   "microsoft" == Hyper-V
+#   "oracle" == VirtualBox
+#   "KVM" == KVM/Qemu
+if [ "${virt}" == "microsoft" ]; then
+	pacman -S --noconfirm hyperv
+	systemctl enable hv_fcopy_daemon
+	systemctl enable hv_kvp_daemon
+	systemctl enable hv_vss_daemon
+fi

@@ -1,7 +1,7 @@
 source "hyperv-iso" "x86_64" {
 	iso_url = var.iso.url
 	iso_checksum = var.iso.checksum
-	output_directory = "output/libvirt/${local.name}"
+	output_directory = "output/hyperv/${local.name}"
 
 	boot_command = var.boot_command
 	shutdown_command = var.shutdown_command
@@ -11,7 +11,7 @@ source "hyperv-iso" "x86_64" {
 	ssh_password = local.ssh.password
 	ssh_handshake_attempts = local.ssh.handshake_attempts
 	ssh_private_key_file = local.ssh.private_key_file
-
+	
 	vm_name = "packer-${local.name}"
 	disk_size = "${local.disk_size}000"
 	cpus = local.cpus

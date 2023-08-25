@@ -4,7 +4,7 @@ from pathlib import Path
 from yaml import load, Loader
 
 
-BASE = Path(__file__).parent.parent
+BASE = Path(__file__).parent.parent.resolve()
 
 
 class Support:

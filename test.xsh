@@ -15,6 +15,10 @@ def get_vagrant_provider(provider):
         return "virtualbox"
     elif provider.startswith("vmware"):
         return "vmware"
+    elif provider.startswith("hyperv"):
+        return "hyperv"
+    else:
+        return provider
 
 
 def get_providers():
@@ -56,9 +60,14 @@ def main():
     #$RAISE_SUBPROC_ERROR = True
     for box in g`output/**/*.box`:
         p = pathlib.Path(box)
-        sed -e f's#@@BOX@@#file:///home/greg/src/vms/vms/{box}#' -e f's/@@BOX_NAME@@/{p.name}/' Vagrantfile.in > Vagrantfile
+        with open("Vagrantfile.in", "r") as fr:
+            content = fr.read()
+        content = content.replace("@@BOX@@", f"file:///home/greg/src/vms/vms/{box}")
+        content = content.replace("@@BOX_NAME@@", p.name)
+        with open("Vagrantfile", "w") as fw:
+            fw.write(content)
         vagrant box add @(box) --name @(p.name)
-        if str(p.parent.name) in ["virtualbox", "libvirt", "vmware"]:
+        if str(p.parent.name) in ["virtualbox", "libvirt", "vmware", "hyperv"]:
             vagrant up --provider @(p.parent.name)
         else:
             print(f"Now whatcha wanna go and do that for? {box}")
