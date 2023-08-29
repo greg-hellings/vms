@@ -15,3 +15,5 @@ distros/nixos/**/*.hcl
 __pycache__
 *.pyc
 *.pyo
+packer_cache
+.venv
