@@ -129,6 +129,7 @@ btrfs filesystem sync /
 # Let's clean it up.
 echo "Cleanup leftover networking configuration"
 rm -f /etc/NetworkManager/system-connections/*.nmconnection
+#*/
 
 # Truncate the /etc/resolv.conf left over from NetworkManager during the
 # kickstart. This causes delays in boot with cloud-init because the
@@ -142,7 +143,6 @@ truncate -s 0 /etc/machine-id
 sed -i 's,Defaults\\s*requiretty,Defaults !requiretty,' /etc/sudoers
 echo 'vagrant ALL=(ALL) NOPASSWD: ALL' > /etc/sudoers.d/vagrant-nopasswd
 sed -i 's/.*UseDNS.*/UseDNS no/' /etc/ssh/sshd_config
-#'
 
 cat > /etc/ssh/sshd_config.d/10-vagrant-insecure-rsa-key.conf <<EOF
 # For now the vagrant insecure key is an rsa key

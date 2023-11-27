@@ -1,8 +1,8 @@
 distro = "fedora"
 version = "rawhide"
 iso = {
-	url = "https://download.fedoraproject.org/pub/fedora/linux/development/rawhide/Server/x86_64/iso/./Fedora-Server-dvd-x86_64-Rawhide-20230824.n.0.iso"
-	checksum = "70f626198b172da63fb991e61dd571ab2be66e2f7d0795f4c14c6c52a33f57df"
+	url = "https://download.fedoraproject.org/pub/fedora/linux/development/rawhide/Server/x86_64/iso/Fedora-Server-dvd-x86_64-Rawhide-20231126.n.0.iso"
+	checksum = "5613927b713cac9503a6475de95c518c9615a0aeb784b6444764a1ee0b1b69af"
 }
 boot_command = [
   "<up>e<down><down><end><bs><bs><bs><bs><bs>",
