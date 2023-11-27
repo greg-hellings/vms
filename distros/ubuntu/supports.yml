@@ -6,4 +6,5 @@
   - arch: x86_64
     provider: vmware-iso
 22.04: *supp
+"23.10": *supp
 #18.04: *supp  # EOL
