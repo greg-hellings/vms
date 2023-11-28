@@ -66,7 +66,7 @@ jobs:
           packer build -only="${{ matrix.builder }}" -var-file="${file}" -var "qemu_accelerator=tcg" -var "build=${{ needs.collect.outputs.build }}" ${{ github.event_name != 'release' && '-except=upload' || '' }} sources
         env:
           VAGRANT_CLOUD_TOKEN: ${{ secrets.VAGRANT_CLOUD_TOKEN }}
-          PACKER_LOG: ${{ contains(matrix.needs_timeout, matrix.distro) && '0' || '0' }}
+          PACKER_LOG: 1 #${{ contains(matrix.needs_timeout, matrix.distro) && '0' || '0' }}
       - name: Upload artifact
         if: ${{ failure() }}
         uses: actions/upload-artifact@v3
