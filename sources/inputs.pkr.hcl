@@ -83,8 +83,8 @@ locals {
 		build = var.build
 	})
 
-	cpus = 2
-	memory = 4096
+	cpus = 4
+	memory = 8192
 	disk_size = 10
 	ssh = {
 		username = "vagrant"
