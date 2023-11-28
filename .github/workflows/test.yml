@@ -25,7 +25,7 @@ jobs:
             packer validate -except=upload -var-file=${vars} sources/
           done
       - name: Run Packer format check
-        run: packer fmt -check -recursive .
+        run: packer fmt -check $(git ls-files | grep -E -e '.hcl$')
 
   lint:
     name: Lint shell code
