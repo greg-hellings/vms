@@ -10,7 +10,7 @@ packer {
     }
     vagrant = {
       source  = "github.com/hashicorp/vagrant"
-      version = "~> 1"
+      version = "1.1.1"
     }
     vmware = {
       version = ">= 1.0"
@@ -25,26 +25,26 @@ packer {
 
 build {
 	sources = [
-		"source.qemu.x86_64",
-		"source.virtualbox-iso.x86_64",
-		"source.vmware-iso.x86_64",
-		"source.hyperv-iso.x86_64"
+		"source.qemu.amd64",
+		"source.virtualbox-iso.amd64",
+		"source.vmware-iso.amd64",
+		"source.hyperv-iso.amd64"
 	]
 
 	# If anything needs specific support for one of the distros
 	provisioner "shell" {
 		execute_command = "sudo -S sh -c '{{ .Vars }} {{ .Path }}'"
-		only = ["qemu.x86_64"]
+		only = ["qemu.amd64"]
 		script = "distros/${var.distro}/${var.version}/qemu.sh"
 	}
 	provisioner "shell" {
 		execute_command = "sudo -S sh -c '{{ .Vars }} {{ .Path }}'"
-		only = ["virtualbox-iso.x86_64"]
+		only = ["virtualbox-iso.amd64"]
 		script = "distros/${var.distro}/${var.version}/virtualbox.sh"
 	}
 	provisioner "shell" {
 		execute_command = "sudo -S sh -c '{{ .Vars }} {{ .Path }}'"
-		only = ["vmware-iso.x86_64"]
+		only = ["vmware-iso.amd64"]
 		script = "distros/${var.distro}/${var.version}/vmware.sh"
 	}
 
@@ -69,7 +69,9 @@ build {
 		post-processor "vagrant-cloud" {
 			name = "upload"
 			access_token = var.vagrant_cloud_token
+			architecture = var.architecture
 			box_tag = "boxen/${local.name}"
+			default_architecture = "amd64"
 			version = var.build
 			version_description = local.description
 		}

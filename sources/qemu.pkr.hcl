@@ -3,7 +3,7 @@ variable "qemu_accelerator" {
 	default = "kvm"
 }
 
-source "qemu" "x86_64" {
+source "qemu" "amd64" {
 	iso_url = var.iso.url
 	iso_checksum = var.iso.checksum
 	output_directory = "output/libvirt/${local.name}"

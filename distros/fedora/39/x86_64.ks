@@ -34,10 +34,17 @@ url --mirrorlist=https://mirrors.fedoraproject.org/mirrorlist?repo=fedora-$relea
 reboot
 
 ##### begin package list #############################################
-%packages --inst-langs=en
+%packages --instLangs=en
 
 # Include packages for the cloud-server-environment group
 @^cloud-server-environment
+
+# Install the tracer dnf plugin to enable automatic reboots
+# IF the user requests package updates
+# AND requests a reboot
+# AND the packages updated require a reboot.
+# https://fedoraproject.org/wiki/Changes/Automatic_Cloud_Reboot_On_Updates
+python3-dnf-plugin-tracer
 
 # Don't include the kernel toplevel package since it pulls in
 # kernel-modules. We're happy for now with kernel-core.
@@ -136,6 +143,7 @@ btrfs filesystem sync /
 # Let's clean it up.
 echo "Cleanup leftover networking configuration"
 rm -f /etc/NetworkManager/system-connections/*.nmconnection
+#*/
 
 # Truncate the /etc/resolv.conf left over from NetworkManager during the
 # kickstart. This causes delays in boot with cloud-init because the
@@ -149,15 +157,20 @@ truncate -s 0 /etc/machine-id
 sed -i 's,Defaults\\s*requiretty,Defaults !requiretty,' /etc/sudoers
 echo 'vagrant ALL=(ALL) NOPASSWD: ALL' > /etc/sudoers.d/vagrant-nopasswd
 sed -i 's/.*UseDNS.*/UseDNS no/' /etc/ssh/sshd_config
-#'
 
 cat > /etc/ssh/sshd_config.d/10-vagrant-insecure-rsa-key.conf <<EOF
 # For now the vagrant insecure key is an rsa key
-# https://github.com/hashicorp/vagrant/issues/11783
+# htfedoratps://github.com/hashicorp/vagrant/issues/11783
 PubkeyAcceptedKeyTypes=+ssh-rsa
 EOF
 
 ssh-keygen -A
+
+mkdir -m 0700 -p /home/vagrant/.ssh/
+curl -L -o /home/vagrant/.ssh/authorized_keys "https://raw.githubusercontent.com/hashicorp/vagrant/main/keys/vagrant.pub"
+chown -R vagrant:vagrant /home/vagrant/.ssh
+chmod 600 /home/vagrant/.ssh/authorized_keys
+chcon -R unconfined_u:object_r:user_home_t:s0 /home/vagrant/.ssh
 
 %end
 ##### end kickstart post ############################################

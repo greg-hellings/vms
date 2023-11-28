@@ -1,9 +1,9 @@
 7:
-  - arch: x86_64
+  - arch: amd64
     provider: qemu
-  - arch: x86_64
+  - arch: amd64
     provider: virtualbox-iso
-  - arch: x86_64
+  - arch: amd64
     provider: vmware-iso
-  - arch: x86_64
+  - arch: amd64
     provider: hyperv-iso

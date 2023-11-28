@@ -1,8 +1,8 @@
 distro = "debian"
 version = "12"
 iso = {
-	url = "https://cdimage.debian.org/cdimage/archive/12.0.0/amd64/iso-cd/debian-12.0.0-amd64-netinst.iso"
-	checksum = "3b0e9718e3653435f20d8c2124de6d363a51a1fd7f911b9ca0c6db6b3d30d53e"
+	url = "http://cdimage.debian.org/cdimage/release/12.2.0/amd64/iso-cd/debian-12.2.0-amd64-netinst.iso"
+	checksum = "23ab444503069d9ef681e3028016250289a33cc7bab079259b73100daee0af66"
 }
 boot_command = [
 	"<esc><wait>",

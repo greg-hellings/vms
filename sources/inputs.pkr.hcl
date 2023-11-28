@@ -10,7 +10,7 @@ variable "distro" {
 
 variable "arch" {
 	type = string
-	default = "x86_64"
+	default = "amd64"
 }
 
 variable "version" {

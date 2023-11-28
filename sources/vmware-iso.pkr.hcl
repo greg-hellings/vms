@@ -1,4 +1,4 @@
-source "vmware-iso" "x86_64" {
+source "vmware-iso" "amd64" {
 	iso_url = var.iso.url
 	iso_checksum = var.iso.checksum
 	output_directory = "output/vmware/${local.name}"

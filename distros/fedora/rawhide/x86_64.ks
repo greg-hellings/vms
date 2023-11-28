@@ -75,6 +75,9 @@ qemu-guest-agent
 # in /usr/share/GeoIP
 -geolite2-country
 -geolite2-city
+
+# Specific to vagrant
+dnf-yum
 rsync
 fuse-sshfs
 %end
@@ -83,16 +86,26 @@ fuse-sshfs
 
 ##### begin kickstart post ###########################################
 %post --erroronfail
+#!/bin/bash
 set -x
+if [ -e /dev/vda ]; then
+	device="/dev/vda"
+elif [ -e /dev/sda ]; then
+	device="/dev/sda"
+else
+	echo "No device found"
+	exit 1
+fi
+
 
 if [ "$(arch)" = "x86_64" ]; then
 # Set up legacy BIOS boot if we booted from UEFI
-grub2-install --target=i386-pc /dev/vda
+grub2-install --target=i386-pc "${device}"
 fi
 
 # Blivet sets pmbr_boot flag erroneously and we need to purge it
 # otherwise it'll fail to boot
-parted /dev/vda disk_set pmbr_boot off
+parted "${device}" disk_set pmbr_boot off
 
 # linux-firmware is installed by default and is quite large. As of mid 2020:
 #   Total download size: 97 M
@@ -145,12 +158,21 @@ echo 'vagrant ALL=(ALL) NOPASSWD: ALL' > /etc/sudoers.d/vagrant-nopasswd
 sed -i 's/.*UseDNS.*/UseDNS no/' /etc/ssh/sshd_config
 
 cat > /etc/ssh/sshd_config.d/10-vagrant-insecure-rsa-key.conf <<EOF
-# For now the vagrant insecure key is an rsa key
-# https://github.com/hashicorp/vagrant/issues/11783
+# Starting in Vagrant 2.3.8 there is support for an EDDSA25519 key,
+# but prior to that, only the insecure RSA is available. When the time
+# comes, we can remove this bit, but we keep it for a long time
+# for backwards compatibility
 PubkeyAcceptedKeyTypes=+ssh-rsa
 EOF
 
 ssh-keygen -A
+
+
+mkdir -m 0700 -p /home/vagrant/.ssh/
+curl -L -o /home/vagrant/.ssh/authorized_keys "https://raw.githubusercontent.com/hashicorp/vagrant/main/keys/vagrant.pub"
+chown -R vagrant:vagrant /home/vagrant/.ssh
+chmod 600 /home/vagrant/.ssh/authorized_keys
+chcon -R unconfined_u:object_r:user_home_t:s0 /home/vagrant/.ssh
 
 %end
 ##### end kickstart post ############################################
