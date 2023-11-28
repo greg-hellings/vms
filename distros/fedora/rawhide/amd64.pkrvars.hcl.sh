@@ -15,7 +15,7 @@ checksums="${tmp}/checksums"
 # First, find the proper URL, since it updates every build
 curl -L -o "${listing}" "${fedora}"
 links="$(pup -f "${listing}" 'a[href*=".iso"] attr{href}' | grep dvd)"
-iso_name="$(echo "${links}" | grep -e 'iso$')"
+iso_name="$(echo "${links}" | grep -e 'iso$' | head -1)"
 iso="${fedora}${iso_name}"
 
 # Read the SHA256 sum value
