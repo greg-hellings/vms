@@ -21,7 +21,7 @@ runs:
         # Install virtualbox
         sudo apt-get update
         # Install QEmu, etc
-        sudo apt-get install -y unzip python3-{virtualenv,yaml} cloud-utils xorriso qemu-system-{x86,ppc} vagrant
+        sudo apt-get install -y unzip cloud-utils xorriso qemu-system-{x86,ppc} vagrant
         # Install packer.io
         curl -O https://releases.hashicorp.com/packer/${{ inputs.version }}/packer_${{ inputs.version }}_linux_amd64.zip
         unzip -o packer_${{ inputs.version }}_linux_amd64.zip -d /usr/local/bin
