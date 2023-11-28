@@ -63,7 +63,13 @@ jobs:
           # Strip .sh if it is a dynamic one
           file="$(printf '%s' "${{ matrix.distro }}" | sed -E -e 's/^(.*).sh$/\1/')"
           # Add a retry in case something bogus like a network failure happens
-          packer build -only="${{ matrix.builder }}" -var-file="${file}" -var "qemu_accelerator=tcg" -var "build=${{ needs.collect.outputs.build }}" ${{ github.event_name != 'release' && '-except=upload' || '' }} sources
+          packer build -only="${{ matrix.builder }}" \
+                       -var-file="${file}" \
+                       -var "qemu_accelerator=tcg" \
+                       -var "build=${{ needs.collect.outputs.build }}" \
+                       -var "cpu_model=x86 Skylake-Client" \
+                       ${{ github.event_name != 'release' && '-except=upload' || '' }} \
+                       sources
         env:
           VAGRANT_CLOUD_TOKEN: ${{ secrets.VAGRANT_CLOUD_TOKEN }}
           PACKER_LOG: 1 #${{ contains(matrix.needs_timeout, matrix.distro) && '0' || '0' }}

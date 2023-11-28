@@ -24,7 +24,7 @@ source "qemu" "amd64" {
   headless   = var.headless
   disk_cache = "writeback"
   format     = "qcow2"
-  cpu_model  = "host"
+  cpu_model  = var.cpu_model
 
   qemuargs = [
     #["-chardev", "stdio,id=char0,logfile=serial-output-qemu-${var.arch}-${var.distro}-${var.version},signal=off"],

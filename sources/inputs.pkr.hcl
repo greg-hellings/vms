@@ -74,6 +74,11 @@ variable "http_directory" {
   default = ""
 }
 
+variable "cpu_model" {
+  type    = string
+  default = "host"
+}
+
 locals {
   name = "${var.distro}-${var.version}"
   description = templatefile("../README.box.md", {
