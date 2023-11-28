@@ -80,7 +80,7 @@ jobs:
                        -var-file="${file}" \
                        -var "qemu_accelerator=tcg" \
                        -var "build=${{ needs.collect.outputs.build }}" \
-                       -var "cpu_model=x86 Skylake-Client" \
+                       -var "cpu_model=Skylake-Client" \
                        ${{ github.event_name != 'release' && '-except=upload' || '' }} \
                        sources
         env:
