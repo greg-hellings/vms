@@ -34,6 +34,4 @@ jobs:
       - name: Install shellcheck
         run: |
           shellcheck --version
-          for script in $(find . -name '*.sh'); do
-            shellcheck "${script}"
-          done
+          shellcheck $(find . -name '*.sh')

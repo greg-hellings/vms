@@ -10,7 +10,7 @@ checksums="$(mktemp)"
 until curl -f -L -o "${checksums}" "${baseurl}.SHA256SUM"; do
 	sleep 1
 done
-sha="$(cat "${checksums}" | awk '/SHA256/ {print $4}')"
+sha="$(awk '/SHA256/ {print $4}' "${checksums}")"
 rm "${checksums}"
 
 cat << HERPDERP > "${name}"

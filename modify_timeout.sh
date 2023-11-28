@@ -4,11 +4,11 @@ set -exo pipefail
 distro="${1}"
 
 # Find URL
-url="$(cat "${distro}" | grep url | cut -f2 -d'"')"
+url="$(grep -e url "${distro}" | cut -f2 -d'"')"
 curl -C - -O "${url}"
 
 # Mount and extract
-file=$(printf "${url}" | sed -E -e 's#.*/(.*)$#\1#')
+file=$(printf '%s' "${url}" | sed -E -e 's#.*/(.*)$#\1#')
 work="$(mktemp -d)"
 xorriso -osirrox on -indev "${file}" -extract / "${work}"
 
