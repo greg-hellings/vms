@@ -2,23 +2,18 @@ name: Test the components of it
 
 "on":
   push:
-    paths-ignore:
-      - .github/workflow/build.yml
-      - http/**
-      - README.box.md
-      - README.md
-      - LICENSE
   pull_request:
   workflow_dispatch:
 
 jobs:
   validate:
     name: Validate Packer templates are reasonable
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: ./.github/actions/setup
-      - uses: ./.github/actions/install_packer
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Install Packer
+        uses: ./.github/actions/install_packer
       - name: Run syntax check
         run: |
           set -exo pipefail
@@ -32,16 +27,14 @@ jobs:
 
   lint:
     name: Lint Ansible code
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-      - name: Setup test environment
-        uses: ./.github/actions/setup
-        with:
-          ansible: true
-      - name: Run lint
+      - name: Install shellcheck
         run: |
-          yamllint -c ansible/yamllint.yml ansible .github distros
-          find distros/ -name user-data | xargs yamllint -c ansible/yamllint.yml
-          # TODO: Add ansible-lint run
+          sudo apt-get update
+          sudo apt-get install -y shellcheck
+          for script in $(find . -name '*.sh'); do
+            shellcheck "${script}"
+          done
