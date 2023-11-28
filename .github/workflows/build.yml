@@ -23,7 +23,7 @@ jobs:
         run: |-
           set -eo pipefail
           distros=$(find distros -name '*.hcl' -o -name '*.hcl.sh' | jq -cRs 'split("\n") | [ .[] | if length > 0 then . else empty end ]')
-          echo "::set-output name=distros::${distros}"
+          echo "name=distros::${distros}" >> $GITHUB_OUTPUT
       - name: Find timestamp for versioning
         id: time
         uses: nanzm/get-time-action@v1.1
