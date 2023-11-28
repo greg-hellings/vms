@@ -11,17 +11,18 @@ name: Build the boxes
 jobs:
   collect:
     name: Discover distros
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     outputs:
       distros: ${{ steps.distros.outputs.distros }}
       build: ${{ steps.time.outputs.time }}
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v3
       - name: Discover boxes
         id: distros
         run: |-
           set -eo pipefail
-          distros=$(ls distros/*.hcl{,.sh} | jq -cRs 'split("\n") | [ .[] | if length > 0 then . else empty end ]')
+          distros=$(find distros -name '*.hcl' -o -name '*.hcl.sh' | jq -cRs 'split("\n") | [ .[] | if length > 0 then . else empty end ]')
           echo "::set-output name=distros::${distros}"
       - name: Find timestamp for versioning
         id: time
@@ -46,20 +47,10 @@ jobs:
     steps:
       - name: Checkout project
         uses: actions/checkout@v3
-        with:
-          submodules: recursive
-      - name: Setup system dependnecies
-        uses: ./.github/actions/setup
-        with:
-          ansible: true
       - name: Install Packer and related tools
         uses: ./.github/actions/install_packer
       - name: Clear disk space
         uses: greg-hellings/make-space@main
-      - name: Modify build timeouts, if necessary
-        if: contains(matrix.needs_timeout, matrix.distro)
-        shell: bash
-        run: ./modify_timeout.sh "${{ matrix.distro }}"
       - name: Run generator, if necessary
         if: endsWith(matrix.distro, '.sh')
         run: "${{ matrix.distro }}"
@@ -68,7 +59,7 @@ jobs:
         run: |
           set -e
           # Strip .sh if it is a dynamic one
-          file="$(printf "${{ matrix.distro }}" | sed -E -e 's/^(.*).sh$/\1/')"
+          file="$(printf '%s' "${{ matrix.distro }}" | sed -E -e 's/^(.*).sh$/\1/')"
           # Add a retry in case something bogus like a network failure happens
           packer build -only="${{ matrix.builder }}" -var-file="${file}" -var "qemu_accelerator=tcg" -var "build=${{ needs.collect.outputs.build }}" ${{ github.event_name != 'release' && '-except=upload' || '' }} sources
         env:
