@@ -13,7 +13,7 @@ jobs:
         uses: actions/checkout@v3
       - name: Install Packer
         uses: ./.github/actions/install_packer
-      - name: Run syntax check
+      - name: Run validate check
         run: |
           set -exo pipefail
           packer init sources
@@ -24,6 +24,8 @@ jobs:
             fi
             packer validate -except=upload -var-file=${vars} sources/
           done
+      - name: Run Packer format check
+        run: packer fmt -check -recursive .
 
   lint:
     name: Lint shell code
