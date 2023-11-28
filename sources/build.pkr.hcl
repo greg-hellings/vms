@@ -10,7 +10,7 @@ packer {
     }
     vagrant = {
       source  = "github.com/hashicorp/vagrant"
-      version = "1.1.1"
+      version = "= 1.1.1"
     }
     vmware = {
       version = ">= 1.0"
