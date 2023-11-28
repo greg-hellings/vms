@@ -16,10 +16,14 @@ packer {
       version = ">= 1.0"
       source = "github.com/hashicorp/vmware"
     }
-	hyperv = {
-	  version = "= 1.1.1"
-	  source = "github.com/hashicorp/hyperv"
-	}
+    hyperv = {
+      version = "= 1.1.1"
+      source = "github.com/hashicorp/hyperv"
+    }
+    virtualbox = {
+      source  = "github.com/hashicorp/virtualbox"
+      version = "~> 1"
+    }
   }
 }
 
@@ -69,7 +73,7 @@ build {
 		post-processor "vagrant-cloud" {
 			name = "upload"
 			access_token = var.vagrant_cloud_token
-			architecture = var.architecture
+			architecture = var.arch
 			box_tag = "boxen/${local.name}"
 			default_architecture = "amd64"
 			version = var.build

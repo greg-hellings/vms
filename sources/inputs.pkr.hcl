@@ -75,7 +75,7 @@ variable "http_directory" {
 }
 
 locals {
-	name = "${var.distro}-${var.version}-${var.arch}"
+	name = "${var.distro}-${var.version}"
 	description = templatefile("../README.box.md", {
 		distro = var.distro
 		arch = var.arch
