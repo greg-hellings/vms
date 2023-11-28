@@ -1,4 +1,4 @@
-name: Test the components of it
+name: Perform formatting and sanity checks
 
 "on":
   push:
@@ -17,6 +17,7 @@ jobs:
       - name: Run syntax check
         run: |
           set -exo pipefail
+          packer init sources
           for vars in $(find distros/ -name '*.pkrvars.hcl'); do
             if [[ "${vars}" == *.sh ]]; then
               "./${vars}"
@@ -26,7 +27,7 @@ jobs:
           done
 
   lint:
-    name: Lint Ansible code
+    name: Lint shell code
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
