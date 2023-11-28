@@ -81,6 +81,8 @@ jobs:
                        -var "qemu_accelerator=tcg" \
                        -var "build=${{ needs.collect.outputs.build }}" \
                        -var "cpu_model=Skylake-Client" \
+                       -var "cpus=2" \
+                       -var "memory=4096" \
                        ${{ github.event_name != 'release' && '-except=upload' || '' }} \
                        sources
         env:

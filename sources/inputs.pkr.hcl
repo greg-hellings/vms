@@ -79,6 +79,16 @@ variable "cpu_model" {
   default = "host"
 }
 
+variable "cpus" {
+  type    = number
+  default = 4
+}
+
+variable "memory" {
+  type    = number
+  default = 8192
+}
+
 locals {
   name = "${var.distro}-${var.version}"
   description = templatefile("../README.box.md", {
@@ -88,8 +98,8 @@ locals {
     build   = var.build
   })
 
-  cpus      = 4
-  memory    = 8192
+  cpus      = var.cpus
+  memory    = var.memory
   disk_size = 10
   ssh = {
     username           = "vagrant"
