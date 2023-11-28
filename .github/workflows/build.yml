@@ -27,7 +27,7 @@ jobs:
           cat "$GITHUB_OUTPUT"
       - name: Find timestamp for versioning
         id: time
-        uses: nanzm/get-time-action@v1.1
+        uses: nanzm/get-time-action@v2
         with:
           format: 'YYYY.MM.DD.HH'
 
