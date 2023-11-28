@@ -52,6 +52,17 @@ jobs:
         uses: ./.github/actions/install_packer
       - name: Clear disk space
         uses: greg-hellings/make-space@main
+      - name: Output tool versions
+        shell: bash
+        run: |
+          set -x
+          packer -version
+          if $(command -v qemu-system-x86_64); then
+            qemu-system-x86_64 -version
+          fi
+          if $(command -v VBoxManage); then
+            VBoxManage --version;
+          fi
       - name: Run generator, if necessary
         if: endsWith(matrix.distro, '.sh')
         run: "${{ matrix.distro }}"
