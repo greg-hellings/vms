@@ -19,7 +19,7 @@ iso_name="$(echo "${links}" | grep -e 'iso$')"
 iso="${fedora}${iso_name}"
 
 # Read the SHA256 sum value
-sums="$(pup -f "${listing}" 'a[href*="CHECKSUM"] attr{href}')"
+sums="$(pup -f "${listing}" 'a[href*="CHECKSUM"] attr{href}' | head -1)"
 until curl -f -L -o "${checksums}" "${fedora}${sums}"; do
 	sleep 1
 done
