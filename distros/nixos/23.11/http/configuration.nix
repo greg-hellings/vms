@@ -6,7 +6,7 @@
 		#PROVIDER_PLACEHOLDER
 	];
 
-	system.stateVersion = "23.05";
+	system.stateVersion = "23.11";
 
 	# Packages installed on the whole system
 	environment.systemPackages = with pkgs; [

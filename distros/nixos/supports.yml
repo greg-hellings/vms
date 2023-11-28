@@ -1,7 +1,8 @@
-23.05:
+23.05: &supp
   - arch: amd64
     provider: qemu
   - arch: amd64
     provider: virtualbox-iso
   - arch: amd64
     provider: vmware-iso
+23.11: *supp
