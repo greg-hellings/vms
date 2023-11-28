@@ -55,11 +55,13 @@ jobs:
       - name: Run generator, if necessary
         if: endsWith(matrix.distro, '.sh')
         run: "${{ matrix.distro }}"
+      - name: Install Packer plugins
+        shell: bash
+        run: packer init sources
       - name: Build
         shell: bash
         run: |
           set -e
-          packer init sources
           # Strip .sh if it is a dynamic one
           file="$(printf '%s' "${{ matrix.distro }}" | sed -E -e 's/^(.*).sh$/\1/')"
           # Add a retry in case something bogus like a network failure happens
