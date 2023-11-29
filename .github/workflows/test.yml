@@ -19,7 +19,7 @@ jobs:
         uses: actions/cache/restore@v3
         id: cache-restore
         with:
-          path: $HOME/.config/packer/plugins
+          path: ~/.config/packer/plugins
           key: ${{ runner.os }}-${{ hashFiles('sources/build.pkr.hcl') }}
 
       - name: Install Packer plugins
