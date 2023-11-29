@@ -11,12 +11,31 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+
       - name: Install Packer
         uses: ./.github/actions/install_packer
+
+      - name: Restore Packer plugin cache
+        uses: actions/cache/restore@v3
+        id: cache-restore
+        with:
+          path: $HOME/.config/packer/plugins
+          key: ${{ runner.os }}-${{ hashFiles('sources/build.pkr.hcl') }}
+
+      - name: Install Packer plugins
+        shell: bash
+        run: packer init sources
+
+      - name: Cache Packer plugins
+        uses: actions/cache/save@v3
+        if: always()
+        with:
+          path: $HOME/.config/packer/plugins
+          key: ${{ steps.cache-restore.outputs.cache-primary-key }}
+
       - name: Run validate check
         run: |
           set -exo pipefail
-          packer init sources
           for vars in $(find distros/ -name '*.pkrvars.hcl*'); do
             if [[ "${vars}" == *.sh ]]; then
               "./${vars}"
@@ -24,6 +43,7 @@ jobs:
             fi
             packer validate -except=upload -var-file=${vars} sources/
           done
+
       - name: Run Packer format check
         run: git ls-files | grep -E -e '.hcl$' | xargs -L 1 packer fmt -check
 
@@ -33,6 +53,7 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+
       - name: Install shellcheck
         run: |
           shellcheck --version
