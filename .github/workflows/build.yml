@@ -57,10 +57,10 @@ jobs:
         run: |
           set -x
           packer -version
-          if $(command -v qemu-system-x86_64 -version); then
+          if $(type qemu-system-x86_64); then
             qemu-system-x86_64 -version
           fi
-          if $(command -v VBoxManage); then
+          if $(type VBoxManage); then
             VBoxManage --version;
           fi
       - name: Run generator, if necessary
