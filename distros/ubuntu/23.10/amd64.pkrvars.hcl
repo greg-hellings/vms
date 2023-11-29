@@ -6,12 +6,12 @@ iso = {
 }
 boot_command = [
   "e<down><down><down><end><bs><bs><bs>",
-  "console=tty0 ",
-  "fsck.mode=skip ",
-  "locale=en_US ",
-  "auto=true ",
-  "priority=critical ",
-  "autoinstall",
+  "console=tty0 <wait>",
+  "fsck.mode=skip <wait>",
+  "locale=en_US <wait>",
+  "auto=true <wait>",
+  "priority=critical <wait>",
+  "autoinstall<wait>",
   "<F10>",
 ]
 cd_files = [

@@ -6,11 +6,11 @@ iso = {
 }
 boot_command = [
   "<esc><wait>",
-  "auto ",
-  "DEBIAN_FRONTEND=text ",
-  "preseed/url=http://{{.HTTPIP}}:{{ .HTTPPort }}/preseed.cfg ",
-  "console=tty0 ",
-  "--- net.ifnames=0 biosdevnames=0 ",
+  "auto <wait>",
+  "DEBIAN_FRONTEND=text <wait>",
+  "preseed/url<wait>=http://{{.HTTPIP}}<wait>:{{ .HTTPPort }}/preseed.cfg <wait>",
+  "console=tty0 <wait>",
+  "--- <wait>net.ifnames=0 <wait>biosdevnames=0 ",
   "<enter>"
 ]
 http_directory = "distros/debian/12/http/"

@@ -22,7 +22,7 @@ iso = {
 }
 boot_command = [
   "<up><tab><wait><bs><bs><bs><bs><bs>",
-  "inst.text inst.ks=cdrom:/ks.cfg console=tty0",
+  "inst.text <wait>inst.ks=cdrom:/ks.cfg <wait>console=tty0",
   "<enter><wait>"
 ]
 cd_files = [ "distros/centos-stream/9/disc/*" ]
