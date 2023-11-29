@@ -1,4 +1,4 @@
-name: Perform formatting and sanity checks
+name: Lint and validation
 
 "on":
   pull_request:
@@ -30,7 +30,7 @@ jobs:
         uses: actions/cache/save@v3
         if: always()
         with:
-          path: $HOME/.config/packer/plugins
+          path: ~/.config/packer/plugins
           key: ${{ steps.cache-restore.outputs.cache-primary-key }}
 
       - name: Run validate check
