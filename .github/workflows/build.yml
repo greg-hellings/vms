@@ -18,13 +18,21 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+
+      - name: Install python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3
+          cache: pip
+          cache-dependency-path: .github/workflows/build.yml
+
       - name: Discover boxes
         id: distros
         run: |-
           set -exo pipefail
-          distros=$(find distros -name '*.hcl' -o -name '*.hcl.sh' | jq -cRs 'split("\n") | [ .[] | if length > 0 then . else empty end ]')
-          echo "distros=${distros}" >> "$GITHUB_OUTPUT"
-          cat "$GITHUB_OUTPUT"
+          pip install xonsh PyYAML
+          echo "distros=$(xonsh build.xsh -a --list)" >> "$GITHUB_OUTPUT"
+
       - name: Find timestamp for versioning
         id: time
         uses: nanzm/get-time-action@v2.0
@@ -33,18 +41,12 @@ jobs:
 
   build:
     name: Build box
-    runs-on: ${{ matrix.builder == 'virtualbox-iso.amd64' && 'macOS-12' || 'ubuntu-22.04' }}
+    runs-on: ${{ matrix.runner }}
     needs:
       - collect
     strategy:
       fail-fast: false
-      matrix:
-        builder:
-          - virtualbox-iso.amd64
-          - qemu.amd64
-        distro: ${{ fromJson( needs.collect.outputs.distros ) }}
-        needs_timeout:
-          - distros/ubuntu-20.04-x86_64.pkrvars.hcl
+      matrix: ${{ fromJson( needs.collect.outputs.distros ) }}
     steps:
       - name: Checkout project
         uses: actions/checkout@v3
@@ -68,8 +70,11 @@ jobs:
           fi
 
       - name: Run generator, if necessary
-        if: endsWith(matrix.distro, '.sh')
-        run: "${{ matrix.distro }}"
+        shell: bash
+        run: |
+          if [ -f "${{ matrix.distro }}.sh" ]; then
+            "./${{ matrix.distro }}.sh"
+          fi
 
       - name: Restore Packer plugin cache
         uses: actions/cache/restore@v3
@@ -86,18 +91,16 @@ jobs:
         uses: actions/cache/save@v3
         if: always()
         with:
-          path: $HOME/.config/packer/plugins
+          path: ~/.config/packer/plugins
           key: ${{ steps.cache-restore.outputs.cache-primary-key }}
 
       - name: Build
         shell: bash
         run: |
           set -e
-          # Strip .sh if it is a dynamic one
-          file="$(printf '%s' "${{ matrix.distro }}" | sed -E -e 's/^(.*).sh$/\1/')"
           # Add a retry in case something bogus like a network failure happens
           packer build -only="${{ matrix.builder }}" \
-                       -var-file="${file}" \
+                       -var-file="${{ matrix.distro }}" \
                        -var "qemu_accelerator=tcg" \
                        -var "build=${{ needs.collect.outputs.build }}" \
                        -var "cpu_model=Skylake-Client" \
