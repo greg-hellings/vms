@@ -8,6 +8,9 @@ name: Build the boxes
       - prereleased
   pull_request:
 
+env:
+  PACKER_PLUGIN_PATH: "~/.config/packer/plugins"
+
 jobs:
   collect:
     name: Discover distros
