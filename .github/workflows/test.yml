@@ -1,28 +1,42 @@
-name: Test the components of it
+name: Lint and validation
 
 "on":
-  push:
-    paths-ignore:
-      - .github/workflow/build.yml
-      - http/**
-      - README.box.md
-      - README.md
-      - LICENSE
   pull_request:
   workflow_dispatch:
 
 jobs:
   validate:
     name: Validate Packer templates are reasonable
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: ./.github/actions/setup
-      - uses: ./.github/actions/install_packer
-      - name: Run syntax check
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install Packer
+        uses: ./.github/actions/install_packer
+
+      - name: Restore Packer plugin cache
+        uses: actions/cache/restore@v3
+        id: cache-restore
+        with:
+          path: ~/.config/packer/plugins
+          key: ${{ runner.os }}-${{ hashFiles('sources/build.pkr.hcl') }}
+
+      - name: Install Packer plugins
+        shell: bash
+        run: packer init sources
+
+      - name: Cache Packer plugins
+        uses: actions/cache/save@v3
+        if: always()
+        with:
+          path: ~/.config/packer/plugins
+          key: ${{ steps.cache-restore.outputs.cache-primary-key }}
+
+      - name: Run validate check
         run: |
           set -exo pipefail
-          for vars in $(find distros/ -name '*.pkrvars.hcl'); do
+          for vars in $(find distros/ -name '*.pkrvars.hcl*'); do
             if [[ "${vars}" == *.sh ]]; then
               "./${vars}"
               vars=${vars%.sh}
@@ -30,18 +44,17 @@ jobs:
             packer validate -except=upload -var-file=${vars} sources/
           done
 
+      - name: Run Packer format check
+        run: git ls-files | grep -E -e '.hcl$' | xargs -L 1 packer fmt -check
+
   lint:
-    name: Lint Ansible code
-    runs-on: ubuntu-22.04
+    name: Lint shell code
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-      - name: Setup test environment
-        uses: ./.github/actions/setup
-        with:
-          ansible: true
-      - name: Run lint
+
+      - name: Install shellcheck
         run: |
-          yamllint -c ansible/yamllint.yml ansible .github distros
-          find distros/ -name user-data | xargs yamllint -c ansible/yamllint.yml
-          # TODO: Add ansible-lint run
+          shellcheck --version
+          shellcheck $(find . -name '*.sh')

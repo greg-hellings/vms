@@ -14,11 +14,11 @@ packer {
     }
     vmware = {
       version = ">= 1.0"
-      source = "github.com/hashicorp/vmware"
+      source  = "github.com/hashicorp/vmware"
     }
     hyperv = {
       version = "= 1.1.1"
-      source = "github.com/hashicorp/hyperv"
+      source  = "github.com/hashicorp/hyperv"
     }
     virtualbox = {
       source  = "github.com/hashicorp/virtualbox"
@@ -28,56 +28,56 @@ packer {
 }
 
 build {
-	sources = [
-		"source.qemu.amd64",
-		"source.virtualbox-iso.amd64",
-		"source.vmware-iso.amd64",
-		"source.hyperv-iso.amd64"
-	]
+  sources = [
+    "source.qemu.amd64",
+    "source.virtualbox-iso.amd64",
+    "source.vmware-iso.amd64",
+    "source.hyperv-iso.amd64"
+  ]
 
-	# If anything needs specific support for one of the distros
-	provisioner "shell" {
-		execute_command = "sudo -S sh -c '{{ .Vars }} {{ .Path }}'"
-		only = ["qemu.amd64"]
-		script = "distros/${var.distro}/${var.version}/qemu.sh"
-	}
-	provisioner "shell" {
-		execute_command = "sudo -S sh -c '{{ .Vars }} {{ .Path }}'"
-		only = ["virtualbox-iso.amd64"]
-		script = "distros/${var.distro}/${var.version}/virtualbox.sh"
-	}
-	provisioner "shell" {
-		execute_command = "sudo -S sh -c '{{ .Vars }} {{ .Path }}'"
-		only = ["vmware-iso.amd64"]
-		script = "distros/${var.distro}/${var.version}/vmware.sh"
-	}
+  # If anything needs specific support for one of the distros
+  provisioner "shell" {
+    execute_command = "sudo -S sh -c '{{ .Vars }} {{ .Path }}'"
+    only            = ["qemu.amd64"]
+    script          = "distros/${var.distro}/${var.version}/qemu.sh"
+  }
+  provisioner "shell" {
+    execute_command = "sudo -S sh -c '{{ .Vars }} {{ .Path }}'"
+    only            = ["virtualbox-iso.amd64"]
+    script          = "distros/${var.distro}/${var.version}/virtualbox.sh"
+  }
+  provisioner "shell" {
+    execute_command = "sudo -S sh -c '{{ .Vars }} {{ .Path }}'"
+    only            = ["vmware-iso.amd64"]
+    script          = "distros/${var.distro}/${var.version}/vmware.sh"
+  }
 
-	# Generic wrapping up the provisioner before packaging
-	provisioner "shell" {
-		execute_command = "sudo -S sh -c '{{ .Vars }} {{ .Path }}'"
-		scripts = [
-			"scripts/vagrant.sh",
-			"distros/${var.distro}/${var.version}/finalize.sh",
-			"scripts/minimize.sh"
-		]
-	}
+  # Generic wrapping up the provisioner before packaging
+  provisioner "shell" {
+    execute_command = "sudo -S sh -c '{{ .Vars }} {{ .Path }}'"
+    scripts = [
+      "scripts/vagrant.sh",
+      "distros/${var.distro}/${var.version}/finalize.sh",
+      "scripts/minimize.sh"
+    ]
+  }
 
-	post-processors {
-		post-processor "vagrant" {
-			keep_input_artifact = true
-			compression_level = 9
-			output = "output/{{ .Provider }}/${local.name}.box"
-			vagrantfile_template = "vagrant/${var.arch}.rb"
-		}
+  post-processors {
+    post-processor "vagrant" {
+      keep_input_artifact  = true
+      compression_level    = 9
+      output               = "output/{{ .Provider }}/${local.name}.box"
+      vagrantfile_template = "vagrant/${var.arch}.rb"
+    }
 
-		post-processor "vagrant-cloud" {
-			name = "upload"
-			access_token = var.vagrant_cloud_token
-			architecture = var.arch
-			box_tag = "boxen/${local.name}"
-			default_architecture = "amd64"
-			version = var.build
-			version_description = local.description
-		}
-	}
+    post-processor "vagrant-cloud" {
+      name                 = "upload"
+      access_token         = var.vagrant_cloud_token
+      architecture         = var.arch
+      box_tag              = "boxen/${local.name}"
+      default_architecture = "amd64"
+      version              = var.build
+      version_description  = local.description
+    }
+  }
 }
