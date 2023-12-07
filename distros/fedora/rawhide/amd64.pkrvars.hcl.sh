@@ -35,7 +35,7 @@ iso = {
 }
 boot_command = [
   "<up>e<down><down><end><bs><bs><bs><bs><bs>",
-  "net.ifnames=0 biosdevnames=0 inst.ks=cdrom:/x86_64.ks console=tty0 console=ttyS0<f10>"
+  "net.ifnames=0<wait> biosdevnames=0<wait> inst.ks=cdrom:/x86_64.ks<wait> console=tty0<wait> console=<wait>ttyS0<f10>"
 ]
 cd_files = [
 	"distros/fedora/rawhide/*.ks"

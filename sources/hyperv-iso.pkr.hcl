@@ -11,12 +11,15 @@ source "hyperv-iso" "amd64" {
   ssh_password           = local.ssh.password
   ssh_handshake_attempts = local.ssh.handshake_attempts
   ssh_private_key_file   = local.ssh.private_key_file
+  ssh_host               = "10.42.2.254"
 
-  vm_name   = "packer-${local.name}"
-  disk_size = "${local.disk_size}000"
-  cpus      = local.cpus
-  memory    = local.memory
-  headless  = var.headless
+  vm_name     = "packer-${local.name}"
+  disk_size   = "${local.disk_size}000"
+  cpus        = local.cpus
+  memory      = local.memory
+  headless    = var.headless
+  switch_name = "packer-amd64"
+  mac_address = "0000deadbeef"
 
   http_content   = var.http_files
   http_directory = var.http_directory

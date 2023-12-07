@@ -7,7 +7,7 @@ name="${0%.sh}"
 
 baseurl="https://mirror.stream.centos.org/9-stream/BaseOS/x86_64/iso/CentOS-Stream-9-latest-x86_64-boot.iso"
 checksums="$(mktemp)"
-until curl -f -L -o "${checksums}" "${baseurl}.SHA256SUM"; do
+until curl -f -L "${baseurl}.SHA256SUM" > "${checksums}"; do
 	sleep 1
 done
 sha="$(awk '/SHA256/ {print $4}' "${checksums}")"

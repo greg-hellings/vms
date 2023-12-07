@@ -5,6 +5,7 @@ import pathlib
 import re
 import sys
 import time
+from shutil import rmtree
 
 
 def get_vagrant_provider(provider):
@@ -62,7 +63,7 @@ def main():
         p = pathlib.Path(box)
         with open("Vagrantfile.in", "r") as fr:
             content = fr.read()
-        content = content.replace("@@BOX@@", f"file:///home/greg/src/vms/vms/{box}")
+        content = content.replace("@@BOX@@", p.resolve().as_uri())
         content = content.replace("@@BOX_NAME@@", p.name)
         with open("Vagrantfile", "w") as fw:
             fw.write(content)
@@ -73,7 +74,9 @@ def main():
             print(f"Now whatcha wanna go and do that for? {box}")
             continue
         vagrant destroy -f
-        rm -rf .vagrant
+        vag_folder = pathlib.Path(".vagrant")
+        if vag_folder.exists():
+            rmtree(vag_folder)
 
 
 if __name__ == '__main__':

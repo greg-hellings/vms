@@ -16,3 +16,6 @@ distros/centos-stream/**/*.hcl
 __pycache__
 *.pyc
 *.pyo
+packer_cache
+.venv
+venv

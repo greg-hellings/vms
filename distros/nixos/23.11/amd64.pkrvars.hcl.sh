@@ -30,10 +30,10 @@ iso = {
 }
 boot_command = [
   "<tab><wait> net.ifnames=0<wait> <wait>bi<wait>osdevnames=0<enter>",
-  "<wait60>",  # Wait for system to come up?
-  "curl -o /tmp/install.sh http://{{ .HTTPIP }}:{{ .HTTPPort }}/install.sh<enter>",
+  "<wait120>",  # Wait for system to come up?
+  "curl<wait> -o<wait> /tmp/install.sh<wait> http://<wait>{{ .HTTPIP }}<wait>:{{ .HTTPPort }}/<wait>install.sh<enter>",
   "<wait>",
-  "sudo bash /tmp/install.sh {{ .HTTPPort }} {{ .HTTPIP }}<enter>"
+  "sudo<wait> bash<wait> /tmp/install.sh<wait> {{ .HTTPPort }}<wait> {{ .HTTPIP }}<wait><enter>"
 ]
 http_directory = "distros/nixos/23.05/http/"
 boot_wait = "5s"
