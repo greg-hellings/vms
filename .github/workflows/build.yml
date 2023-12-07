@@ -71,6 +71,7 @@ jobs:
         run: |
           if [ -f "${{ matrix.distro }}.sh" ]; then
             "./${{ matrix.distro }}.sh"
+          fi
         
       - name: Install Packer plugins
         shell: bash
