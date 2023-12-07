@@ -7,10 +7,10 @@ iso = {
 boot_command = [
   "e<down><down><down><end><bs><bs><bs>",
   "console=tty0 <wait>",
-  "fsck.mode=skip <wait>",
-  "locale=en_US <wait>",
+  "fsck.mode<wait>=skip <wait>",
+  "locale=<wait>en_US <wait>",
   "auto=true <wait>",
-  "priority=critical <wait>",
+  "priority<wait>=critical <wait>",
   "autoinstall<wait>",
   "<F10>",
 ]
