@@ -94,7 +94,7 @@ jobs:
         uses: actions/cache/save@v3
         if: always()
         with:
-          path: ~/.config/packer/plugins
+          path: ${{ runner.os == 'Linux' && '~/.config/packer/plugins' || '/usr/local/bin/github.com' }}
           key: ${{ steps.cache-restore.outputs.cache-primary-key }}
 
       - name: Build
