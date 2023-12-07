@@ -6,7 +6,7 @@ set -ex
 name="${0%.sh}"
 
 checksums="$(mktemp)"
-until curl -f -L -o "${checksums}" "http://mirror.centos.org/centos/8-stream/isos/x86_64/CHECKSUM"; do
+until curl -f -L "https://mirror.centos.org/centos/8-stream/isos/x86_64/CHECKSUM" > "${checksums}"; do
 	sleep 1
 done
 sha="$(grep -e latest-boot "${checksums}" | grep SHA256 | cut -d' ' -f 4)"
@@ -15,7 +15,7 @@ cat << HERPDERP > "${name}"
 distro = "centos-stream"
 version = "8"
 iso = {
-	url = "http://mirror.centos.org/centos/8-stream/isos/x86_64/CentOS-Stream-8-x86_64-latest-boot.iso"
+	url = "https://mirrors.edge.kernel.org/centos/8-stream/isos/x86_64/CentOS-Stream-8-x86_64-latest-boot.iso"
 	checksum = "${sha}"
 }
 boot_command = [

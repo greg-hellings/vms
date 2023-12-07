@@ -5,5 +5,4 @@
     provider: virtualbox-iso
   - arch: amd64
     provider: vmware-iso
-  - arch: amd64
-    provider: hyperv-iso
+  # Hyper-V, I have been thus far unable to have it bring up its network automatically

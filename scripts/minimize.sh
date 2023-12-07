@@ -26,3 +26,5 @@ if [ -n "${swap_device}" ] && [ -e "${swap_device}" ]; then
 	sudo dd if=/dev/zero of="$swap_device" bs=1M || :
 	sudo /sbin/mkswap ${swap_device_label:+-L "$swap_device_label"} ${swap_device_uuid:+-U "$swap_device_uuid"} "$swap_device"
 fi
+
+sleep 15  # Hyper-v seems to be super fast during boot

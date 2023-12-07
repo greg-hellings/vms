@@ -5,6 +5,8 @@
     provider: virtualbox-iso
   - arch: amd64
     provider: vmware-iso
+  - arch: amd64
+    provider: hyperv-iso
 22.04: *supp
 "23.10": *supp
 #18.04: *supp  # EOL

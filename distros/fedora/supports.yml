@@ -5,8 +5,12 @@
     provider: virtualbox-iso
   - arch: amd64
     provider: vmware-iso
+  - arch: amd64
+    provider: hyperv-iso
 38: *supp
 39: *supp
 rawhide:
   - arch: amd64
     provider: qemu
+  - arch: amd64
+    provider: hyperv-iso

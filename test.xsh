@@ -5,6 +5,7 @@ import pathlib
 import re
 import sys
 import time
+from shutil import rmtree
 
 
 def get_vagrant_provider(provider):
@@ -73,7 +74,9 @@ def main():
             print(f"Now whatcha wanna go and do that for? {box}")
             continue
         vagrant destroy -f
-        rm -rf .vagrant
+        vag_folder = pathlib.Path(".vagrant")
+        if vag_folder.exists():
+            rmtree(vag_folder)
 
 
 if __name__ == '__main__':

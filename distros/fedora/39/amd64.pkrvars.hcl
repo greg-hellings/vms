@@ -6,7 +6,7 @@ iso = {
 }
 boot_command = [
   "<up>e<down><down><end> ",
-  "net.ifnames=0 biosdevnames=0 inst.ks=cdrom:/x86_64.ks console=tty0<f10>"
+  "net.if<wait>names=0<wait> biosdev<wait>names=0<wait> inst.ks=<wait>cdrom:/x86_64.ks<wait> console<wait>=tty0<f10>"
 ]
 cd_files = [
   "distros/fedora/39/*.ks"
