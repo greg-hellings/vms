@@ -1,9 +1,0 @@
-- hosts: all
-  pre_tasks:
-    - name: Install necessary packge
-      become: true
-      package:
-        name: glibc-common
-        state: present
-  roles:
-    - locale

@@ -1,5 +1,0 @@
-driver:
-  name: containers
-platforms:
-  - name: test-ubuntu18-virtualbox
-    image: ubuntu:18.04

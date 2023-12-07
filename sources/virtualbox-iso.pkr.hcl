@@ -1,4 +1,4 @@
-source "virtualbox-iso" "x86_64" {
+source "virtualbox-iso" "amd64" {
 	iso_url = var.iso.url
 	iso_checksum = var.iso.checksum
 	output_directory = "output/virtualbox/${local.name}"

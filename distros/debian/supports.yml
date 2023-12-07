@@ -1,9 +1,9 @@
 10: &supp
-  - arch: x86_64
+  - arch: amd64
     provider: qemu
-  - arch: x86_64
+  - arch: amd64
     provider: virtualbox-iso
-  - arch: x86_64
+  - arch: amd64
     provider: vmware-iso
 11: *supp
 12: *supp

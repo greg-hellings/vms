@@ -31,15 +31,15 @@ jobs:
 
   build:
     name: Build box
-    runs-on: ${{ matrix.builder == 'virtualbox-iso.x86_64' && 'macOS-12' || 'ubuntu-22.04' }}
+    runs-on: ${{ matrix.builder == 'virtualbox-iso.amd64' && 'macOS-12' || 'ubuntu-22.04' }}
     needs:
       - collect
     strategy:
       fail-fast: false
       matrix:
         builder:
-          - virtualbox-iso.x86_64
-          - qemu.x86_64
+          - virtualbox-iso.amd64
+          - qemu.amd64
         distro: ${{ fromJson( needs.collect.outputs.distros ) }}
         needs_timeout:
           - distros/ubuntu-20.04-x86_64.pkrvars.hcl

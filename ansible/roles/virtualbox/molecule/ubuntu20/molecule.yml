@@ -1,5 +1,0 @@
-driver:
-  name: containers
-platforms:
-  - name: test-ubuntu20-virtualbox
-    image: ubuntu:20.04

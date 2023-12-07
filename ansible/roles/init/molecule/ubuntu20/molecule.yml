@@ -1,7 +1,0 @@
-driver:
-  name: vagrant
-  provider:
-    name: virtualbox
-platforms:
-  - name: test-ubuntu20-init
-    box: boxen/ubuntu-20.04-x86_64

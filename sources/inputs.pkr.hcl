@@ -10,7 +10,7 @@ variable "distro" {
 
 variable "arch" {
 	type = string
-	default = "x86_64"
+	default = "amd64"
 }
 
 variable "version" {
@@ -75,7 +75,7 @@ variable "http_directory" {
 }
 
 locals {
-	name = "${var.distro}-${var.version}-${var.arch}"
+	name = "${var.distro}-${var.version}"
 	description = templatefile("../README.box.md", {
 		distro = var.distro
 		arch = var.arch
@@ -83,8 +83,8 @@ locals {
 		build = var.build
 	})
 
-	cpus = 2
-	memory = 4096
+	cpus = 4
+	memory = 8192
 	disk_size = 10
 	ssh = {
 		username = "vagrant"

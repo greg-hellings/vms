@@ -27,8 +27,9 @@ btrfs none --label=fedora btrfs.007
 btrfs /home --subvol --name=home LABEL=fedora
 btrfs /     --subvol --name=root LABEL=fedora
 
-repo --name=rawhide --mirrorlist=https://mirrors.fedoraproject.org/mirrorlist?repo=rawhide&arch=$basearch
-url --mirrorlist=https://mirrors.fedoraproject.org/mirrorlist?repo=rawhide&arch=$basearch
+repo --name=fedora --mirrorlist=https://mirrors.fedoraproject.org/mirrorlist?repo=fedora-$releasever&arch=$basearch
+repo --name=updates --mirrorlist=https://mirrors.fedoraproject.org/mirrorlist?repo=updates-released-f$releasever&arch=$basearch
+url --mirrorlist=https://mirrors.fedoraproject.org/mirrorlist?repo=fedora-$releasever&arch=$basearch
 
 reboot
 
@@ -158,15 +159,12 @@ echo 'vagrant ALL=(ALL) NOPASSWD: ALL' > /etc/sudoers.d/vagrant-nopasswd
 sed -i 's/.*UseDNS.*/UseDNS no/' /etc/ssh/sshd_config
 
 cat > /etc/ssh/sshd_config.d/10-vagrant-insecure-rsa-key.conf <<EOF
-# Starting in Vagrant 2.3.8 there is support for an EDDSA25519 key,
-# but prior to that, only the insecure RSA is available. When the time
-# comes, we can remove this bit, but we keep it for a long time
-# for backwards compatibility
+# For now the vagrant insecure key is an rsa key
+# htfedoratps://github.com/hashicorp/vagrant/issues/11783
 PubkeyAcceptedKeyTypes=+ssh-rsa
 EOF
 
 ssh-keygen -A
-
 
 mkdir -m 0700 -p /home/vagrant/.ssh/
 curl -L -o /home/vagrant/.ssh/authorized_keys "https://raw.githubusercontent.com/hashicorp/vagrant/main/keys/vagrant.pub"

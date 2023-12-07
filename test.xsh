@@ -24,9 +24,9 @@ def get_vagrant_provider(provider):
 def get_providers():
     "List of providers as defined in sources/"
     providers: set[str] = {
-        "qemu.x86_64"
-        "virtualbox-iso.x86_64",
-        "vmware-iso.x86_64"
+        "qemu.amd64"
+        "virtualbox-iso.amd64",
+        "vmware-iso.amd64"
     }
     return providers
 

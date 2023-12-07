@@ -16,7 +16,7 @@
 1. Try a build
   1. You can execute directly with the `packer` executable, if you want
   1. If you want to wrap up standard options, or build multiple versions/distros at once, use the `build.xsh` file
-  1. `xonsh build.xsh -d <distro> -b hyperv-iso.x86_64 -v`
+  1. `xonsh build.xsh -d <distro> -b hyperv-iso.amd64 -v`
   1. You can substitute out any of the options with `-a` to build "all" targets that match
 
 ### Troubleshooting
