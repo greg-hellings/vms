@@ -23,7 +23,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Install python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: 3
           cache: pip
@@ -54,12 +54,6 @@ jobs:
       - name: Checkout project
         uses: actions/checkout@v3
 
-      - name: Install Packer and related tools
-        uses: ./.github/actions/install_packer
-
-      - name: Clear disk space
-        uses: greg-hellings/make-space@main
-
       - name: Output tool versions
         shell: bash
         run: |
@@ -77,25 +71,10 @@ jobs:
         run: |
           if [ -f "${{ matrix.distro }}.sh" ]; then
             "./${{ matrix.distro }}.sh"
-          fi
-
-      - name: Restore Packer plugin cache
-        uses: actions/cache/restore@v3
-        id: cache-restore
-        with:
-          path: ${{ runner.os == 'Linux' && '~/.config/packer/plugins' || '/usr/local/bin/github.com' }}
-          key: ${{ runner.os }}-${{ hashFiles('sources/build.pkr.hcl') }}
         
       - name: Install Packer plugins
         shell: bash
         run: packer init sources
-
-      - name: Cache Packer plugins
-        uses: actions/cache/save@v3
-        if: always()
-        with:
-          path: ${{ runner.os == 'Linux' && '~/.config/packer/plugins' || '/usr/local/bin/github.com' }}
-          key: ${{ steps.cache-restore.outputs.cache-primary-key }}
 
       - name: Build
         shell: bash

@@ -9,7 +9,7 @@ class Provider:
     @property
     def runner(self) -> str:
         if self.name == "qemu":
-            return "ubuntu-latest"
+            return "isaiah-fedora"
         elif self.name.startswith("virtualbox"):
-            return "macos-12"
+            return "isaiah-fedora"
         return None
