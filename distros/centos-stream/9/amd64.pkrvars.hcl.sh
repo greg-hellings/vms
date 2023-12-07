@@ -10,7 +10,7 @@ checksums="$(mktemp)"
 until curl -f -L -o "${checksums}" "${baseurl}.SHA256SUM"; do
 	sleep 1
 done
-sha="$(cat "${checksums}" | awk '/SHA256/ {print $4}')"
+sha="$(awk '/SHA256/ {print $4}' "${checksums}")"
 rm "${checksums}"
 
 cat << HERPDERP > "${name}"
@@ -22,7 +22,7 @@ iso = {
 }
 boot_command = [
   "<up><tab><wait><bs><bs><bs><bs><bs>",
-  "inst.text inst.ks=cdrom:/ks.cfg console=tty0",
+  "inst.text <wait>inst.ks=cdrom:/ks.cfg <wait>console=tty0",
   "<enter><wait>"
 ]
 cd_files = [ "distros/centos-stream/9/disc/*" ]

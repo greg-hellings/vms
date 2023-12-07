@@ -11,6 +11,7 @@ Vagrantfile
 # Generated distros
 distros/fedora/rawhide/*.hcl
 distros/nixos/**/*.hcl
+distros/centos-stream/**/*.hcl
 
 __pycache__
 *.pyc

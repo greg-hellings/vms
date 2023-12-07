@@ -2,6 +2,7 @@
 set -ex
 
 # Configure vagrant user's SSH key
+# shellcheck disable=SC2174
 mkdir -m 0700 -p ~vagrant/.ssh
 curl -L -o ~vagrant/.ssh/authorized_keys "https://raw.githubusercontent.com/hashicorp/vagrant/master/keys/vagrant.pub"
 chmod 600 ~vagrant/.ssh/authorized_keys

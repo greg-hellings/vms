@@ -18,7 +18,7 @@ curl -L -o "${checksums}" "${base}.sha256"
 until curl -f -L -o "${checksums}" "${base}.sha256"; do
 	sleep 1
 done
-sha="$(cat "${checksums}" | grep minimal | cut -d' ' -f 1)"
+sha="$(grep -e minimal "${checksums}" | cut -d' ' -f 1)"
 
 # Write out HCL file
 cat << EOF > "${name}"

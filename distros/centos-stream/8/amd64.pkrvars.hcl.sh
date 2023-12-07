@@ -9,7 +9,7 @@ checksums="$(mktemp)"
 until curl -f -L -o "${checksums}" "http://mirror.centos.org/centos/8-stream/isos/x86_64/CHECKSUM"; do
 	sleep 1
 done
-sha="$(cat "${checksums}" | grep latest-boot | grep SHA256 | cut -d' ' -f 4)"
+sha="$(grep -e latest-boot "${checksums}" | grep SHA256 | cut -d' ' -f 4)"
 
 cat << HERPDERP > "${name}"
 distro = "centos-stream"
