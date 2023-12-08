@@ -16,7 +16,7 @@ jobs:
     name: Discover distros
     runs-on: ubuntu-latest
     outputs:
-      boxen: ${{ steps.distros.outputs.some }}
+      boxen: ${{ steps.distros.outputs.all }}
       build: ${{ steps.time.outputs.time }}
     steps:
       - name: Checkout code
