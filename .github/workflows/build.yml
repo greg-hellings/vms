@@ -16,8 +16,7 @@ jobs:
     name: Discover distros
     runs-on: ubuntu-latest
     outputs:
-      all: ${{ steps.distros.outputs.all }}
-      some: ${{ steps.distros.outputs.some }}
+      boxen: ${{ steps.distros.outputs.some }}
       build: ${{ steps.time.outputs.time }}
     steps:
       - name: Checkout code
@@ -36,7 +35,7 @@ jobs:
           set -exo pipefail
           pip install xonsh PyYAML
           echo "all=$(xonsh build.xsh -a --list)" >> "$GITHUB_OUTPUT"
-          echo "some=$(xonsh build.xsh -b virtualbox-iso.amd64 -a --list)" >> "$GITHUB_OUTPUT"
+          echo "some=$(xonsh build.xsh -b qemu.amd64 -a --list)" >> "$GITHUB_OUTPUT"
 
       - name: Find timestamp for versioning
         id: time
@@ -51,7 +50,7 @@ jobs:
       - collect
     strategy:
       fail-fast: false
-      matrix: ${{ fromJson( needs.collect.outputs.some ) }}
+      matrix: ${{ fromJson( needs.collect.outputs.boxen ) }}
     steps:
       - name: Checkout project
         uses: actions/checkout@v4
