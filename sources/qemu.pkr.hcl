@@ -38,6 +38,8 @@ source "qemu" "amd64" {
 
   http_content   = var.http_files
   http_directory = var.http_directory
+  http_port_min  = var.http_port_min
+  http_port_max  = var.http_port_max
   cd_content     = var.cd_content
   cd_files       = var.cd_files
   cd_label       = var.cd_label

@@ -90,6 +90,8 @@ jobs:
                        -var "build=${{ needs.collect.outputs.build }}" \
                        -var "cpus=2" \
                        -var "memory=4096" \
+                       -var "http_port_min=${HTTP_PORT_MIN:-8000}" \
+                       -var "http_port_max=${HTTP_PORT_MAX:-9000}" \
                        ${{ github.event_name != 'release' && '-except=upload' || '' }} \
                        sources
         env:
