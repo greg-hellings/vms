@@ -28,11 +28,9 @@ source "qemu" "amd64" {
 
   qemuargs = [
     #["-chardev", "stdio,id=char0,logfile=serial-output-qemu-${var.arch}-${var.distro}-${var.version},signal=off"],
-    #["-serial", "chardev:char0"],
-    ["-chardev", "socket,host=localhost,port=9876,server=on,wait=off,id=qga0"],
+    ["-chardev", "socket,path=${local.name}.qga.sock,server=on,wait=off,id=qga0"],
     ["-device", "virtio-serial"],
     ["-device", "virtserialport,chardev=qga0,name=org.qemu.guest_agent.0"],
-    ["-qmp", "tcp:localhost:4444,server,wait=off"],
   ]
   accelerator = var.qemu_accelerator
 
