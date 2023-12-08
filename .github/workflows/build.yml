@@ -72,10 +72,24 @@ jobs:
           if [ -f "${{ matrix.distro }}.sh" ]; then
             "./${{ matrix.distro }}.sh"
           fi
+
+      - name: Restore Packer plugin cache
+        uses: actions/cache/restore@v3
+        id: cache-restore
+        with:
+          path: ${{ runner.os == 'Linux' && '~/.config/packer/plugins' || '/usr/local/bin/github.com' }}
+          key: ${{ runner.os }}-${{ hashFiles('sources/build.pkr.hcl') }}
         
       - name: Install Packer plugins
         shell: bash
         run: packer init sources
+
+      - name: Cache Packer plugins
+        uses: actions/cache/save@v3
+        if: always()
+        with:
+          path: ${{ runner.os == 'Linux' && '~/.config/packer/plugins' || '/usr/local/bin/github.com' }}
+          key: ${{ steps.cache-restore.outputs.cache-primary-key }}
 
       - name: Build
         shell: bash
