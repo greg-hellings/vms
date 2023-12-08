@@ -16,8 +16,8 @@ jobs:
     name: Discover distros
     runs-on: ubuntu-latest
     outputs:
-      qemu: ${{ steps.distros.outputs.qemu }}
-      vbox: ${{ steps.distros.outputs.vbox }}
+      all: ${{ steps.distros.outputs.all }}
+      some: ${{ steps.distros.outputs.some }}
       build: ${{ steps.time.outputs.time }}
     steps:
       - name: Checkout code
@@ -35,8 +35,8 @@ jobs:
         run: |-
           set -exo pipefail
           pip install xonsh PyYAML
-          echo "qemu=$(xonsh build.xsh -b qemu.amd64 -a --list)" >> "$GITHUB_OUTPUT"
-          echo "vbox=$(xonsh build.xsh -b virtualbox-iso.amd64 -a --list)" >> "$GITHUB_OUTPUT"
+          echo "all=$(xonsh build.xsh -a --list)" >> "$GITHUB_OUTPUT"
+          echo "some=$(xonsh build.xsh -b virtualbox-iso.amd64 -a --list)" >> "$GITHUB_OUTPUT"
 
       - name: Find timestamp for versioning
         id: time
@@ -44,74 +44,14 @@ jobs:
         with:
           format: 'YYYY.MM.DD.HH'
 
-  qemu:
-    name: Build boxes in QEmu
+  build:
+    name: Build boxes
     runs-on: ${{ matrix.runner }}
     needs:
       - collect
     strategy:
       fail-fast: false
-      matrix: ${{ fromJson( needs.collect.outputs.qemu ) }}
-    steps:
-      - name: Checkout project
-        uses: actions/checkout@v4
-
-      - name: Run generator, if necessary
-        shell: bash
-        run: |
-          if [ -f "${{ matrix.distro }}.sh" ]; then
-            "./${{ matrix.distro }}.sh"
-          fi
-
-      - name: Restore Packer plugin cache
-        uses: actions/cache/restore@v3
-        id: cache-restore
-        with:
-          path: .config/packer/plugins
-          key: ${{ runner.os }}-${{ hashFiles('sources/build.pkr.hcl') }}
-        
-      - name: Install Packer plugins
-        shell: bash
-        run: packer init sources
-
-      - name: Cache Packer plugins
-        uses: actions/cache/save@v3
-        if: always()
-        with:
-          path: .config/packer/plugins
-          key: ${{ steps.cache-restore.outputs.cache-primary-key }}
-
-      - name: Build
-        shell: bash
-        run: |
-          set -e
-          # Add a retry in case something bogus like a network failure happens
-          packer build -only="${{ matrix.builder }}" \
-                       -var-file="${{ matrix.distro }}" \
-                       -var "build=${{ needs.collect.outputs.build }}" \
-                       -var "cpus=2" \
-                       -var "memory=4096" \
-                       ${{ github.event_name != 'release' && '-except=upload' || '' }} \
-                       sources
-        env:
-          VAGRANT_CLOUD_TOKEN: ${{ secrets.VAGRANT_CLOUD_TOKEN }}
-          PACKER_LOG: 1
-
-      - name: Upload artifact
-        if: ${{ failure() }}
-        uses: actions/upload-artifact@v3
-        with:
-          name: serial-output
-          path: serial-output*
-
-  vbox:
-    name: Build boxes in VirtualBox
-    runs-on: ${{ matrix.runner }}
-    needs:
-      - collect
-    strategy:
-      fail-fast: false
-      matrix: ${{ fromJson( needs.collect.outputs.vbox ) }}
+      matrix: ${{ fromJson( needs.collect.outputs.some ) }}
     steps:
       - name: Checkout project
         uses: actions/checkout@v4
