@@ -16,7 +16,7 @@ jobs:
     name: Discover distros
     runs-on: ubuntu-latest
     outputs:
-      boxen: ${{ steps.distros.outputs.all }}
+      boxen: ${{ steps.distros.outputs.some }}
       build: ${{ steps.time.outputs.time }}
     steps:
       - name: Checkout code
@@ -35,7 +35,7 @@ jobs:
           set -exo pipefail
           pip install xonsh PyYAML
           echo "all=$(xonsh build.xsh -a --list)" >> "$GITHUB_OUTPUT"
-          echo "some=$(xonsh build.xsh -b qemu.amd64 -a --list)" >> "$GITHUB_OUTPUT"
+          echo "some=$(xonsh build.xsh -b virtualbox-iso.amd64 -a --list)" >> "$GITHUB_OUTPUT"
 
       - name: Find timestamp for versioning
         id: time
