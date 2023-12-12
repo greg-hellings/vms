@@ -28,16 +28,16 @@ source "qemu" "amd64" {
 
   qemuargs = [
     #["-chardev", "stdio,id=char0,logfile=serial-output-qemu-${var.arch}-${var.distro}-${var.version},signal=off"],
-    #["-serial", "chardev:char0"],
-    ["-chardev", "socket,host=localhost,port=9876,server=on,wait=off,id=qga0"],
+    ["-chardev", "socket,path=${local.name}.qga.sock,server=on,wait=off,id=qga0"],
     ["-device", "virtio-serial"],
     ["-device", "virtserialport,chardev=qga0,name=org.qemu.guest_agent.0"],
-    ["-qmp", "tcp:localhost:4444,server,wait=off"],
   ]
   accelerator = var.qemu_accelerator
 
   http_content   = var.http_files
   http_directory = var.http_directory
+  http_port_min  = var.http_port_min
+  http_port_max  = var.http_port_max
   cd_content     = var.cd_content
   cd_files       = var.cd_files
   cd_label       = var.cd_label

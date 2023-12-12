@@ -74,6 +74,16 @@ variable "http_directory" {
   default = ""
 }
 
+variable "http_port_min" {
+  type    = number
+  default = 8000
+}
+
+variable "http_port_max" {
+  type    = number
+  default = 9000
+}
+
 variable "cpu_model" {
   type    = string
   default = "host"
