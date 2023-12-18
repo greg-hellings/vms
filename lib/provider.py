@@ -9,7 +9,7 @@ class Provider:
     @property
     def runner(self) -> str:
         if self.name == "qemu":
-            return "isaiah"
+            return "qemu"
         elif self.name.startswith("virtualbox"):
-            return "isaiah"
+            return "virtualbox"
         return None
