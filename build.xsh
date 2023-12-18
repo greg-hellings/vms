@@ -1,11 +1,14 @@
 #!/usr/bin/env xonsh
-from argparse import ArgumentParser
 from pathlib import Path
 import sys
 sys.path.append(str(Path(__file__).parent / "lib"))
 from support import Support, BASE
 import time
 import json
+
+from argparse import ArgumentParser
+from functools import reduce
+from yaml import dump, Dumper, load, Loader
 
 source test.xsh
 
@@ -78,7 +81,12 @@ def do_build(build):
 if args.all or args.list or (args.distro and args.version and args.build):
     process_all()
     if args.list:
-        my_list = [d.matrix for d in my_list if d.is_github]
-        print(json.dumps({"include": my_list}))
+        with open(".gitlab-ci-build.yml.in", "r") as fp:
+            y = load(fp, Loader=Loader)
+        for item in my_list:
+            if item.is_github:
+                y[ item.only[6:] ]["parallel"]["matrix"].append({"distro": item.var_path})
+        with open(".gitlab-ci-build.yml", "w") as fp:
+            dump(y, fp, Dumper=Dumper)
 else:
     print("Doing menu stuff")

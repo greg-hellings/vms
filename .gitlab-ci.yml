@@ -1,0 +1,48 @@
+stages:
+  - lint
+  - trigger
+
+validate:
+  stage: lint
+  cache:
+    paths:
+      - /var/lib/gitlab-runner/.config/packer/plugins/
+  script: |-
+    set -exo pipefail
+    packer init sources
+    for vars in $(find distros/ -name '*.pkrvars.hcl*'); do
+      if [[ "${vars}" == *.sh ]]; then
+        "./${vars}"
+        vars=${vars%.sh}
+      fi
+      packer validate -except=upload -var-file=${vars} sources/
+    done
+
+shell:
+  stage: lint
+  script: |-
+    shellcheck --version
+    shellcheck $(find . -name '*.sh')
+
+distros:
+  stage: lint
+  artifacts:
+    reports:
+      dotenv: build.env
+    paths:
+      - .gitlab-ci-build.yml
+  script: |-
+    python3 -m venv venv
+    source venv/bin/activate
+    pip install -U xonsh PyYAML
+    xonsh ./build.xsh -a --list
+    echo "BUILD=$(date +'%Y.%m.%d.%H')" >> build.env
+
+trigger:
+  stage: trigger
+  trigger:
+    include:
+      - artifact: .gitlab-ci-build.yml
+        job: distros
+  variables:
+    PARENT_PIPELINE_ID: $CI_PIPELINE_ID
