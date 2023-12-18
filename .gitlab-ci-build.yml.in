@@ -1,0 +1,47 @@
+# vim: set ft=yaml:
+stages:
+  - build
+
+.build:
+  stage: build
+  cache:
+    paths:
+      - /var/lib/gitlab-runner/.config/packer/plugins/
+  needs:
+    - pipeline: $PARENT_PIPELINE_ID
+      job: distros
+      artifacts: true
+  tags:
+    - ${tag}
+  script: |
+    set -exo pipefail
+    export PACKER_LOG=1
+    if [ -f "${distro}.sh" ]; then
+      ./"${distro}.sh"
+    fi
+    packer init sources
+    packer build "${only}" \
+                 -var-file="${distro}" \
+                 -var "build=${BUILD}" \
+                 -var "cpus=2" \
+                 -var "memory=4096" \
+                 -var "http_port_min=${HTTP_PORT_MIN:-8000}" \
+                 -var "http_port_max=${HTTP_PORT_MAX:-9000}" \
+                 -except=upload \
+                 sources
+
+qemu.amd64:
+  extends: .build
+  variables:
+    only: "-only=qemu.amd64"
+    tag: qemu
+  parallel:
+    matrix: []
+
+virtualbox-iso.amd64:
+  extends: .build
+  variables:
+    only: "-only=virtualbox-iso.amd64"
+    tag: vbox
+  parallel:
+    matrix: []
