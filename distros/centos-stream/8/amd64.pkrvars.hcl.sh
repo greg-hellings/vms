@@ -6,7 +6,7 @@ set -ex
 name="${0%.sh}"
 
 checksums="$(mktemp)"
-until curl -f -L "https://mirror.centos.org/centos/8-stream/isos/x86_64/CHECKSUM" > "${checksums}"; do
+until curl -f -L "https://mirrors.edge.kernel.org/centos/8-stream/isos/x86_64/CHECKSUM" > "${checksums}"; do
 	sleep 1
 done
 sha="$(grep -e latest-boot "${checksums}" | grep SHA256 | cut -d' ' -f 4)"

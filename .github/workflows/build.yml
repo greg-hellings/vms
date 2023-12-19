@@ -9,21 +9,21 @@ name: Build the boxes
   pull_request:
 
 env:
-  PACKER_PLUGIN_PATH: "~/.config/packer/plugins"
+  PACKER_PLUGIN_PATH: ".config/packer/plugins"
 
 jobs:
   collect:
     name: Discover distros
     runs-on: ubuntu-latest
     outputs:
-      distros: ${{ steps.distros.outputs.distros }}
+      boxen: ${{ steps.distros.outputs.some }}
       build: ${{ steps.time.outputs.time }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
       - name: Install python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: 3
           cache: pip
@@ -34,7 +34,8 @@ jobs:
         run: |-
           set -exo pipefail
           pip install xonsh PyYAML
-          echo "distros=$(xonsh build.xsh -a --list)" >> "$GITHUB_OUTPUT"
+          echo "all=$(xonsh build.xsh -a --list)" >> "$GITHUB_OUTPUT"
+          echo "some=$(xonsh build.xsh -b virtualbox-iso.amd64 -a --list)" >> "$GITHUB_OUTPUT"
 
       - name: Find timestamp for versioning
         id: time
@@ -43,34 +44,16 @@ jobs:
           format: 'YYYY.MM.DD.HH'
 
   build:
-    name: Build box
+    name: Build boxes
     runs-on: ${{ matrix.runner }}
     needs:
       - collect
     strategy:
       fail-fast: false
-      matrix: ${{ fromJson( needs.collect.outputs.distros ) }}
+      matrix: ${{ fromJson( needs.collect.outputs.boxen ) }}
     steps:
       - name: Checkout project
-        uses: actions/checkout@v3
-
-      - name: Install Packer and related tools
-        uses: ./.github/actions/install_packer
-
-      - name: Clear disk space
-        uses: greg-hellings/make-space@main
-
-      - name: Output tool versions
-        shell: bash
-        run: |
-          set -x
-          packer -version
-          if $(type qemu-system-x86_64); then
-            qemu-system-x86_64 -version
-          fi
-          if $(type VBoxManage); then
-            VBoxManage --version;
-          fi
+        uses: actions/checkout@v4
 
       - name: Run generator, if necessary
         shell: bash
@@ -83,7 +66,7 @@ jobs:
         uses: actions/cache/restore@v3
         id: cache-restore
         with:
-          path: ${{ runner.os == 'Linux' && '~/.config/packer/plugins' || '/usr/local/bin/github.com' }}
+          path: .config/packer/plugins
           key: ${{ runner.os }}-${{ hashFiles('sources/build.pkr.hcl') }}
         
       - name: Install Packer plugins
@@ -94,7 +77,7 @@ jobs:
         uses: actions/cache/save@v3
         if: always()
         with:
-          path: ~/.config/packer/plugins
+          path: .config/packer/plugins
           key: ${{ steps.cache-restore.outputs.cache-primary-key }}
 
       - name: Build
@@ -104,16 +87,16 @@ jobs:
           # Add a retry in case something bogus like a network failure happens
           packer build -only="${{ matrix.builder }}" \
                        -var-file="${{ matrix.distro }}" \
-                       -var "qemu_accelerator=tcg" \
                        -var "build=${{ needs.collect.outputs.build }}" \
-                       -var "cpu_model=Skylake-Client" \
                        -var "cpus=2" \
                        -var "memory=4096" \
+                       -var "http_port_min=${HTTP_PORT_MIN:-8000}" \
+                       -var "http_port_max=${HTTP_PORT_MAX:-9000}" \
                        ${{ github.event_name != 'release' && '-except=upload' || '' }} \
                        sources
         env:
           VAGRANT_CLOUD_TOKEN: ${{ secrets.VAGRANT_CLOUD_TOKEN }}
-          PACKER_LOG: 1 #${{ contains(matrix.needs_timeout, matrix.distro) && '0' || '0' }}
+          PACKER_LOG: 1
 
       - name: Upload artifact
         if: ${{ failure() }}

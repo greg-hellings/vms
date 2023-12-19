@@ -6,7 +6,7 @@ iso = {
 }
 boot_command = [
   "<up><tab><wait>",
-  "<bs><bs><bs><bs><bs> inst.ks=cdrom:/ks.cfg console=tty0",
+  "<bs><bs><bs><bs><bs><wait> inst.ks<wait>=cdrom:/ks.cfg<wait> console<wait>=tty0<wait>",
   "<enter>"
 ]
 cd_files = ["distros/centos/7/disc/*"]

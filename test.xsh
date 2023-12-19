@@ -63,7 +63,7 @@ def main():
         p = pathlib.Path(box)
         with open("Vagrantfile.in", "r") as fr:
             content = fr.read()
-        content = content.replace("@@BOX@@", f"file:///home/greg/src/vms/vms/{box}")
+        content = content.replace("@@BOX@@", p.resolve().as_uri())
         content = content.replace("@@BOX_NAME@@", p.name)
         with open("Vagrantfile", "w") as fw:
             fw.write(content)
